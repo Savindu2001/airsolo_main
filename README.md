@@ -22,3 +22,9 @@ project_root/
 │── web/  # Web-specific files
 │── firebase.json  # Firebase Configuration
 │── README.md
+
+
+
+
+- lib 
+  - 
