@@ -1,5 +1,4 @@
-import 'package:airsolo/src/features/authentication/screens/splash_screen.dart';
-import 'package:airsolo/src/utils/theme/theme.dart';
+import 'package:airsolo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 
@@ -11,10 +10,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      theme: AirAppTheme.lightTheme,
-      darkTheme: AirAppTheme.darkTheme ,
       themeMode: ThemeMode.system,
-      home: const SplashScreen(),
+      theme: AAppTheme.lightTheme,
+      darkTheme: AAppTheme.darkTheme,
     );
   }
 }
