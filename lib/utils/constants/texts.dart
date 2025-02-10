@@ -42,6 +42,7 @@ static const String  resendEmail = 'Resend Email';
 static const String  resendEmailIn = 'Resend Email In';
 static const String  switchAsHost = 'Switch As Host';
 static const String  switchAsTourist = 'Switch As Traveller';
+static const String  and = '_and_';
 
 
 
@@ -49,7 +50,7 @@ static const String  switchAsTourist = 'Switch As Traveller';
 static const String loginTitle = 'Welcome back,';
 static const String loginSubTitle = 'Travel Freely, Explore Boldly.';
 
-static const String signupTitle = 'Create an Account';
+static const String signupTitle = 'Let\'s create your account';
 
 static const String forgetPasswordTitle = 'Forgot Password?';
 static const String forgetPasswordSubTitle = 'Enter your email to reset your password.';

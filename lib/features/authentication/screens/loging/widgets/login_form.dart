@@ -1,9 +1,12 @@
 
+import 'package:airsolo/features/authentication/screens/signup/signup.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ALoginForm extends StatelessWidget {
@@ -65,7 +68,7 @@ class ALoginForm extends StatelessWidget {
             SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.signIn),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
             const SizedBox(height: ASizes.spaceBtwItems,),
             //create Account Button
-            SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.createAccount ),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
+            SizedBox( width:double.infinity, child: ElevatedButton(onPressed: () => Get.to(()=> const  SignupScreen()), child: const Text(ATexts.createAccount ),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
            
           ],
         ),
