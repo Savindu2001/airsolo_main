@@ -65,7 +65,7 @@ class ALoginForm extends StatelessWidget {
             SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.signIn),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
             const SizedBox(height: ASizes.spaceBtwItems,),
             //create Account Button
-            SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.createAccount ))),
+            SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.createAccount ),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
            
           ],
         ),

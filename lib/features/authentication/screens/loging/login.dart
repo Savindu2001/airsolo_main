@@ -1,9 +1,10 @@
 import 'package:airsolo/common/styles/spacing_styles.dart';
-import 'package:airsolo/features/authentication/screens/loging/widgets/from_divider.dart';
+import 'package:airsolo/common/widgets/login_signup/form_divider.dart';
+import 'package:airsolo/common/widgets/login_signup/social_buttons.dart';
 import 'package:airsolo/features/authentication/screens/loging/widgets/login_form.dart';
 import 'package:airsolo/features/authentication/screens/loging/widgets/login_header.dart';
-import 'package:airsolo/features/authentication/screens/loging/widgets/login_social.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                   ALoginForm(dark: dark),
 
                   ///Divider
-                  AFormDivider(dark: dark),
+                  AFormDivider(dark: dark, dividerText: ATexts.orSignInWith),
                   const SizedBox(height: ASizes.spaceBtwSections,),
 
                   /// Footer
