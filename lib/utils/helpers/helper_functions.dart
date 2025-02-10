@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 class AHelperFunctions {
 
-  
+
   
   static void showSnackBar(String message){
     ScaffoldMessenger.of(Get.context!).showSnackBar(

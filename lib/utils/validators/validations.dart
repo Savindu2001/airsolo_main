@@ -58,7 +58,7 @@ class AValidator {
     }
 
     //Regular expressions for email validators
-    final phoneRegExp = RegExp(r'^\d{10}$');
+    final phoneRegExp = RegExp(r'^\d{10}$ ');
 
     //check minimum password length
     if (!phoneRegExp.hasMatch(value)){
