@@ -46,6 +46,12 @@ static const String  and = '_and_';
 
 
 
+//Buttons Texts
+static const String  submit = 'Submit';
+static const String  done = 'Done';
+
+
+
 // Authentication Titles
 static const String loginTitle = 'Welcome back,';
 static const String loginSubTitle = 'Travel Freely, Explore Boldly.';
@@ -55,10 +61,11 @@ static const String signupTitle = 'Let\'s create your account';
 static const String forgetPasswordTitle = 'Forgot Password?';
 static const String forgetPasswordSubTitle = 'Enter your email to reset your password.';
 
-static const String changeYourPasswordTitle = 'Change Your Password';
-static const String changeYourPasswordSubTitle = 'Enter a new password to secure your account.';
+static const String changeYourPasswordTitle = 'Password Reset Email Sent';
+static const String changeYourPasswordSubTitle = 'Your Account Security is our priority! We\'ve sent you a secure link to Safety Change your Password and Keep Your Account Private';
 
-static const String confirmEmail = 'Confirm Your Email';
+static const String confirmEmail = 'Verify your email address!';
+static const String aContinue = 'Continue';
 static const String confirmEmailSubTitle = 'We’ve sent a confirmation link to your email.';
 
 static const String emailNoReceivedMessage = 'Didn’t receive the email? Check your spam folder or resend it.';
@@ -67,6 +74,8 @@ static const String yourAccountCreatedTitle = 'Your Account is Created!';
 static const String yourAccountCreatedSubTitle = 'Start exploring amazing features now.';
 
 
+//Tourist Screens Titles & Sub Titles
+static const String hotelListScreenTitle = 'Explore Your Bed!';
 
 
 

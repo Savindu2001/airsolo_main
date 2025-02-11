@@ -6,18 +6,12 @@ class AColors{
   /* App Basic Colors */
   static const Color primary = Color(0xFFFFC107);
   static const Color secondary = Color(0xFF002147);
-  static const Color accent= Color(0xFF00AEEF);
+  static const Color accent= Color.fromARGB(255, 172, 135, 27);
 
-  /* Gradient Colors */
-  static const  Gradient linerGradient = LinearGradient(
-    begin: Alignment(0.0, 0.0),
-    end: Alignment(0.707, -0.707),
-    colors: [
-      Color(0xffff9a9e),
-      Color(0xfffad0c4),
-      Color(0xfffad0c4),
-    ]
-  );
+
+  /* Home Screens Background Colors */
+
+  static const Color homePrimary = Color(0xFF4b68ff);
 
 
   /* Text Colors */

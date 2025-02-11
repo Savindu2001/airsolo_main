@@ -1,12 +1,14 @@
 
 import 'package:airsolo/common/widgets/login_signup/form_divider.dart';
 import 'package:airsolo/common/widgets/login_signup/social_buttons.dart';
+import 'package:airsolo/features/authentication/screens/signup/verify_email.dart';
 import 'package:airsolo/features/authentication/screens/signup/widget/terms_conditions.dart';
-import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class SignupForm extends StatelessWidget {
@@ -96,7 +98,7 @@ class SignupForm extends StatelessWidget {
           const SizedBox(height: ASizes.spaceBtwSections,),
     
           //Signup Buttons
-          SizedBox( width:double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(ATexts.createAccount),style: ElevatedButton.styleFrom(backgroundColor: dark ? AColors.primary : AColors.black),)),
+          SizedBox( width:double.infinity, child: ElevatedButton(onPressed: () => Get.to(()=> const VerifyEmailScreen()), child: const Text(ATexts.createAccount),)),
           const SizedBox(height: ASizes.spaceBtwSections,),
     
     
