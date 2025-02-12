@@ -17,8 +17,8 @@ static const String onboardingSubTitle3 = 'Chat with fellow travelers, share exp
 
 
 // Home Screen Titles  
-static const String homeAppBarTitle = 'Where Will You Go Next?';  
-static const String homeAppBarSubTitle = 'Explore new destinations, plan your journey, and travel solo with confidence.';  
+static const String homeAppBarTitle = 'Good day for travelling';  
+static const String homeAppBarSubTitle = 'Savindu Senanayake';  
 
 // Authentication Form Text
 static const String firstName = 'First Name';
@@ -75,7 +75,7 @@ static const String yourAccountCreatedSubTitle = 'Start exploring amazing featur
 
 
 //Tourist Screens Titles & Sub Titles
-static const String hotelListScreenTitle = 'Explore Your Bed!';
+static const String serviceScreenTitle = 'Services!';
 
 
 

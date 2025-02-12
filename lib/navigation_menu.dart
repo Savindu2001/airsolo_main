@@ -1,5 +1,5 @@
-import 'package:airsolo/features/app/screens/home/tourist_home.dart';
-import 'package:airsolo/features/app/screens/home/services_home.dart';
+import 'package:airsolo/features/app/screens/home/service_home.dart';
+import 'package:airsolo/features/app/screens/home/main_home.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +45,8 @@ class NavigationMenu extends StatelessWidget {
               icon: Icon(Iconsax.user), 
               label: 'Account'
               ),
+              
+              
         
           ]
           ),
@@ -59,5 +61,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const TouristHomeScreen(),const ServiceHomeScreen(), Container(color: Colors.blue,), Container(color: Colors.green,)];
+  final screens = [const MainHomeScreen(),const ServiceHomeScreen(), Container(color: Colors.blue,), Container(color: Colors.green,)];
 }

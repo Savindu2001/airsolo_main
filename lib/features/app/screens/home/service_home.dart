@@ -2,15 +2,15 @@ import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
 
-class TouristHomeScreen extends StatelessWidget {
-  const TouristHomeScreen({super.key});
+class ServiceHomeScreen extends StatelessWidget {
+  const ServiceHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title:  Text(ATexts.hotelListScreenTitle, style: Theme.of(context).textTheme.headlineSmall,),
+        title:  Text(ATexts.serviceScreenTitle, style: Theme.of(context).textTheme.headlineLarge,),
       ),
 
       body: SingleChildScrollView(

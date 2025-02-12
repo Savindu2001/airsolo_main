@@ -28,11 +28,12 @@ class APrimaryHeaderContainer extends StatelessWidget {
 
                         // Background Shapes
 
-                          Positioned(top: -150,right: -250,child: ACircularContainer(backgroundColor: AColors.white.withOpacity(0.1))),
-                          ACircularContainer(backgroundColor: AColors.white.withOpacity(0.1)),
-                          Positioned(top: 150,right: 250,child: ACircularContainer(backgroundColor: AColors.white.withOpacity(0.1))),
-                          Positioned(top: 150,right: 250,child: ACircularContainer(width: 100, height:100, backgroundColor:  AColors.white.withOpacity(0.1), radius: 100,)),
-                          Positioned(top: 180,right: 100,child: ACircularContainer(width: 50, height:50, backgroundColor:  AColors.white.withOpacity(0.1), radius: 50,)),
+                          Positioned(top: -150,right: -250,child: ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
+                          ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1),width: 400, height: 400, radius: 400,),
+                          
+                          Positioned(top: 150,right: 250,child: ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
+                          Positioned(top: 150,right: 250,child: ACircularContainer(width: 100, height:100, backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
+                          Positioned(top: 180,right: 100,child: ACircularContainer(width: 50, height:50, backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
 
                           child
                     

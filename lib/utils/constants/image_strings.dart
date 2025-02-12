@@ -19,5 +19,23 @@ class AImages{
   static const String verifiedEmail = 'assets/images/verify/verified.png';
   static const String sentEmail = 'assets/images/verify/sentEmail.png';
 
+  //Category Icons
+  static const String hostel = 'assets/images/icons/hostel.png';
+  static const String restaurant = 'assets/images/icons/restaurants.png';
+  static const String place = 'assets/images/icons/places.png';
+  static const String taxi = 'assets/images/icons/taxi.png';
+  static const String event = 'assets/images/icons/events.png';
+  static const String guide = 'assets/images/icons/guides.png';
+
+
+  //Banners
+  static const String banner1 = 'assets/images/banners/banner1.png';
+  static const String banner2 = 'assets/images/banners/banner2.png';
+  static const String banner3 = 'assets/images/banners/banner3.png';
+  static const String banner4 = 'assets/images/banners/banner4.png';
+  
+
+
+
   
 }

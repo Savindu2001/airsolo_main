@@ -26,6 +26,8 @@ dependencies:
   get_storage: ^2.1.1
   get: ^4.6.6
   smooth_page_indicator: ^1.2.0+3
+  hugeicons: ^0.0.7
+  carousel_slider: ^5.0.0
 
 
 
@@ -46,7 +48,9 @@ flutter:
 #------  LOCAL ASSETS ------#
   assets:
     - assets/images/on_boarding_images/
+    - assets/images/icons/
     - assets/images/verify/
+    - assets/images/banners/
     - assets/logo/
 
 
