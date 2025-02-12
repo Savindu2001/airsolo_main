@@ -33,6 +33,32 @@ class AImages{
   static const String banner2 = 'assets/images/banners/banner2.png';
   static const String banner3 = 'assets/images/banners/banner3.png';
   static const String banner4 = 'assets/images/banners/banner4.png';
+  static const String banner5 = 'assets/images/banners/banner5.png';
+
+
+  ///Item Images (Hostels, taxi, guides, restaurants etc....)
+  
+  /// Hostel Images
+      static const String hostelImage1 = 'assets/images/items/hostel1.png';
+      static const String hostelImage2 = 'assets/images/items/hostel2.png';
+      // static const String hostelImage3 = '';
+      // static const String hostelImage4 = '';
+      // static const String hostelImage5 = '';
+
+  /// Restaurants Images
+      // static const String restaurantImage1 = '';
+      // static const String restaurantImage2 = '';
+      // static const String restaurantImage3 = '';
+      // static const String restaurantImage4 = '';
+      // static const String restaurantImage5 = '';
+
+  /// Places Images
+      static const String placeImage1 = 'assets/images/items/place1.png';
+      static const String placeImage2 = 'assets/images/items/place2.png';
+      // static const String placeImage3 = '';
+      // static const String placeImage4 = '';
+      // static const String placeImage5 = '';
+
   
 
 

@@ -64,10 +64,9 @@ class ASizes {
   //Gridview Spacing
   static const double gridViewSpacing = 16.0;
 
-  //hotel image sizes
-
-  //room image sizes
-
-  //locations image sizes
+  // Item sizes dimensions (Hostels, Resturants, Taxis, Guides , etc....)
+  static const double itemImageRadius = 16.0;
+  static const double itemImageSize = 120.0;
+  static const double itemImageHieght = 160.0;
 
 }

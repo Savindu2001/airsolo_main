@@ -12,10 +12,11 @@ import 'package:get/get_core/src/get_main.dart';
 
 class APromoSlider extends StatelessWidget {
   const APromoSlider({
-    super.key, required this.banners,
+    super.key, required this.banners,  this.autoPlay = true,
   });
 
   final List<String> banners;
+  final bool autoPlay;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +29,13 @@ class APromoSlider extends StatelessWidget {
           options: CarouselOptions(
             viewportFraction: 1,
             onPageChanged: (index, _) => controller.updatePageIndicator(index), 
+            autoPlay: autoPlay,
+            autoPlayInterval: Duration(seconds: 3),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
           ),
         
           items: banners.map((url) =>  ARoundedImage(imageUrl: url, applyImageRadius: true,)).toList(),
+          
         ),
     
         const SizedBox(height: ASizes.spaceBtwItems,),

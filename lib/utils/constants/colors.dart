@@ -55,6 +55,15 @@ class AColors{
   static const Color lightGrey = Color(0xFFF9F9F9);
   static const Color white = Color(0xFFFFFFFF);
 
+  /* Items Tag Colors */
+  static const Color itemSaleTag = Color.fromARGB(255, 255, 68, 68);
+
+
+
+  /* Review Star Colors */
+  static const Color reviewStar = Color.fromARGB(255, 255, 183, 0);
+
+
   
 
 

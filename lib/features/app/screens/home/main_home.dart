@@ -54,11 +54,12 @@ class MainHomeScreen extends StatelessWidget {
                   const ASectionHeading(title: 'Best Deals', showActionButton: false),
                   const Padding(
                     padding: EdgeInsets.all(ASizes.defaultSpace),
-                    child: APromoSlider(banners:  [ AImages.banner1, AImages.banner2, AImages.banner3, AImages.banner4 ]),
+                    child: APromoSlider(autoPlay: true ,banners:  [ AImages.banner1, AImages.banner2, AImages.banner5 , AImages.banner3, AImages.banner4]),
                   ),
 
                   //Popular Hostels Card
-
+                  const ASectionHeading(title: 'Best Hostels', showActionButton: false),
+                  const SizedBox(height: ASizes.spaceBtwItems,),
                   AItemCardVertical(),
 
 
