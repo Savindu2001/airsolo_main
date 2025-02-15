@@ -1,5 +1,9 @@
-import 'package:airsolo/common/widgets/item_cards/vertical_item_card.dart';
 import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
+import 'package:airsolo/common/widgets/custome_shapes/containers/scroll_item_cards.dart';
+import 'package:airsolo/common/widgets/item_cards/horizantal_item_card.dart';
+import 'package:airsolo/common/widgets/item_cards/vertical_item_card.dart';
+import 'package:airsolo/common/widgets/layout/grid_layout.dart';
+import 'package:airsolo/common/widgets/layout/list_layout.dart';
 import 'package:airsolo/common/widgets/search_bar/default_searchbar.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
 import 'package:airsolo/features/app/screens/home/widgets/banner_slider.dart';
@@ -59,13 +63,35 @@ class MainHomeScreen extends StatelessWidget {
 
                   //Popular Hostels Card
                   const ASectionHeading(title: 'Best Hostels', showActionButton: false),
+                  const SizedBox(height: ASizes.spaceBtwItems/2,),
+                    //Hostel Grid
+                    AGridLayout(itemCount: 4, itemBuilder: (_, index) => const AItemCardVertical(businessName: 'Tree House Hostel', scoreName: 'Fabolus', city: 'sigiriya', country: 'sri lanka', image: AImages.hostelImage1, score: 9.9, reviewCount: 1503, discount: 35, ), ),
+                  
+
+
+                  
+                  
+
+
+
+
+                  // Item Horizantal Card
                   const SizedBox(height: ASizes.spaceBtwItems,),
-                  AItemCardVertical(),
-
-
+                  const ASectionHeading(title: 'Get inspired!', showActionButton: false),
+                  const SizedBox(height: ASizes.spaceBtwItems/2,),
+                  SizedBox(
+                    height: 420,
+                    child: AListLayout(itemCount: 3, itemBuilder: (_, index) => AItemCardHorizantal(scoreName: 'Super', businessName: 'Cozy Secrets', city: 'dambulla', country: 'sri lanka', image: AImages.hostelImage2, score: 7.5, reviewCount: 134, discount: 40, ))),
+                  const SizedBox(height: ASizes.spaceBtwItems,),
 
 
                   //Popular Places Card
+                  const ASectionHeading(title: 'Places!', showActionButton: true),
+                  SizedBox(
+                    height: 300,
+                    child: AItemCardSlider(title: 'Mirissa', image: AImages.placeImage2,))
+
+                   
 
             
           ],
@@ -74,3 +100,5 @@ class MainHomeScreen extends StatelessWidget {
     );
   }
 }
+
+

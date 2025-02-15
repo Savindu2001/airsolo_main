@@ -1,9 +1,9 @@
 import 'package:airsolo/common/widgets/custome_shapes/containers/rounded_card.dart';
 import 'package:airsolo/common/widgets/icon/a_circular_icon.dart';
 import 'package:airsolo/common/widgets/images/a_rounded_image.dart';
+import 'package:airsolo/common/widgets/item_cards/item_review_score_vertical.dart';
 import 'package:airsolo/common/widgets/texts/item_title_text.dart';
 import 'package:airsolo/utils/constants/colors.dart';
-import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/shadows.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
@@ -11,7 +11,28 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AItemCardVertical extends StatelessWidget {
-  const AItemCardVertical({super.key});
+  const AItemCardVertical({super.key, 
+  required this.scoreName, 
+  required this.businessName, 
+  required this.city, 
+  required this.country, 
+  required this.image, 
+  required this.score, 
+  required this.reviewCount, 
+  required this.discount, 
+  this.showDiscount = true, 
+  this.showReviewScore = true, 
+  this.applyImageRadius = true, 
+  this.smallSize = true});
+
+
+
+
+  final String scoreName,businessName, city, country , image;
+  
+  final double score, reviewCount, discount;
+
+  final bool showDiscount, showReviewScore,applyImageRadius,smallSize;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +43,7 @@ class AItemCardVertical extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ASizes.itemImageRadius),
         boxShadow: [AShadowStyle.verticalItemShadow] ,
-        color: dark ? AColors.darkerGrey : AColors.white,
+        color: dark ? AColors.black : AColors.white,
       ),
 
       child: Column(
@@ -36,7 +57,7 @@ class AItemCardVertical extends StatelessWidget {
             child:  Stack(
               children: [
                 ///-- Thumbnail Image
-                ARoundedImage(imageUrl: AImages.hostelImage1, applyImageRadius: true,),
+                 ARoundedImage(imageUrl: image, applyImageRadius: applyImageRadius,),
 
                 /// Sales Tag
                 Positioned(
@@ -45,13 +66,13 @@ class AItemCardVertical extends StatelessWidget {
                   child: ARoundedContainer(
                     radius: ASizes.sm,
                     backgroundColor: AColors.itemSaleTag.withOpacity(0.8 ),
-                    padding: EdgeInsets.symmetric(horizontal: ASizes.sm, vertical: ASizes.xs),
-                    child: Text('30%' ,  style: Theme.of(context).textTheme.labelLarge!.apply(color: AColors.white),),
+                    padding: const EdgeInsets.symmetric(horizontal: ASizes.sm, vertical: ASizes.xs),
+                    child: Text('-${discount}%' ,  style: Theme.of(context).textTheme.labelLarge!.apply(color: AColors.white),),
                   ),
                 ),
 
                 ///Favourite Icon
-                Positioned(
+                const Positioned(
                   top: 0,
                   right: 0,
                   child: ACircular_Icon(icon: Iconsax.heart5, color: Colors.red, size: 24, ),),
@@ -65,53 +86,30 @@ class AItemCardVertical extends StatelessWidget {
           // -- Datils
 
            Padding(
-            padding: const EdgeInsets.only(left: ASizes.sm),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            padding:  EdgeInsets.only(left: ASizes.sm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-              // -- Business Name
-              AItemTitleText(title: 'TreeHouse Hostel',),
-
-
-              
+                    // -- Business Name
+                    AItemTitleText(title: 'businessName',),
 
 
-              // -- City/Country
-              AItemTitleText(title: 'sigiriya | sri lanka',smallSize: true,),
-              SizedBox(height: ASizes.spaceBtwItems/2,),
+                    
+
+
+                    // -- City/Country
+                    AItemTitleText(title: '${city} | ${country}',smallSize: smallSize,),
+                    SizedBox(height: ASizes.spaceBtwItems/2,),
 
 
 
 
-              // -- Review Score Lable (Average Name Ex - score =< 6 super , )
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Icon(Iconsax.magic_star1, color: AColors.reviewStar,),
-                      Text('9.9 ', style: Theme.of(context).textTheme.headlineSmall),
-
-                    ],
-                  ),
-
-
-                  Row(
-                    children: [
-
-                       Text('Fabulous'),
-                        Text('(1503)'),
-
-                    ],
-                  ),
-                  
-                 
-                ],
-              ),
-              SizedBox(height: ASizes.spaceBtwItems/2,),
-            ],
-          ),),
+                    // -- Review Score Lable (Average Name Ex - score =< 6 super , )
+                    AItemReviewScoreVertical(reviewTitle: scoreName, score: score, reviewCount: reviewCount,),
+                    SizedBox(height: ASizes.spaceBtwItems/2,),
+                  ],
+                ),),
 
           
 
