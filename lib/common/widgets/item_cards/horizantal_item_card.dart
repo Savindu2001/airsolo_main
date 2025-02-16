@@ -92,7 +92,7 @@ class AItemCardHorizantal extends StatelessWidget {
                 const SizedBox(height: 4),
                 AItemTitleText(title: '${city} | ${country}',smallSize: true,),
                 
-                const SizedBox(height: 6),
+                const SizedBox(height: ASizes.sm),
                 Row(
                   children: [
                     const Icon(Iconsax.magic_star1, color: AColors.primary, size: ASizes.md),
@@ -112,11 +112,20 @@ class AItemCardHorizantal extends StatelessWidget {
             children: [
 
 
-              ///Favourite Icon
+          ///Favourite Icon
           const Positioned(
             top: 0,
             right: 0,
-            child: ACircular_Icon(icon: Iconsax.heart5, color: Colors.red, size: 24, ),),
+            child: ACircular_Icon(
+              icon: Iconsax.heart5, 
+              color: Colors.red, 
+              size: 24, 
+              backgroundColor: AColors.lightGrey,
+              
+              ),),
+
+
+            SizedBox(height: ASizes.sm,),
 
 
 

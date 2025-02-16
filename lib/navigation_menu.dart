@@ -1,4 +1,4 @@
-import 'package:airsolo/features/app/screens/home/service_home.dart';
+import 'package:airsolo/features/app/screens/services/service_home.dart';
 import 'package:airsolo/features/app/screens/home/main_home.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';

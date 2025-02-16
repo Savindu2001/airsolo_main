@@ -92,7 +92,7 @@ class AItemCardVertical extends StatelessWidget {
                   children: [
 
                     // -- Business Name
-                    AItemTitleText(title: 'businessName',),
+                    AItemTitleText(title: businessName,),
 
 
                     

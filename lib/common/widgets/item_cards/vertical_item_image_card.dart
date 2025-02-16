@@ -57,7 +57,7 @@ class AItemCardImageVertical extends StatelessWidget {
                     top: 125,
                     left: 0,
                     child: Container(
-                      color: Colors.black,
+                      color: dark ? AColors.black : AColors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: AItemTitleText(title: title,),

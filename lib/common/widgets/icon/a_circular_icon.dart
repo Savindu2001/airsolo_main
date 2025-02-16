@@ -39,7 +39,9 @@ class ACircular_Icon extends StatelessWidget {
             : AColors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(100)
       ),
-      child: IconButton(onPressed: onPressed, icon: Icon(icon, color: color, size: size,)),
+      child: IconButton(
+        onPressed: onPressed, 
+        icon: Icon(icon, color: color, size: size,)),
                   );
   }
 }

@@ -7,18 +7,24 @@ import 'package:flutter/material.dart';
 
 class ASearchBarContainer extends StatelessWidget {
   const ASearchBarContainer({
-    super.key, required this.text, this.icon, this.showBackground = true,  this.showBorder = true,
+    super.key, 
+    required this.text, 
+    this.icon, 
+    this.showBackground = true,  
+    this.showBorder = true, 
+    this.padding = const EdgeInsets.symmetric(horizontal: ASizes.defaultSpace),
   });
 
   final String text;
   final IconData? icon;
   final bool showBackground, showBorder;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
     final darkMode = AHelperFunctions.isDarkMode(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: ASizes.defaultSpace),
+      padding: padding,
       child: Container(
         width: ADeviceUtils.getScreenWidth(),
         padding: const EdgeInsets.all(ASizes.md),
