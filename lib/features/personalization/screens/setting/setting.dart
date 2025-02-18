@@ -61,7 +61,30 @@ class ASettingScreen extends StatelessWidget {
                 const ASectionHeading(title: 'App Setting', showActionButton: false),
                 const SizedBox(height: ASizes.spaceBtwItems,),
 
-                ASettingMenuTile(title: 'Load Data', subTitle: 'Upload Data to Cloud ', icon: Iconsax.cloud,onTap: () {},),
+                const ASettingMenuTile(title: 'Geolocation', subTitle: 'set recommendation based on location', icon: Iconsax.location,),
+                ASettingMenuTile(
+                  title: 'Safe Mode', 
+                  subTitle: 'Secure your Account More', 
+                  icon: Iconsax.security_user, 
+                  trailing: Switch(
+                    value: false, 
+                    onChanged: (falese){}),
+                    ),
+
+                    ASettingMenuTile(
+                  title: 'HD Image Quality', 
+                  subTitle: 'Quality Images', 
+                  icon: Iconsax.security_user, 
+                  trailing: Switch(
+                    value: false, 
+                    onChanged: (falese){}),
+                    ),
+                    ASettingMenuTile(title: 'Theme', subTitle: 'Light & Dark Mode', icon: Iconsax.moon,onTap: () {},),
+                    ASettingMenuTile(title: 'Privacy & Terms', subTitle: 'Privacy & Terms of App', icon: Iconsax.lock,onTap: () {},),
+                    ASettingMenuTile(title: 'About - V.0.0.1', subTitle: 'About Airsolo App', icon: Iconsax.bubble,onTap: () {},),
+
+                    
+
 
 
 
