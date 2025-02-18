@@ -22,7 +22,7 @@ class ServiceHomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title:  Text(ATexts.serviceScreenTitle, style: Theme.of(context).textTheme.headlineLarge,),
+          title:  Text(ATexts.serviceScreenTitle, style: Theme.of(context).textTheme.headlineMedium,),
         ),
       
         body: NestedScrollView(
@@ -75,7 +75,6 @@ class ServiceHomeScreen extends StatelessWidget {
                     tabs:  [
                       Tab(child: Text('Hostels'),),
                       Tab(child: Text('Taxi'),),
-                      Tab(child: Text('Guides'),),
                       Tab(child: Text('Safari'),),
                       Tab(child: Text('Resturants'),),
                       Tab(child: Text('Events'),),
@@ -92,7 +91,6 @@ class ServiceHomeScreen extends StatelessWidget {
           body: const TabBarView(
             children: [
               
-              ACategoryTab(),
               ACategoryTab(),
               ACategoryTab(),
               ACategoryTab(),

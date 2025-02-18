@@ -13,24 +13,24 @@ class ACategoryTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       children: [
       Padding(
-                  padding: EdgeInsets.all(ASizes.defaultSpace),
+                  padding: const EdgeInsets.all(ASizes.defaultSpace),
                   child: Column(
                     children: [
                       ///-- Category
-                      ACategoryShowcase(images: [AImages.hostelImage1 ,AImages.hostelImage2, AImages.placeImage2],),
-                      SizedBox(height: ASizes.spaceBtwItems,),
+                      const ACategoryShowcase(images: [AImages.hostelImage1 ,AImages.hostelImage2, AImages.placeImage2],),
+                      const SizedBox(height: ASizes.spaceBtwItems,),
                       
                       
                       ///Services
                       ASectionHeading(title: 'You might like', showActionButton: true, onPressed: (){},),
-                      SizedBox(height: ASizes.spaceBtwItems,),
+                      const SizedBox(height: ASizes.spaceBtwItems,),
       
                       //Service Item
-                      AGridLayout(itemBuilder: (_, index) => AItemCardVertical(scoreName: 'Superb', businessName: 'City Hostel', city: 'colombo', country: 'sri lanka', image: AImages.hostelImage1, score: 8.9, reviewCount: 2314, discount: 10), itemCount: 12),
-                      SizedBox(height: ASizes.spaceBtwSections,),
+                      AGridLayout(itemBuilder: (_, index) => const AItemCardVertical(scoreName: 'Superb', businessName: 'City Hostel', city: 'colombo', country: 'sri lanka', image: AImages.hostelImage1, score: 8.9, reviewCount: 2314, discount: 10), itemCount: 12),
+                      const SizedBox(height: ASizes.spaceBtwSections,),
                       
                     ],
                   ),

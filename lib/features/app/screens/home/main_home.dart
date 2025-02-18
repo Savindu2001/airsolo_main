@@ -32,11 +32,11 @@ class MainHomeScreen extends StatelessWidget {
 
                         children: [
                           //App Bar
-                           AHomeAppBar(),
-                           SizedBox(height: ASizes.spaceBtwSections,),
+                           const AHomeAppBar(),
+                           const SizedBox(height: ASizes.spaceBtwSections,),
                           //SearchBar
-                          ASearchBarContainer( text: 'Where you go next?', showBackground: true, showBorder: true, icon: Iconsax.search_normal,),
-                          SizedBox(height: ASizes.spaceBtwItems+ 5,),
+                          const ASearchBarContainer( text: 'Where you go next?', showBackground: true, showBorder: true, icon: Iconsax.search_normal,),
+                          const SizedBox(height: ASizes.spaceBtwItems+ 5,),
 
                           // Category Title & Icons
 
@@ -46,7 +46,8 @@ class MainHomeScreen extends StatelessWidget {
 
                           // Category Icons
 
-                          AHomeCategories(),
+                          const AHomeCategories(),
+                          const SizedBox(height: ASizes.spaceBtwSections,),
                           
 
                         ]
@@ -67,7 +68,7 @@ class MainHomeScreen extends StatelessWidget {
 
                   //Popular Places Card
                   const ASectionHeading(title: 'Places!', showActionButton: true),
-                  SizedBox(
+                  const SizedBox(
                     height: 220,
                     child: AItemCardSlider(title: 'Mirissa', image: AImages.placeImage2,)),
 
@@ -84,7 +85,7 @@ class MainHomeScreen extends StatelessWidget {
                   const SizedBox(height: ASizes.spaceBtwItems/2,),
                   SizedBox(
                     height: 420,
-                    child: AListLayout(itemCount: 3, itemBuilder: (_, index) => AItemCardHorizantal(scoreName: 'Super', businessName: 'Cozy Secrets', city: 'dambulla', country: 'sri lanka', image: AImages.hostelImage2, score: 7.5, reviewCount: 134, discount: 40, ))),
+                    child: AListLayout(itemCount: 3, itemBuilder: (_, index) => const AItemCardHorizantal(scoreName: 'Super', businessName: 'Cozy Secrets', city: 'dambulla', country: 'sri lanka', image: AImages.hostelImage2, score: 7.5, reviewCount: 134, discount: 40, ))),
                   const SizedBox(height: ASizes.spaceBtwItems,),
 
                    

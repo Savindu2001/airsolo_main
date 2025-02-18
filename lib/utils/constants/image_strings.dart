@@ -59,6 +59,11 @@ class AImages{
       // static const String placeImage4 = '';
       // static const String placeImage5 = '';
 
+
+
+  /// User Profile Images
+  static const String userProfile= 'assets/images/user/user.png';
+
   
 
 

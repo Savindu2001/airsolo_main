@@ -22,3 +22,6 @@ flutter create --template package auth_repository
 
 change colors
 change titles
+
+
+Ai Guide - `TripGenie` – AI that generates tour plans like magic.

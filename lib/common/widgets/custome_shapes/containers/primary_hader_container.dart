@@ -20,21 +20,17 @@ class APrimaryHeaderContainer extends StatelessWidget {
                   color: darkMode? AColors.primary : AColors.homePrimary,
                   padding: const EdgeInsets.all(0),
                 
-                  child: SizedBox(
-                    height: 400,
-                    width: double.infinity,
+                  child: Container(
                     child: Stack(
                       children: [
-
+                    
                         // Background Shapes
-
+                    
                           Positioned(top: -150,right: -250,child: ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
-                          ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1),width: 400, height: 400, radius: 400,),
-                          
                           Positioned(top: 150,right: 250,child: ACircularContainer(backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
                           Positioned(top: 150,right: 250,child: ACircularContainer(width: 100, height:100, backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
                           Positioned(top: 180,right: 100,child: ACircularContainer(width: 50, height:50, backgroundColor: darkMode ? AColors.black.withOpacity(0.1) : AColors.white.withOpacity(0.1))),
-
+                    
                           child
                     
                         

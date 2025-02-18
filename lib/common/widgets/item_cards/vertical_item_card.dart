@@ -60,6 +60,7 @@ class AItemCardVertical extends StatelessWidget {
                  ARoundedImage(imageUrl: image, applyImageRadius: applyImageRadius,),
 
                 /// Sales Tag
+                if(showDiscount == true)
                 Positioned(
                   top: 12,
                   left: 2,
