@@ -1,5 +1,3 @@
-
-import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
 class ASectionHeading extends StatelessWidget {
@@ -15,20 +13,12 @@ class ASectionHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: ASizes.defaultSpace),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.headlineSmall!.apply(color: textColor), maxLines: 1, overflow: TextOverflow.ellipsis),
-              if(showActionButton)  TextButton(onPressed: onPressed, child: Text(buttonText)),
-            ],
-          )
-        ],
-      ),
-      );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: Theme.of(context).textTheme.headlineSmall!.apply(color: textColor), maxLines: 1, overflow: TextOverflow.ellipsis),
+        if(showActionButton)  TextButton(onPressed: onPressed, child: Text(buttonText)),
+      ],
+    );
   }
 }

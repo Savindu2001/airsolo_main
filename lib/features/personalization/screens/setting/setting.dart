@@ -3,9 +3,11 @@ import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_c
 import 'package:airsolo/common/widgets/list_tiles/setting_menu_tile.dart';
 import 'package:airsolo/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
+import 'package:airsolo/features/personalization/screens/profile/profile.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ASettingScreen extends StatelessWidget {
@@ -27,7 +29,7 @@ class ASettingScreen extends StatelessWidget {
                 
 
                 /// User Profile Card
-                const AUserProfileTile(),
+                AUserProfileTile(onPressed: () => Get.to(() => const AProfileScreen()),),
                 const SizedBox(height: ASizes.spaceBtwSections,),
 
 
@@ -38,7 +40,7 @@ class ASettingScreen extends StatelessWidget {
 
             /// Body
             Padding(
-            padding: EdgeInsets.all(ASizes.defaultSpace),
+            padding: const EdgeInsets.all(ASizes.defaultSpace),
             child: Column(
               children: [
 
@@ -82,6 +84,13 @@ class ASettingScreen extends StatelessWidget {
                     ASettingMenuTile(title: 'Theme', subTitle: 'Light & Dark Mode', icon: Iconsax.moon,onTap: () {},),
                     ASettingMenuTile(title: 'Privacy & Terms', subTitle: 'Privacy & Terms of App', icon: Iconsax.lock,onTap: () {},),
                     ASettingMenuTile(title: 'About - V.0.0.1', subTitle: 'About Airsolo App', icon: Iconsax.bubble,onTap: () {},),
+
+
+                // -- Logout Button
+                const SizedBox(height: ASizes.spaceBtwSections,),
+                SizedBox(width: double.infinity,child: OutlinedButton(onPressed: (){}, child: const Text('Logout')),),
+
+                const SizedBox(height: ASizes.spaceBtwSections * 2.5 ),
 
                     
 

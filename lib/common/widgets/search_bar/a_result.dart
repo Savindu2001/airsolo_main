@@ -5,12 +5,12 @@ class SearchResultScreen extends StatelessWidget {
   final DateTime? date;
   final int guests;
 
-  SearchResultScreen({required this.place, required this.date, required this.guests});
+  const SearchResultScreen({super.key, required this.place, required this.date, required this.guests});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Search Results")),
+      appBar: AppBar(title: const Text("Search Results")),
       body: Center(
         child: Text("Searching for $place on ${date?.toLocal().toString().split(' ')[0]} for $guests guests..."),
       ),

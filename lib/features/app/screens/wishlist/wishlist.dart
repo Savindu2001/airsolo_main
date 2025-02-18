@@ -6,7 +6,6 @@ import 'package:airsolo/features/app/screens/home/main_home.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -25,10 +24,10 @@ class AWishListPage extends StatelessWidget {
 
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ASizes.defaultSpace),
+          padding: const EdgeInsets.all(ASizes.defaultSpace),
           child: Column(
             children: [
-              AGridLayout(itemCount: 6, itemBuilder: (_, index )=> AItemCardVertical(scoreName: 'Awosome', businessName: 'Savee Hostel', city: 'Dambulla', country: 'sri lanka', image: AImages.hostel, score: 8.9, reviewCount: 234, discount: 0, showDiscount: false,))
+              AGridLayout(itemCount: 6, itemBuilder: (_, index )=> const AItemCardVertical(scoreName: 'Awosome', businessName: 'Savee Hostel', city: 'Dambulla', country: 'sri lanka', image: AImages.hostel, score: 8.9, reviewCount: 234, discount: 0, showDiscount: false,))
             ],
           ),
         ),

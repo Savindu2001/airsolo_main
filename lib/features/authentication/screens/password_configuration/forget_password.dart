@@ -2,7 +2,6 @@ import 'package:airsolo/features/authentication/screens/password_configuration/r
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -14,7 +13,7 @@ class ForgetPassword extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: EdgeInsets.all(ASizes.defaultSpace),
+        padding: const EdgeInsets.all(ASizes.defaultSpace),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -29,7 +28,7 @@ class ForgetPassword extends StatelessWidget {
             // Text
 
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: ATexts.email,
                 prefixIcon: Icon(Iconsax.direct_right)
               ),

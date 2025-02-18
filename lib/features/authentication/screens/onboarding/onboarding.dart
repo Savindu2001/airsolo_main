@@ -7,7 +7,6 @@ import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
@@ -57,7 +56,7 @@ class Onboarding extends StatelessWidget {
 
           //Circle Button
 
-          OnBoardingNextButton(),
+          const OnBoardingNextButton(),
 
         ],
       ),

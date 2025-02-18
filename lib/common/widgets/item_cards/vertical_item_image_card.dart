@@ -26,8 +26,8 @@ class AItemCardImageVertical extends StatelessWidget {
     final dark = AHelperFunctions.isDarkMode(context);
     return Container(
       width: 180,
-      margin: EdgeInsets.all(ASizes.sm),
-      padding: EdgeInsets.all(1),
+      margin: const EdgeInsets.all(ASizes.sm),
+      padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ASizes.itemImageRadius),
         

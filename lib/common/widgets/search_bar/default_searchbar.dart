@@ -31,7 +31,7 @@ class ASearchBarContainer extends StatelessWidget {
           //
           showDialog(
             context: context,
-            builder: (context) => SearchPopup(),
+            builder: (context) => const SearchPopup(),
           );
         },
         child: Container(

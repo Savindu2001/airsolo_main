@@ -23,7 +23,7 @@ class ACategoryCard extends StatelessWidget {
     return GestureDetector(
         onTap: onTap,
         child: ARoundedContainer(
-            padding:  EdgeInsets.all(ASizes.sm),
+            padding:  const EdgeInsets.all(ASizes.sm),
             showBorder: showBorder,
             backgroundColor: Colors.transparent,
             child: Row(

@@ -39,7 +39,7 @@ class AItemCardVertical extends StatelessWidget {
     final dark = AHelperFunctions.isDarkMode(context);
     return Container(
       width: 180,
-      padding: EdgeInsets.all(1),
+      padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ASizes.itemImageRadius),
         boxShadow: [AShadowStyle.verticalItemShadow] ,
@@ -52,7 +52,7 @@ class AItemCardVertical extends StatelessWidget {
           //Thumbnail
           ARoundedContainer(
             height: 180,
-            padding: EdgeInsets.all(ASizes.sm),
+            padding: const EdgeInsets.all(ASizes.sm),
             backgroundColor: dark ? AColors.dark : AColors.light,
             child:  Stack(
               children: [
@@ -68,7 +68,7 @@ class AItemCardVertical extends StatelessWidget {
                     radius: ASizes.sm,
                     backgroundColor: AColors.itemSaleTag.withOpacity(0.8 ),
                     padding: const EdgeInsets.symmetric(horizontal: ASizes.sm, vertical: ASizes.xs),
-                    child: Text('-${discount}%' ,  style: Theme.of(context).textTheme.labelLarge!.apply(color: AColors.white),),
+                    child: Text('-$discount%' ,  style: Theme.of(context).textTheme.labelLarge!.apply(color: AColors.white),),
                   ),
                 ),
 
@@ -87,7 +87,7 @@ class AItemCardVertical extends StatelessWidget {
           // -- Datils
 
            Padding(
-            padding:  EdgeInsets.only(left: ASizes.sm),
+            padding:  const EdgeInsets.only(left: ASizes.sm),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -100,15 +100,15 @@ class AItemCardVertical extends StatelessWidget {
 
 
                     // -- City/Country
-                    AItemTitleText(title: '${city} | ${country}',smallSize: smallSize,),
-                    SizedBox(height: ASizes.spaceBtwItems/2,),
+                    AItemTitleText(title: '$city | $country',smallSize: smallSize,),
+                    const SizedBox(height: ASizes.spaceBtwItems/2,),
 
 
 
 
                     // -- Review Score Lable (Average Name Ex - score =< 6 super , )
                     AItemReviewScoreVertical(reviewTitle: scoreName, score: score, reviewCount: reviewCount,),
-                    SizedBox(height: ASizes.spaceBtwItems/2,),
+                    const SizedBox(height: ASizes.spaceBtwItems/2,),
                   ],
                 ),),
 

@@ -20,13 +20,13 @@ class ACategoryShowcase extends StatelessWidget {
       showBorder: true,
       borderColor: AColors.darkGrey,
       backgroundColor: Colors.transparent,
-      margin: EdgeInsets.only(bottom: ASizes.spaceBtwItems),
-      padding: EdgeInsets.all(ASizes.md),
+      margin: const EdgeInsets.only(bottom: ASizes.spaceBtwItems),
+      padding: const EdgeInsets.all(ASizes.md),
       child: Column(
       children: [
     
         //Category -- with service Count 
-        ACategoryCard(showBorder: false,),
+        const ACategoryCard(showBorder: false,),
     
         //Category -- with 3 images 
         Row(
@@ -45,8 +45,8 @@ Widget categoryTopServiceImageWidget (String image, context){
               child: ARoundedContainer(
                 height: 100,
                 backgroundColor: AHelperFunctions.isDarkMode(context) ? AColors.darkGrey : AColors.light,
-                margin: EdgeInsets.only(right: ASizes.sm),
-                padding: EdgeInsets.all(ASizes.sm),
+                margin: const EdgeInsets.only(right: ASizes.sm),
+                padding: const EdgeInsets.all(ASizes.sm),
                 child: Image(image: AssetImage(image), fit: BoxFit.contain, ),
               ),
             );

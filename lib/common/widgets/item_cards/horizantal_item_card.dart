@@ -34,7 +34,7 @@ class AItemCardHorizantal extends StatelessWidget {
     final dark = AHelperFunctions.isDarkMode(context);
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: ASizes.defaultSpace/2),
+      margin: const EdgeInsets.only(top: ASizes.defaultSpace/2),
       padding: const EdgeInsets.all(ASizes.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ASizes.borderRadiusLg),
@@ -71,7 +71,7 @@ class AItemCardHorizantal extends StatelessWidget {
                     ),
                     child: Text(
                       '-${discount.toInt()}%',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ) : Container(),
                 ),
@@ -90,7 +90,7 @@ class AItemCardHorizantal extends StatelessWidget {
               children: [
                 AItemTitleText(title: businessName),
                 const SizedBox(height: 4),
-                AItemTitleText(title: '${city} | ${country}',smallSize: true,),
+                AItemTitleText(title: '$city | $country',smallSize: true,),
                 
                 const SizedBox(height: ASizes.sm),
                 Row(
@@ -98,7 +98,7 @@ class AItemCardHorizantal extends StatelessWidget {
                     const Icon(Iconsax.magic_star1, color: AColors.primary, size: ASizes.md),
                     const SizedBox(width: 4),
                     Text(
-                      '${scoreName} • (${reviewCount.toInt()})',
+                      '$scoreName • (${reviewCount.toInt()})',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -125,7 +125,7 @@ class AItemCardHorizantal extends StatelessWidget {
               ),),
 
 
-            SizedBox(height: ASizes.sm,),
+            const SizedBox(height: ASizes.sm,),
 
 
 
@@ -138,8 +138,8 @@ class AItemCardHorizantal extends StatelessWidget {
               borderRadius: BorderRadius.circular(ASizes.borderRadiusSm),
             ),
             child:  Text(
-              '${score}',
-              style: TextStyle(color: AColors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              '$score',
+              style: const TextStyle(color: AColors.white, fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
 

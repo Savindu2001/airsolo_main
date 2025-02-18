@@ -7,7 +7,6 @@ import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -94,7 +93,7 @@ class SignupForm extends StatelessWidget {
     
           //terms & Conditions Checkbox
     
-          ATermsConditions(),
+          const ATermsConditions(),
           const SizedBox(height: ASizes.spaceBtwSections,),
     
           //Signup Buttons

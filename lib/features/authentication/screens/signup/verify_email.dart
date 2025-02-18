@@ -6,7 +6,6 @@ import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
@@ -23,7 +22,7 @@ class VerifyEmailScreen extends StatelessWidget {
       ),
       body:  SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ASizes.defaultSpace),
+          padding: const EdgeInsets.all(ASizes.defaultSpace),
           child: Column(
             children: [
               ///Image
@@ -54,7 +53,7 @@ class VerifyEmailScreen extends StatelessWidget {
                       ),
                     ),
 
-              SizedBox(height: ASizes.spaceBtwItems,),
+              const SizedBox(height: ASizes.spaceBtwItems,),
               SizedBox(width: double.infinity, child: TextButton(onPressed: (){}, child: const Text(ATexts.resendEmail)),),
               
 

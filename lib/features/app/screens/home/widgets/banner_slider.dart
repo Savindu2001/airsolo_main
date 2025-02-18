@@ -4,11 +4,9 @@ import 'package:airsolo/common/widgets/images/a_rounded_image.dart';
 import 'package:airsolo/features/app/controllers/home_controller.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class APromoSlider extends StatelessWidget {
   const APromoSlider({
@@ -30,8 +28,8 @@ class APromoSlider extends StatelessWidget {
             viewportFraction: 1,
             onPageChanged: (index, _) => controller.updatePageIndicator(index), 
             autoPlay: autoPlay,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
           ),
         
           items: banners.map((url) =>  ARoundedImage(imageUrl: url, applyImageRadius: true,)).toList(),
@@ -49,7 +47,7 @@ class APromoSlider extends StatelessWidget {
                   ACircularContainer(
                     width: 20, 
                     height: 4, 
-                    margin: EdgeInsets.only(right: 10), 
+                    margin: const EdgeInsets.only(right: 10), 
                     backgroundColor: controller.carouselIndex.value == i ? AColors.primary : AColors.grey 
                     ),
               ], 

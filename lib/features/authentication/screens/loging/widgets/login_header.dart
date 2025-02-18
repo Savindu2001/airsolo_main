@@ -3,7 +3,6 @@ import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ALoginHeader extends StatelessWidget {
   const ALoginHeader({

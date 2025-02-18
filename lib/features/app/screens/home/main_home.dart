@@ -58,7 +58,10 @@ class MainHomeScreen extends StatelessWidget {
                   
 
                   ///Body Part
-                  const ASectionHeading(title: 'Best Deals', showActionButton: false),
+                  const Padding(
+                    padding: EdgeInsets.only(left: ASizes.defaultSpace),
+                    child: ASectionHeading(title: 'Best Deals', showActionButton: false),
+                  ),
                   const Padding(
                     padding: EdgeInsets.all(ASizes.defaultSpace),
                     child: APromoSlider(autoPlay: true ,banners:  [ AImages.banner1, AImages.banner2, AImages.banner5 , AImages.banner3, AImages.banner4]),
@@ -67,13 +70,19 @@ class MainHomeScreen extends StatelessWidget {
 
 
                   //Popular Places Card
-                  const ASectionHeading(title: 'Places!', showActionButton: true),
+                  const Padding(
+                    padding: EdgeInsets.only(left: ASizes.defaultSpace),
+                    child: ASectionHeading(title: 'Places', showActionButton: true),
+                  ),
                   const SizedBox(
                     height: 220,
                     child: AItemCardSlider(title: 'Mirissa', image: AImages.placeImage2,)),
 
                   //Popular Hostels Card
-                  const ASectionHeading(title: 'Best Hostels', showActionButton: false),
+                  const Padding(
+                    padding: EdgeInsets.only(left: ASizes.defaultSpace),
+                    child: ASectionHeading(title: 'Best Hostels', showActionButton: false),
+                  ),
                   const SizedBox(height: ASizes.spaceBtwItems/2,),
                     //Hostel Grid
                     AGridLayout(itemCount: 4, itemBuilder: (_, index) => const AItemCardVertical(businessName: 'Tree House Hostel', scoreName: 'Fabolus', city: 'sigiriya', country: 'sri lanka', image: AImages.hostelImage1, score: 9.9, reviewCount: 1503, discount: 35, ), ),
@@ -81,7 +90,10 @@ class MainHomeScreen extends StatelessWidget {
 
                   // Item Horizantal Card
                   const SizedBox(height: ASizes.spaceBtwItems,),
-                  const ASectionHeading(title: 'Get inspired!', showActionButton: false),
+                  const Padding(
+                    padding: EdgeInsets.only(left: ASizes.defaultSpace),
+                    child: ASectionHeading(title: 'Get inspired!', showActionButton: false),
+                  ),
                   const SizedBox(height: ASizes.spaceBtwItems/2,),
                   SizedBox(
                     height: 420,

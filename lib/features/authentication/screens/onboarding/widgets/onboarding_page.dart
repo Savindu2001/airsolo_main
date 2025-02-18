@@ -1,7 +1,6 @@
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class OnBoardingPage extends StatelessWidget {
   

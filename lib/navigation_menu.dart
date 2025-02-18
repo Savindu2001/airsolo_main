@@ -2,6 +2,7 @@ import 'package:airsolo/features/app/screens/services/service_home.dart';
 import 'package:airsolo/features/app/screens/home/main_home.dart';
 import 'package:airsolo/features/app/screens/wishlist/wishlist.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
+import 'package:airsolo/features/tripgenie/screens/ai.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -68,5 +69,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const MainHomeScreen(),const ServiceHomeScreen(), Container(color: Colors.blue,),const AWishListPage(), const ASettingScreen(),];
+  final screens = [const MainHomeScreen(),const ServiceHomeScreen(), const TripGenieHomeScreen(),const AWishListPage(), const ASettingScreen(),];
 }

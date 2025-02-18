@@ -17,7 +17,7 @@ class AItemReviewScoreVertical extends StatelessWidget {
       children: [
         Column(
           children: [
-            Icon(Iconsax.magic_star1, color: AColors.reviewStar,),
+            const Icon(Iconsax.magic_star1, color: AColors.reviewStar,),
             
             Text('$score', style: Theme.of(context).textTheme.headlineSmall),
     

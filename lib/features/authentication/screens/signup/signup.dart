@@ -15,7 +15,7 @@ class SignupScreen extends StatelessWidget {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ASizes.defaultSpace),
+          padding: const EdgeInsets.all(ASizes.defaultSpace),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -24,7 +24,7 @@ class SignupScreen extends StatelessWidget {
               const SizedBox(height: ASizes.spaceBtwSections,),
 
               ///Form
-              SignupForm(),
+              const SignupForm(),
             ],
           ),
           ),
