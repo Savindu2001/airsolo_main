@@ -16,6 +16,7 @@ class AWishListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AAppBar(
+        showBackArrow: true,
         title: Text('Wishlist',style: Theme.of(context).textTheme.headlineMedium,),
         actions: [
           ACircular_Icon(icon: Iconsax.add, onPressed: () => Get.to(const MainHomeScreen()),)

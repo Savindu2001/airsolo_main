@@ -75,7 +75,8 @@ static const String yourAccountCreatedSubTitle = 'Start exploring amazing featur
 
 
 //Tourist Screens Titles & Sub Titles
-static const String serviceScreenTitle = 'Services!';
+static const String serviceScreenTitle = 'Services';
+static const String aiScreenTitle = 'Trip Genie';
 
 
 
