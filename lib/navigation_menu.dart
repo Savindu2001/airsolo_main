@@ -1,7 +1,6 @@
 import 'package:airsolo/features/app/screens/services/service_home.dart';
 import 'package:airsolo/features/app/screens/home/main_home.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
-import 'package:airsolo/features/tripgenie/screens/ai.dart';
 import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
@@ -38,11 +37,6 @@ class NavigationMenu extends StatelessWidget {
               icon: Icon(Iconsax.category), 
               label: 'Services'
               ),
-        
-              NavigationDestination(
-              icon: Icon(Iconsax.ticket), 
-              label: 'Trip'
-              ),
 
               NavigationDestination(
               icon: Icon(Iconsax.image), 
@@ -69,5 +63,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const MainHomeScreen(),const ServiceHomeScreen(), const TripGenieHomeScreen(),const AAIHomeScreen(), const ASettingScreen(),];
+  final screens = [const MainHomeScreen(),const ServiceHomeScreen(), const AAIHomeScreen(), const ASettingScreen(),];
 }

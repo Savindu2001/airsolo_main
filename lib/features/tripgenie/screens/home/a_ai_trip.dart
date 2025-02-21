@@ -2,10 +2,12 @@ import 'package:airsolo/common/widgets/appbar/appbar.dart';
 import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
 import 'package:airsolo/common/widgets/layout/grid_layout.dart';
 import 'package:airsolo/common/widgets/texts/item_title_text.dart';
+import 'package:airsolo/features/tripgenie/screens/ai_trip_maker/ai_trip_maker.dart';
 import 'package:airsolo/features/tripgenie/screens/home/widgets/a_ai_features_category_card.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 class AAIHomeScreen extends StatelessWidget {
   const AAIHomeScreen({super.key});
@@ -51,15 +53,20 @@ class AAIHomeScreen extends StatelessWidget {
                       const AItemTitleText(title: 'Make your next trip plan esaly', smallSize: true,),
                       const SizedBox(height: ASizes.spaceBtwItems *2,),
 
+                      
+
+
+
 
                       //Features Boxes
                       AGridLayout(
-                        itemCount: 4, 
+                        itemCount: 2, 
                         mainAxisExtent: 120,
                         itemBuilder: (_, index) {
-                         return const AAiFeaturesCategoryCard(showBorder: true,);
+                         return AAiFeaturesCategoryCard(showBorder: true, onTap: () => Get.to(()=> const AITripMakerScreen()),);
                         }
                         ),
+
 
                     ],
                   ),),

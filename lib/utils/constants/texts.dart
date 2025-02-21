@@ -80,6 +80,14 @@ static const String aiScreenTitle = 'Trip Genie';
 
 
 
+// Ai Fetures All Titles
+static const String aiTripMakerTitle = 'Make Your Next Trip';
+static const String aiTripDestination = 'Enter Your Country to Go';
+ static const String aiTripMakeButton = 'Generate AI Trip Plan';
+ static const String aiTripMakePlaceEnter = 'Enter Country Have you Hope to Travel';
+
+
+
 
 
 }
