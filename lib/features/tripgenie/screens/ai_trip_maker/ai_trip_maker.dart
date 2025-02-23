@@ -6,7 +6,6 @@ import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
@@ -128,7 +127,7 @@ class _AITripMakerScreenState extends State<AITripMakerScreen> {
 
 
 
-                  // Number of Guests
+                  // Travel Preference
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -147,7 +146,7 @@ class _AITripMakerScreenState extends State<AITripMakerScreen> {
               
                   
                   SizedBox( width:double.infinity, child: ElevatedButton(
-                    onPressed: () => Get.to(()=> TripResultsScreen()),//_controller.generateTrip, 
+                    onPressed: () => Get.to(()=> const TripResultsScreen()),//_controller.generateTrip, 
                     child: const Text(ATexts.aiTripMakeButton),)),
                 ],
               ),
