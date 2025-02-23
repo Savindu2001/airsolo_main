@@ -1,10 +1,12 @@
 
 import 'package:airsolo/common/widgets/texts/item_title_text.dart';
+import 'package:airsolo/features/tripgenie/screens/ai_trip_maker/ai_trip_details.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class TripResultsScreen extends StatelessWidget {
@@ -23,7 +25,7 @@ class TripResultsScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           
           return Card(
-            margin: EdgeInsets.only(bottom: ASizes.defaultSpace),
+            margin: const EdgeInsets.only(bottom: ASizes.defaultSpace),
             color: darkMode ? AColors.darkerGrey : AColors.primary,
             shadowColor: Colors.black,
             child: Column(
@@ -66,7 +68,7 @@ class TripResultsScreen extends StatelessWidget {
                         
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox( width:double.infinity, child: ElevatedButton(onPressed: () {}, child: Text('View Full Trip',style: TextStyle(color: darkMode ? AColors.black : AColors.white),)),
+                  child: SizedBox( width:double.infinity, child: ElevatedButton(onPressed: () => Get.to(()=> const AiResultDetails()), child: Text('View Full Trip',style: TextStyle(color: darkMode ? AColors.black : AColors.white),)),
                 ),
                 )    
               ],
