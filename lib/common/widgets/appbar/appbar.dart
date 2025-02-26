@@ -2,8 +2,6 @@ import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:iconsax/iconsax.dart';
-
 class AAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AAppBar({super.key, this.title,  this.showBackArrow = false, this.leadingIcon,  this.actions,  this.leadingOnPressed});
 
@@ -21,7 +19,7 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         automaticallyImplyLeading: false,
         leading: showBackArrow 
-            ? IconButton(onPressed: () => Get.back(), icon: const Icon(Iconsax.arrow_left)) 
+            ? IconButton(onPressed: () => Get.back(), icon: const Icon(Icons.arrow_back_ios)) 
             : leadingIcon != null ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon)) : null,
         title: title,
         actions: actions,

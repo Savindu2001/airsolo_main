@@ -1,7 +1,6 @@
 import 'package:airsolo/common/widgets/appbar/appbar.dart';
 import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
-import 'package:airsolo/features/tripgenie/screens/ai_promts.dart/promt.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
