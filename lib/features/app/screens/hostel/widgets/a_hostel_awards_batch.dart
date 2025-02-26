@@ -1,9 +1,10 @@
 
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
-class ADefault_Amentions extends StatelessWidget {
-  const ADefault_Amentions({
+class AHostel_Awards_Badge extends StatelessWidget {
+  const AHostel_Awards_Badge({
     super.key,
   });
 
@@ -18,12 +19,12 @@ class ADefault_Amentions extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: ASizes.sm,),
         itemBuilder: (_, index) =>  Row(
               children: [
-                const Icon(Icons.desk, color: Colors.amber, size: ASizes.iconLg,),
+                const Icon(Iconsax.medal_star, color: Colors.amber, size: ASizes.iconLg,),
                 const SizedBox(width: ASizes.spaceBtwItems / 2,),
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: '24 Hour Reception',style: Theme.of(context).textTheme.bodyLarge),
+                      TextSpan(text: 'Best Hostel 2025',style: Theme.of(context).textTheme.bodyLarge),
                     ]
                   )
                 ),
