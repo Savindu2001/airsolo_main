@@ -28,7 +28,7 @@ class ASearchBarContainer extends StatelessWidget {
       padding: padding,
       child: GestureDetector(
         onTap: () {
-          //
+          
           showDialog(
             context: context,
             builder: (context) => const SearchPopup(),

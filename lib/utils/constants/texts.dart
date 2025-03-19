@@ -49,6 +49,8 @@ static const String  and = '_and_';
 //Buttons Texts
 static const String  submit = 'Submit';
 static const String  done = 'Done';
+static const String close ='Close';
+static const String bookH ='Book Your Stay';
 
 
 

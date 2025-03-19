@@ -1,12 +1,15 @@
 import 'package:airsolo/common/widgets/appbar/appbar.dart';
 import 'package:airsolo/features/app/screens/hostel/widgets/a_hostel_awards_batch.dart';
 import 'package:airsolo/features/app/screens/hostel/widgets/a_hostel_Image_slider.dart';
+import 'package:airsolo/features/app/screens/hostel/widgets/a_hostel_book_bottom_sheet.dart';
 import 'package:airsolo/features/app/screens/hostel/widgets/a_hostel_event_card_linkups.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:airsolo/features/app/screens/hostel/widgets/a_hostel_bottom_sheet.dart';
 
 class HostelDetails extends StatelessWidget {
   const HostelDetails({super.key});
@@ -111,7 +114,7 @@ class HostelDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                       TextButton(onPressed: (){}, child: Row(
+                       TextButton(onPressed: ()=> showCustomBottomSheet(context, 0), child: Row(
                          children: [
                            Text('Read more',style: Theme.of(context).textTheme.titleLarge,),
                            const Icon(Icons.arrow_right_sharp)
@@ -169,7 +172,7 @@ class HostelDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                       TextButton(onPressed: (){}, child: Row(
+                       TextButton(onPressed: ()=> showCustomBottomSheet(context, 2), child: Row(
                          children: [
                            Text('View all House rules',style: Theme.of(context).textTheme.titleLarge,),
                            const Icon(Icons.arrow_right_sharp)
@@ -182,7 +185,7 @@ class HostelDetails extends StatelessWidget {
                   const SizedBox(height: ASizes.md,),
 
 
-                // FacilityItem Se
+                // Facility ItemS
                   SizedBox(
                     height: 60,
                     child: ListView.separated(
@@ -213,28 +216,28 @@ class HostelDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                       TextButton(onPressed: (){}, child: Row(
-                         children: [
-                           Text('View all facilities',style: Theme.of(context).textTheme.titleLarge,),
-                           const Icon(Icons.arrow_right_sharp)
-                         ],
+                       TextButton(onPressed: () => showCustomBottomSheet(context, 1), child: Row(
+                                        children: [
+                                          Text('View all facilities',style: Theme.of(context).textTheme.titleLarge,),
+                                          const Icon(Icons.arrow_right_sharp)
+                                        ],
                        ))
                     ],
                   ),
+                  const SizedBox(height: ASizes.defaultSpace/2),
 
 
+                  // Book Hostel Button
+                  SizedBox( width:double.infinity, child: ElevatedButton(onPressed: () => BookHostelStayBottomSheet.show(context,0)
+                  , child: const Text(ATexts.bookH), )),
 
-                  
-                  
-                      
-                  
+                  const SizedBox(height: ASizes.defaultSpace,),
+
                       
                     ],
                   ),
 
               ),
-            
-
               
 
 
@@ -245,4 +248,5 @@ class HostelDetails extends StatelessWidget {
       ),
     );
   }
+
 }
