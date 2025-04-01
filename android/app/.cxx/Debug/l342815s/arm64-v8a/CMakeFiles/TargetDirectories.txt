@@ -1,0 +1,2 @@
+/Users/savindusenanayake/Developer/AIRSOLO/airsolo/android/app/.cxx/Debug/l342815s/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/savindusenanayake/Developer/AIRSOLO/airsolo/android/app/.cxx/Debug/l342815s/arm64-v8a/CMakeFiles/rebuild_cache.dir

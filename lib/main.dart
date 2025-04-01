@@ -1,22 +1,34 @@
-import 'package:airsolo/features/authentication/screens/onboarding/onboarding.dart';
-import 'package:airsolo/utils/theme/theme.dart';
+import 'package:airsolo/app.dart';
+import 'package:airsolo/data/repositories/repositories.authentication/authentication_repository.dart';
+import 'package:airsolo/data/services/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
+
+Future<void> main() async {
+
+  ///-- Widget Binding
+  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  
+
+  ///-- GetX Local Storage
+  await GetStorage.init();
 
 
-void main() => runApp(const App());
+  // ToDo : Await Native Splash
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-class App extends StatelessWidget {
-  const App({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return  GetMaterialApp(
-      themeMode: ThemeMode.system,
-      theme: AAppTheme.lightTheme,
-      darkTheme: AAppTheme.darkTheme,
-      home: const Onboarding(),
-    );
-  }
+  ///-- Initialize Firebase Authentication
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
+    (FirebaseApp value) => Get.put(AuthenticationRepository()),
+
+  );
+
+  // Load All The Material Design
+  runApp(const App());
+
 }
-
