@@ -5,7 +5,7 @@ class RoomDetailsPage extends StatelessWidget {
   final DateTimeRange? dateRange;
   final int guests;
 
-  RoomDetailsPage({
+  const RoomDetailsPage({super.key, 
     required this.location,
     required this.dateRange,
     required this.guests,
@@ -46,14 +46,14 @@ class RoomDetailsPage extends StatelessWidget {
           children: [
             Text(
               "Selected Dates: ${dateRange?.start.toLocal()} - ${dateRange?.end.toLocal()}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               "Number of Guests: $guests",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: availableRooms.length,
@@ -69,22 +69,22 @@ class RoomDetailsPage extends StatelessWidget {
                         children: [
                           Text(
                             room['roomType'],
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(room['description']),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text("Price: \$${room['price']} per night"),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text("Available: ${room['availability']} rooms"),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
                               // Handle booking logic here
                               print("Booked ${room['roomType']} for $guests guests.");
                               // You can navigate to a confirmation page or show a dialog
                             },
-                            child: Text("Book Now"),
+                            child: const Text("Book Now"),
                           ),
                         ],
                       ),

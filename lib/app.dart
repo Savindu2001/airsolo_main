@@ -1,4 +1,4 @@
-//import 'package:airsolo/features/authentication/screens/onboarding/onboarding.dart';
+import 'package:airsolo/bindings/general_bindings.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ class App extends StatelessWidget {
     return  GetMaterialApp(
       themeMode: ThemeMode.system,
       theme: AAppTheme.lightTheme,
+      initialBinding: GeneralBindings(),
       darkTheme: AAppTheme.darkTheme,
       home: const Scaffold(backgroundColor: AColors.primary, body: Center(child: CircularProgressIndicator(color: Colors.white,),),)
     );

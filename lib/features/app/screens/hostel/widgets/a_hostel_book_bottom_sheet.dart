@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class BookHostelStayBottomSheet extends StatefulWidget {
+  const BookHostelStayBottomSheet({super.key});
+
   @override
   _BookHostelStayBottomSheetState createState() => _BookHostelStayBottomSheetState();
 
@@ -15,7 +17,7 @@ class BookHostelStayBottomSheet extends StatefulWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
       ),
       builder: (BuildContext context) {
-        return BookHostelStayBottomSheet();
+        return const BookHostelStayBottomSheet();
       },
     );
   }

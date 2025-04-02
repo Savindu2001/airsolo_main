@@ -64,6 +64,12 @@ class AImages{
   /// User Profile Images
   static const String userProfile= 'assets/images/user/user.png';
 
+
+
+  // Lottie Animations
+   
+   static const String proccessingDocer = 'assets/images/animations/141594-animation-of-docer.json';
+
   
 
 

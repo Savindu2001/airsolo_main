@@ -1,5 +1,13 @@
 class AValidator {
 
+  //Empty Text Validation
+  static String? validateEmptyText(String? fieldName,String? value){
+    if(value == null || value.isEmpty){
+      return '$fieldName is required.' ;
+    }
+    return null;
+  }
+
   static String? validateEmail(String? value){
     if (value == null || value.isEmpty){
       return 'Email is required!';
@@ -58,7 +66,7 @@ class AValidator {
     }
 
     //Regular expressions for email validators
-    final phoneRegExp = RegExp(r'^\d{10}$ ');
+    final phoneRegExp = RegExp(r'^\d{10}$');
 
     //check minimum password length
     if (!phoneRegExp.hasMatch(value)){
