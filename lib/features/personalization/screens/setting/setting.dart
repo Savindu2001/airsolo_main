@@ -4,6 +4,7 @@ import 'package:airsolo/common/widgets/list_tiles/setting_menu_tile.dart';
 import 'package:airsolo/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
 import 'package:airsolo/features/app/screens/wishlist/wishlist.dart';
+import 'package:airsolo/features/authentication/controllers/login/login_controller.dart';
 import 'package:airsolo/features/personalization/screens/profile/profile.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -89,7 +90,14 @@ class ASettingScreen extends StatelessWidget {
 
                 // -- Logout Button
                 const SizedBox(height: ASizes.spaceBtwSections,),
-                SizedBox(width: double.infinity,child: OutlinedButton(onPressed: (){}, child: const Text('Logout')),),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: (){
+                      LoginController.instance.logout();
+                    }, 
+                    child: const Text('Logout')
+                    ),),
 
                 const SizedBox(height: ASizes.spaceBtwSections * 2.5 ),
 

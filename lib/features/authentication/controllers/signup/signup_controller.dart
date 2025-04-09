@@ -78,8 +78,8 @@ class SignupController extends GetxController {
         //Get.to(() => VerifyEmailScreen(email: email.text.trim()), transition: Transition.rightToLeft);
 
         Navigator.of(Get.context!).pushReplacement(
-  MaterialPageRoute(builder: (context) => VerifyEmailScreen(email: email.text.trim()))
-);
+          MaterialPageRoute(builder: (context) => VerifyEmailScreen(email: email.text.trim()))
+        );
         
         
       } else {

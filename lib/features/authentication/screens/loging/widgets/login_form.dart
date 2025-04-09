@@ -1,17 +1,14 @@
+import 'package:airsolo/features/authentication/controllers/login/login_controller.dart';
 import 'package:airsolo/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:airsolo/features/authentication/screens/signup/signup.dart';
-import 'package:airsolo/navigation_menu.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
-import 'package:airsolo/utils/popups/loaders.dart';
+import 'package:airsolo/utils/validators/validations.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:http/http.dart' as http; // Import for HTTP requests
-import 'dart:convert'; // Import for JSON encoding/decoding
-import 'package:shared_preferences/shared_preferences.dart'; // Import for SharedPreferences
 
-class ALoginForm extends StatefulWidget {
+class ALoginForm extends StatelessWidget {
   const ALoginForm({
     super.key,
     required this.dark,
@@ -20,80 +17,19 @@ class ALoginForm extends StatefulWidget {
   final bool dark;
 
   @override
-  _ALoginFormState createState() => _ALoginFormState();
-}
-
-class _ALoginFormState extends State<ALoginForm> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool _isLoading = false; // State to track loading
-
-  Future<void> login() async {
-    final String email = emailController.text;
-    final String password = passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      
-      ALoaders.warningSnackBar(
-        title: 'title',
-        message: 'Please enter email and password');
-      return;
-    }
-
-    setState(() {
-      _isLoading = true; // Start loading
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse('http://192.168.1.5:3000/api/users/login'), // Your backend login URL
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final String token = data['token'];
-
-        // Store the token using SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('jwtToken', token);
-
-        // Navigate to the next screen
-        Get.to(() => const NavigationMenu());
-      } else {
-        final errorData = jsonDecode(response.body);
-        ALoaders.errorSnackBar(
-          title: 'Eorror ',
-          message: Text(errorData['message'])
-          );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error logging in: $e')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false; // Stop loading
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final LoginController loginController = Get.put(LoginController()); // Create an instance of LoginController
+    final controller = Get.put(LoginController());
     return Form(
+      key: loginController.loginFormKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: ASizes.spaceBtwSections),
         child: Column(
           children: [
             /// Email
             TextFormField(
-              controller: emailController,
+              controller: loginController.email,
+              validator: (value) => AValidator.validateEmail(value),
               decoration: const InputDecoration(
                 prefixIcon: Icon(Iconsax.direct_right),
                 labelText: ATexts.email,
@@ -101,16 +37,23 @@ class _ALoginFormState extends State<ALoginForm> {
             ),
             const SizedBox(height: ASizes.spaceBtwinputFields),
 
-            /// Password
-            TextFormField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Iconsax.password_check),
-                labelText: ATexts.password,
-                suffixIcon: Icon(Iconsax.eye_slash),
+          
+
+            //password
+          Obx(
+            () => TextFormField(
+              controller: loginController.password,
+              obscureText: controller.hidePassword.value,
+                decoration:  InputDecoration(
+                  prefixIcon: const Icon(Iconsax.password_check),
+                  labelText: ATexts.password ,
+                  suffixIcon: IconButton(
+                    onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
+                    icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.password_check )
+                    ),
+                ),
               ),
-              obscureText: true, // Hide password
-            ),
+          ),
             const SizedBox(height: ASizes.spaceBtwinputFields / 2),
 
             /// Remember Me & Forget Password
@@ -120,7 +63,9 @@ class _ALoginFormState extends State<ALoginForm> {
                 // Remember Me
                 Row(
                   children: [
-                    Checkbox(value: true, onChanged: (value) {}),
+                    Obx(()=> Checkbox(
+                      value: controller.rememberMe.value, 
+                      onChanged: (value) => controller.rememberMe.value = !controller.rememberMe.value )),
                     const Text(ATexts.rememberMe),
                   ],
                 ),
@@ -138,12 +83,10 @@ class _ALoginFormState extends State<ALoginForm> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : login, // Disable button when loading
-                child: _isLoading
-                    ? CircularProgressIndicator(color: Colors.white) // Show loading indicator
-                    : const Text(ATexts.signIn),
+                onPressed: ()=> controller.login(),
+                child: const Text(ATexts.signIn)),
               ),
-            ),
+            
             const SizedBox(height: ASizes.spaceBtwItems),
 
             // Create Account Button

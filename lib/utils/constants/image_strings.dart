@@ -68,7 +68,8 @@ class AImages{
 
   // Lottie Animations
    
-   static const String proccessingDocer = 'assets/images/animations/141594-animation-of-docer.json';
+   static const String proccessingDocer = 'assets/images/animations/141594-animation-of-docer.json'; 
+   static const String checkRegister = 'assets/images/animations/72462-check-register.json';
 
   
 
