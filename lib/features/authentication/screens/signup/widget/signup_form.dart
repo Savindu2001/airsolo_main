@@ -10,6 +10,7 @@ import 'package:airsolo/utils/validators/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:country_picker/country_picker.dart';
 
 class SignupForm extends StatelessWidget {
   const SignupForm({
@@ -67,6 +68,53 @@ class SignupForm extends StatelessWidget {
             ),
     
           const SizedBox(height: ASizes.spaceBtwinputFields,),
+
+          //Country
+          TextFormField(
+              controller: controller.country,
+              readOnly: true,
+              onTap: () {
+                showCountryPicker(
+                  context: context,
+                  showPhoneCode: false, // Optional: to show +94
+                  onSelect: (Country country) {
+                    controller.country.text = country.name;
+                  },
+                );
+              },
+              validator: (value) => AValidator.validateEmptyText('Country', value),
+              decoration: const InputDecoration(
+                labelText: ATexts.country,
+                prefixIcon: Icon(Iconsax.location),
+              ),
+            ),
+    
+          const SizedBox(height: ASizes.spaceBtwinputFields,),
+
+        
+
+          // Gender Dropdown
+            DropdownButtonFormField<String>(
+              value: controller.gender.text.isNotEmpty ? controller.gender.text : null,
+              items: ['Male', 'Female', 'Other']
+                  .map((gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender),
+                        
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                controller.gender.text = value!;
+              },
+              validator: (value) => AValidator.validateEmptyText('Gender', value),
+               decoration: const InputDecoration(
+                labelText: ATexts.gender,
+                prefixIcon: Icon(Iconsax.star),
+              ),
+            ),
+
+    
+          const SizedBox(height: ASizes.spaceBtwinputFields,),
     
           //email
     
@@ -77,18 +125,6 @@ class SignupForm extends StatelessWidget {
             decoration: const InputDecoration(
               labelText: ATexts.email,
               prefixIcon: Icon(Iconsax.direct))
-            ),
-    
-            const SizedBox(height: ASizes.spaceBtwinputFields,),
-    
-          //phone number
-          TextFormField(
-            controller: controller.phoneNumber,
-            validator: (value) => AValidator.validatePhoneNumber(value),
-            expands: false,
-            decoration: const InputDecoration(
-              labelText: ATexts.phoneNo,
-              prefixIcon: Icon(Iconsax.mobile))
             ),
     
             const SizedBox(height: ASizes.spaceBtwinputFields,),

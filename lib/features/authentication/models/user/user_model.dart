@@ -5,7 +5,6 @@ class UserModel {
   String username;
   String email;
   String role;
-  String phoneNumber;
   String profilePicture;
 
   UserModel({
@@ -15,7 +14,6 @@ class UserModel {
     required this.username,
     required this.email,
     required this.role,
-    required this.phoneNumber,
     required this.profilePicture,
   });
 
@@ -28,12 +26,11 @@ class UserModel {
       'username': username,
       'email': email,
       'role': role,
-      'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
     };
   }
 
-  // Create a UserModel object from a Map (for Firebase or JSON decoding)
+  // Create a UserModel object from a Map
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] ?? '',
@@ -41,9 +38,8 @@ class UserModel {
       lastName: json['lastName'] ?? '',
       username: json['username'] ?? '',
       email: json['email'] ?? '',
-      role: json['role'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-      profilePicture: json['profilePicture'] ?? '',
+      role: 'traveler',
+      profilePicture: 'http://www.myimage123.com/',
     );
   }
 }

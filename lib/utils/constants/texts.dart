@@ -43,6 +43,8 @@ static const String  resendEmailIn = 'Resend Email In';
 static const String  switchAsHost = 'Switch As Host';
 static const String  switchAsTourist = 'Switch As Traveller';
 static const String  and = '_and_';
+static const String country = 'Country';
+static const String gender = 'Gender';
 
 
 

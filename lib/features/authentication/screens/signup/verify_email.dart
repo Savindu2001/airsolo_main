@@ -9,10 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
-  const VerifyEmailScreen({super.key});
+
+  
+  const VerifyEmailScreen({super.key, required this.email});
+
+  final String email;
 
   @override
   Widget build(BuildContext context) {
+
+    
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -33,7 +39,7 @@ class VerifyEmailScreen extends StatelessWidget {
               ///Title & SubTitle
               Text(ATexts.confirmEmail, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center,),
               const SizedBox(height: ASizes.spaceBtwItems,),
-              Text('savindu.info@gmail.com', style: Theme.of(context).textTheme.labelLarge, textAlign: TextAlign.center,),
+              Text(email, style: Theme.of(context).textTheme.labelLarge, textAlign: TextAlign.center,),
               const SizedBox(height: ASizes.spaceBtwItems,),
               Text(ATexts.confirmEmailSubTitle, style: Theme.of(context).textTheme.labelMedium, textAlign: TextAlign.center,),
               const SizedBox(height: ASizes.spaceBtwSections,),
@@ -47,7 +53,7 @@ class VerifyEmailScreen extends StatelessWidget {
                                   title: ATexts.yourAccountCreatedTitle,
                                   subTitle: ATexts.yourAccountCreatedSubTitle,
                                   buttonText: ATexts.aContinue,
-                                  onPressed: () => Get.to(() => const LoginScreen()), // Clears backstack
+                                  onPressed: () => Get.to(() => const LoginScreen()), 
                                 )),
                             child: const Text(ATexts.aContinue),
                       ),
