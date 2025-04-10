@@ -70,6 +70,11 @@ class AImages{
    
    static const String proccessingDocer = 'assets/images/animations/141594-animation-of-docer.json'; 
    static const String checkRegister = 'assets/images/animations/72462-check-register.json';
+   static const String paperPlane = 'assets/images/animations/110052-paper-plane.json';
+   static const String thankYou = 'assets/images/animations/104368-thank-you.json';
+   static const String loading = 'assets/images/animations/141397-loading-juggle.json';
+   static const String searching= 'assets/images/animations/72785-searching.json';
+   static const String paymentSuccess = 'assets/images/animations/120978-payment-successful.json';
 
   
 

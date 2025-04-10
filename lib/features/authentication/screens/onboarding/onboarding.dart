@@ -1,4 +1,4 @@
- import 'package:airsolo/features/authentication/controllers/onboarding/onboarding_controller.dart';
+ import 'package:airsolo/features/controllers/onboarding_controller.dart';
 import 'package:airsolo/features/authentication/screens/onboarding/widgets/onboarding_navigation_dot.dart';
 import 'package:airsolo/features/authentication/screens/onboarding/widgets/onboarding_next_button.dart';
 import 'package:airsolo/features/authentication/screens/onboarding/widgets/onboarding_page.dart';

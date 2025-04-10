@@ -1,4 +1,4 @@
-import 'package:airsolo/features/app/models/hostel/facilities.dart';
+import 'package:airsolo/features/models/hostel/facilities.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';

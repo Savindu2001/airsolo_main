@@ -1,4 +1,4 @@
-import 'package:airsolo/features/authentication/controllers/login/login_controller.dart';
+import 'package:airsolo/features/controllers/login_controller.dart';
 import 'package:airsolo/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:airsolo/features/authentication/screens/signup/signup.dart';
 import 'package:airsolo/utils/constants/sizes.dart';

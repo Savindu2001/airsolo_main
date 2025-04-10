@@ -1,7 +1,7 @@
 
 import 'package:airsolo/common/widgets/login_signup/form_divider.dart';
 import 'package:airsolo/common/widgets/login_signup/social_buttons.dart';
-import 'package:airsolo/features/authentication/controllers/signup/signup_controller.dart';
+import 'package:airsolo/features/controllers/signup_controller.dart';
 import 'package:airsolo/features/authentication/screens/signup/widget/terms_conditions.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';

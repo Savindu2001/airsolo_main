@@ -1,5 +1,5 @@
 
-import 'package:airsolo/features/authentication/controllers/signup/signup_controller.dart';
+import 'package:airsolo/features/controllers/signup_controller.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';

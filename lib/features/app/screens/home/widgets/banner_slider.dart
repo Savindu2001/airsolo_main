@@ -1,7 +1,7 @@
 
 import 'package:airsolo/common/widgets/custome_shapes/containers/circle_container.dart';
 import 'package:airsolo/common/widgets/images/a_rounded_image.dart';
-import 'package:airsolo/features/app/controllers/home_controller.dart';
+import 'package:airsolo/features/controllers/home_controller.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
