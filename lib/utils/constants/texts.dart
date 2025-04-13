@@ -74,8 +74,8 @@ static const String confirmEmailSubTitle = 'We’ve sent a confirmation link to 
 
 static const String emailNoReceivedMessage = 'Didn’t receive the email? Check your spam folder or resend it.';
 
-static const String yourAccountCreatedTitle = 'Your Account is Created!';
-static const String yourAccountCreatedSubTitle = 'Start exploring amazing features now.';
+static const String yourAccountCreatedTitle = 'Welcome Aboard!';
+static const String yourAccountCreatedSubTitle = 'Your account is ready to go! Start exploring all the amazing features waiting for you.';
 
 
 //Tourist Screens Titles & Sub Titles

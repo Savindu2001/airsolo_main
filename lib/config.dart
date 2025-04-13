@@ -6,7 +6,8 @@ class Config {
   static const String registerEndpoint = '$baseUrl/api/users/register';
   static const String socialLoginEndpoint = '$baseUrl/api/users/social-login';
   static const String forgotPassword = '$baseUrl/api/users/forgot-password';
-  static const String verifyEmail = '$baseUrl/api/users/send-verification-email';
+  static const String verifyEmail = '$baseUrl/api/users/verify-email';
+  static const String verifyEmailCheck = '$baseUrl/api/users/verify-email/check';
 
   // Hostel REST API Endpoints
   static const String getHostelsEndpoint = '$baseUrl/api/hostels';
