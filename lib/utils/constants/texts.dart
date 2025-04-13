@@ -65,8 +65,8 @@ static const String signupTitle = 'Let\'s create your account';
 static const String forgetPasswordTitle = 'Forgot Password?';
 static const String forgetPasswordSubTitle = 'Enter your email to reset your password.';
 
-static const String changeYourPasswordTitle = 'Password Reset Email Sent';
-static const String changeYourPasswordSubTitle = 'Your Account Security is our priority! We\'ve sent you a secure link to Safety Change your Password and Keep Your Account Private';
+static const String changeYourPasswordTitle = 'Password Reset Initiated';
+static const String changeYourPasswordSubTitle = 'Your AirSolo account is now secured with your new password. For added security, remember to:';
 
 static const String confirmEmail = 'Verify your email address!';
 static const String aContinue = 'Continue';

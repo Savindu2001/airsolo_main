@@ -5,6 +5,7 @@ import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
+import 'package:airsolo/utils/validators/validations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -37,6 +38,12 @@ class VerifyEmailController extends GetxController {
   Future<void> sendEmailVerification() async {
     try {
       isVerifying.value = true;
+
+      // Validate email before sending
+      final emailError = AValidator.validateEmail(_email);
+      if (emailError != null) {
+        throw Exception(emailError);
+      }
       
       // Check internet connection
       final isConnected = await NetworkManager.instance.isConnected();

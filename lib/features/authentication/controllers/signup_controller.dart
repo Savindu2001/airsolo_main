@@ -5,6 +5,7 @@ import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:airsolo/utils/popups/full_screen_loader.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
+import 'package:airsolo/utils/validators/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http; 
@@ -29,6 +30,13 @@ class SignupController extends GetxController {
   // --- Signup Logic --- //
   Future<void> signup() async {
     try {
+
+       //  Validate Email First
+      final emailError = AValidator.validateEmail(email.text.trim());
+      if (emailError != null) {
+        ALoaders.errorSnackBar(title: 'Validation Error', message: emailError);
+        return;
+      }
       
       // 1. Start Loading
       AFullScreenLoader.openLoadingDialog(
