@@ -43,6 +43,7 @@ class LoginController extends GetxController {
   try {
     // Validate Form
     if (!loginFormKey.currentState!.validate()) return;
+    
     // Start Loading
     AFullScreenLoader.openLoadingDialog('Authenticating...', AImages.proccessingDocer);
 
