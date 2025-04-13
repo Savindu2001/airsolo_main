@@ -14,7 +14,7 @@ import 'package:airsolo/config.dart';
 class SignupController extends GetxController {
   static SignupController get instance => Get.find();
 
-  // --- Form Controllers ---
+  // --- Form Controllers --- //
   final hidePassword = true.obs;
   final privacyPolicy = false.obs; // Default to false (user must explicitly accept)
   final email = TextEditingController();
@@ -26,9 +26,10 @@ class SignupController extends GetxController {
   final gender = TextEditingController();
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
-  // --- Signup Logic ---
+  // --- Signup Logic --- //
   Future<void> signup() async {
     try {
+      
       // 1. Start Loading
       AFullScreenLoader.openLoadingDialog(
         'We are processing your information...', 
@@ -37,22 +38,10 @@ class SignupController extends GetxController {
 
       // 2. Check Internet
       final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        ALoaders.warningSnackBar(
-          title: 'No Internet Connection',
-          message: 'Please check your network and try again.',
-        );
-        return;
-      }
+      if (!isConnected) return;
 
       // 3. Validate Form
-      if (!signupFormKey.currentState!.validate()) {
-        ALoaders.warningSnackBar(
-          title: 'Invalid Form',
-          message: 'Please fill all required fields correctly.',
-        );
-        return;
-      }
+      if (!signupFormKey.currentState!.validate()) return;
 
       // 4. Check Privacy Policy
       if (!privacyPolicy.value) {
@@ -72,8 +61,8 @@ class SignupController extends GetxController {
         'password': password.text.trim(),
         'country': country.text.trim(),
         'gender': gender.text.trim(),
-        'role': 'traveler', // Default role for travelers
-        'profile_photo': 'https://example.com/default_profile.png', // Use a real default image
+        'role': 'traveler', 
+        'profile_photo': 'https://example.com/default_profile.png', 
       };
 
       // 6. API Call to Node.js Backend
@@ -85,15 +74,21 @@ class SignupController extends GetxController {
 
       // 7. Handle Response
       if (response.statusCode == 200) {
-        // Success: Navigate to Email Verification
+        AFullScreenLoader.stopLoading();
+        await Future.delayed(Duration(milliseconds: 100));
         ALoaders.successSnackBar(
           title: 'Success!',
           message: 'Account created. Please verify your email.',
         );
-        Get.off(() => VerifyEmailScreen(email: email.text.trim()));
+        
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.to(() => VerifyEmailScreen(email: email.text.trim()));
+        });
+
       } 
       else if (response.statusCode == 400 || response.statusCode == 409) {
-        // Handle known errors (e.g., duplicate email)
+        
         final errorData = jsonDecode(response.body);
         ALoaders.errorSnackBar(
           title: 'Registration Failed',
@@ -106,7 +101,6 @@ class SignupController extends GetxController {
       }
     } 
     on http.ClientException catch (e) {
-      // Network-related errors (e.g., DNS failure)
       ALoaders.errorSnackBar(
         title: 'Network Error',
         message: 'Could not connect to the server. Check your connection.',
@@ -122,7 +116,7 @@ class SignupController extends GetxController {
       // Generic error fallback
       ALoaders.errorSnackBar(
         title: 'Oh Snap!',
-        message: 'Something went wrong. Please try again later.',
+        message: e.toString(),
       );
       // Log the error for debugging (use a logger like `logger` or `Firebase Crashlytics`)
       debugPrint('Signup Error: $e');

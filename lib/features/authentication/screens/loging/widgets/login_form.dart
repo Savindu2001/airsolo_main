@@ -1,4 +1,4 @@
-import 'package:airsolo/features/controllers/login_controller.dart';
+import 'package:airsolo/features/authentication/controllers/login_controller.dart';
 import 'package:airsolo/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:airsolo/features/authentication/screens/signup/signup.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -18,8 +18,8 @@ class ALoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoginController loginController = Get.put(LoginController()); // Create an instance of LoginController
-    final controller = Get.put(LoginController());
+   
+    final loginController = Get.put(LoginController());
     return Form(
       key: loginController.loginFormKey,
       child: Padding(
@@ -40,19 +40,24 @@ class ALoginForm extends StatelessWidget {
           
 
             //password
+          /// Password Field
           Obx(
             () => TextFormField(
               controller: loginController.password,
-              obscureText: controller.hidePassword.value,
-                decoration:  InputDecoration(
-                  prefixIcon: const Icon(Iconsax.password_check),
-                  labelText: ATexts.password ,
-                  suffixIcon: IconButton(
-                    onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
-                    icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.password_check )
-                    ),
+              obscureText: loginController.hidePassword.value,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Iconsax.password_check),
+                labelText: ATexts.password,
+                suffixIcon: IconButton(
+                  onPressed: () => loginController.hidePassword.value = !loginController.hidePassword.value,
+                  icon: Icon(
+                    loginController.hidePassword.value
+                        ? Iconsax.eye_slash
+                        : Iconsax.password_check,
+                  ),
                 ),
               ),
+            ),
           ),
             const SizedBox(height: ASizes.spaceBtwinputFields / 2),
 
@@ -64,8 +69,8 @@ class ALoginForm extends StatelessWidget {
                 Row(
                   children: [
                     Obx(()=> Checkbox(
-                      value: controller.rememberMe.value, 
-                      onChanged: (value) => controller.rememberMe.value = !controller.rememberMe.value )),
+                      value: loginController.rememberMe.value, 
+                      onChanged: (value) => loginController.rememberMe.value = !loginController.rememberMe.value )),
                     const Text(ATexts.rememberMe),
                   ],
                 ),
@@ -83,7 +88,7 @@ class ALoginForm extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: ()=> controller.login(),
+                onPressed: ()=> loginController.login(),
                 child: const Text(ATexts.signIn)),
               ),
             

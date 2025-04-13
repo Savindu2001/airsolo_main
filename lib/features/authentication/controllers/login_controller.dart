@@ -40,75 +40,77 @@ class LoginController extends GetxController {
   }
   // --- Login Method ---
   Future<void> login() async {
-    try {
-      // Start Loading
-      AFullScreenLoader.openLoadingDialog('Authenticating...', AImages.proccessingDocer);
+  try {
+    // Start Loading
+    AFullScreenLoader.openLoadingDialog('Authenticating...', AImages.proccessingDocer);
 
-      // Check Internet
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        AFullScreenLoader.stopLoading();
-        ALoaders.errorSnackBar(title: 'No Internet', message: 'Please check your connection');
-        return;
-      }
-
-      // Validate Form
-      if (!loginFormKey.currentState!.validate()) return; 
-
-      // Firebase Auth
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.text.trim(),
-        password: password.text.trim(),
-      );
-
-      // Get Firebase Token
-      final String? firebaseToken = await userCredential.user?.getIdToken();
-      if (firebaseToken == null) {
-        AFullScreenLoader.stopLoading();
-        throw Exception('Failed to get Firebase token');
-      }
-
-      // Backend Verification
-      final response = await http.post(
-        Uri.parse(Config.loginEndpoint),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'token': firebaseToken}),
-      ).timeout(const Duration(seconds: 10));
-
-      // Parse Response
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final String backendToken = data['token'];
-        final String role = data['role']?.toLowerCase() ?? 'traveler';
-
-        // Store tokens
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('jwtToken', backendToken);
-        await prefs.setString('userRole', role);
-
-        // Ensure loader is stopped
-        AFullScreenLoader.stopLoading();
-
-
-        // Critical: Wait for next frame before navigation
-        await Future.delayed(const Duration(milliseconds: 50));
-
-        // Safe Navigation
-        _navigateBasedOnRole(role);
-      } else {
-        throw Exception('Backend error: ${response.statusCode}');
-      }
-    } on FirebaseAuthException catch (e) {
+    // Check Internet
+    final isConnected = await NetworkManager.instance.isConnected();
+    if (!isConnected) {
       AFullScreenLoader.stopLoading();
-      ALoaders.errorSnackBar(title: 'Login Failed', message: _getFirebaseErrorMessage(e));
-    } on TimeoutException catch (_) {
-      AFullScreenLoader.stopLoading();
-      ALoaders.errorSnackBar(title: 'Timeout', message: 'Server took too long to respond');
-    } catch (e) {
-      AFullScreenLoader.stopLoading();
-      ALoaders.errorSnackBar(title: 'Error', message: 'Server Error');
+      ALoaders.errorSnackBar(title: 'No Internet', message: 'Please check your connection');
+      return;
     }
+
+    // Validate Form
+    if (!loginFormKey.currentState!.validate()) return;
+
+    // Firebase Auth
+    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email.text.trim(),
+      password: password.text.trim(),
+    );
+
+    // Get Firebase Token
+    final String? firebaseToken = await userCredential.user?.getIdToken();
+    if (firebaseToken == null) {
+      AFullScreenLoader.stopLoading();
+      throw Exception('Failed to get Firebase token');
+    }
+
+    // Backend Verification
+    final response = await http.post(
+      Uri.parse(Config.loginEndpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'token': firebaseToken}),
+    ).timeout(const Duration(seconds: 10));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final String backendToken = data['token'];
+      final user = data['user'];
+      final String role = user['role']?.toLowerCase() ?? 'traveler';
+
+      // Store tokens and user info
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwtToken', backendToken);
+      await prefs.setString('userRole', role);
+      await prefs.setString('userEmail', user['email'] ?? '');
+      await prefs.setString('userName', '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}');
+      await prefs.setString('userPhoto', user['profile_photo'] ?? '');
+
+      AFullScreenLoader.stopLoading();
+      await Future.delayed(const Duration(milliseconds: 50));
+      _navigateBasedOnRole(role);
+    } else {
+      AFullScreenLoader.stopLoading();
+      final error = jsonDecode(response.body);
+      ALoaders.errorSnackBar(
+        title: 'Login Failed',
+        message: error['message'] ?? 'Something went wrong',
+      );
+    }
+  } on FirebaseAuthException catch (e) {
+    AFullScreenLoader.stopLoading();
+    ALoaders.errorSnackBar(title: 'Login Failed', message: _getFirebaseErrorMessage(e));
+  } on TimeoutException catch (_) {
+    AFullScreenLoader.stopLoading();
+    ALoaders.errorSnackBar(title: 'Timeout', message: 'Server took too long to respond');
+  } catch (e) {
+    AFullScreenLoader.stopLoading();
+    ALoaders.errorSnackBar(title: 'Error', message: 'Server Error');
   }
+}
 
   // --- Safe Navigation Method ---
 void _navigateBasedOnRole(String role) {
