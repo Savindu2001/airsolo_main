@@ -33,7 +33,7 @@ class ForgotPasswordController extends GetxController {
     }
 
     // Loading
-    AFullScreenLoader.openLoadingDialog('Sending Reset Link...', AImages.paperPlane);
+    AFullScreenLoader.openLoadingDialog('Sending Reset Link...', AImages.loading);
     errorMessage.value = ''; // Clear previous error messages
 
     try {
@@ -57,7 +57,7 @@ class ForgotPasswordController extends GetxController {
       }
     } catch (e) {
       // Handle errors in the request
-      errorMessage.value = 'Failed to send the request. Please try again later.';
+      ALoaders.errorSnackBar(title: 'Something Went Wrong!',message: 'Failed to send the request. Please check email & try again later.');
       print("Error: $e");
     } finally {
       AFullScreenLoader.stopLoading();
