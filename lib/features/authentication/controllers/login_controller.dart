@@ -19,7 +19,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
-  // --- Form Controllers ---
+  
   final hidePassword = true.obs;
   final rememberMe = true.obs;
   final email = TextEditingController();
@@ -41,6 +41,8 @@ class LoginController extends GetxController {
   // --- Login Method ---
   Future<void> login() async {
   try {
+    // Validate Form
+    if (!loginFormKey.currentState!.validate()) return;
     // Start Loading
     AFullScreenLoader.openLoadingDialog('Authenticating...', AImages.proccessingDocer);
 
@@ -52,8 +54,7 @@ class LoginController extends GetxController {
       return;
     }
 
-    // Validate Form
-    if (!loginFormKey.currentState!.validate()) return;
+    
 
     // Firebase Auth
     final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
