@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
 import 'package:airsolo/features/app/screens/taxi/driverDashboard.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/navigation_menu.dart';
@@ -91,6 +92,14 @@ class LoginController extends GetxController {
       await prefs.setString('userName', '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}');
       await prefs.setString('userPhoto', user['profile_photo'] ?? '');
 
+      
+      // Update auth state
+      await AuthenticationRepository.instance.handleSuccessfulLogin(
+          token: data['token'],
+          role: role,
+          userData: user,
+        );
+        
       AFullScreenLoader.stopLoading();
       await Future.delayed(const Duration(milliseconds: 50));
       _navigateBasedOnRole(role);
@@ -162,8 +171,9 @@ void _navigateBasedOnRole(String role) {
     try {
       await FirebaseAuth.instance.signOut();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('jwtToken');
-      await prefs.remove('userRole');
+      // await prefs.remove('jwtToken');
+      // await prefs.remove('userRole');
+      await prefs.clear();
       
       // Use rootNavigator for logout
       Navigator.of(Get.context!, rootNavigator: true).pushAndRemoveUntil(

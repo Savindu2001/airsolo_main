@@ -9,26 +9,28 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 
+
+
+
 void main() async {
-  
-  // -- Widget Binding -- //
-  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding = 
+      WidgetsFlutterBinding.ensureInitialized();
 
-  // -- GetX Local Storage -- //
   await GetStorage.init();
-
-  // -- Await Splash Screen Until Other Items Load -- //
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // -- Initialize Firebase & Authentication Repo -- //
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
-        (FirebaseApp value) => Get.put(AuthenticationRepository()),
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // -- Login COntroller -- //
-  Get.put(LoginController());
+  // Initialize dependencies
+  Get.put(AuthenticationRepository(), permanent: true);
+  Get.put(LoginController(), permanent: true);
 
-
-  // -- Load The App -- //
   runApp(const AirsoloApp());
+
+  // Initialize auth state after app loads
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Get.find<AuthenticationRepository>().initializeAuthState();
+  });
 }
