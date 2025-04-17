@@ -27,6 +27,7 @@ void main() async {
   Get.put(AuthenticationRepository(), permanent: true);
   Get.put(LoginController(), permanent: true);
 
+
   runApp(const AirsoloApp());
 
   // Initialize auth state after app loads

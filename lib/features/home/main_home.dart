@@ -1,18 +1,22 @@
 import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
-import 'package:airsolo/common/widgets/custome_shapes/containers/scroll_item_cards.dart';
 import 'package:airsolo/common/widgets/item_cards/horizantal_item_card.dart';
 import 'package:airsolo/common/widgets/item_cards/vertical_item_card.dart';
 import 'package:airsolo/common/widgets/layout/grid_layout.dart';
 import 'package:airsolo/common/widgets/layout/list_layout.dart';
 import 'package:airsolo/common/widgets/search_bar/default_searchbar.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
-import 'package:airsolo/features/app/screens/home/widgets/banner_slider.dart';
-import 'package:airsolo/features/app/screens/home/widgets/home_app_bar.dart';
-import 'package:airsolo/features/app/screens/home/widgets/home_category.dart';
+import 'package:airsolo/features/city/controller/city_controller.dart';
+import 'package:airsolo/features/city/screen/city_detail_screen.dart';
+import 'package:airsolo/features/city/screen/city_screen.dart';
+import 'package:airsolo/features/home/widgets/banner_slider.dart';
+import 'package:airsolo/features/home/widgets/home_app_bar.dart';
+import 'package:airsolo/features/home/widgets/home_category.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 
 class MainHomeScreen extends StatelessWidget {
@@ -20,6 +24,7 @@ class MainHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+ final cityController = Get.put(CityController());
     return   Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +65,7 @@ class MainHomeScreen extends StatelessWidget {
                   ///Body Part
                   const Padding(
                     padding: EdgeInsets.only(left: ASizes.defaultSpace),
-                    child: ASectionHeading(title: 'Best Deals', showActionButton: false),
+                    child: ASectionHeading(title: 'Explore Sri Lanka', showActionButton: false),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(ASizes.defaultSpace),
@@ -69,14 +74,8 @@ class MainHomeScreen extends StatelessWidget {
 
 
 
-                  //Popular Places Card
-                  const Padding(
-                    padding: EdgeInsets.only(left: ASizes.defaultSpace),
-                    child: ASectionHeading(title: 'Places', showActionButton: true),
-                  ),
-                  const SizedBox(
-                    height: 220,
-                    child: AItemCardSlider(title: 'Mirissa', image: AImages.placeImage2,)),
+                  //Popular City Card
+                  _buildPopularCities(),
 
                   //Popular Hostels Card
                   const Padding(
@@ -111,3 +110,66 @@ class MainHomeScreen extends StatelessWidget {
 }
 
 
+
+// City Section
+Widget _buildPopularCities() {
+  final cityController = Get.find<CityController>();
+  
+  return Obx(() {
+    
+    final displayedCities = cityController.cities.take(7).toList();
+    
+    if (displayedCities.isEmpty) {
+      return const SizedBox(height: 0); 
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: ASizes.defaultSpace),
+          child: Row(
+            children: [
+              Text('Popular Places', style: Get.textTheme.headlineSmall),
+              const Spacer(),
+              TextButton(
+                onPressed: () => Get.toNamed('/cities'),
+                child: const Text('View All'),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: ASizes.spaceBtwItems),
+        SizedBox(
+          height: 220, // Fixed height for the horizontal list
+          child: ListView.separated( // Using separated for better control
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: displayedCities.length,
+            itemBuilder: (_, index) {
+              final city = displayedCities[index];
+              return SizedBox( // Constrained width
+                width: 180,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque, // Better touch handling
+                  onTap: () => Get.to(
+                    () => CityDetailScreen(city: city),
+                    transition: Transition.cupertino,
+                  ),
+                  child: CityCard(
+                    city: city,
+                    key: ValueKey(city.id), 
+                    onTap: () => Get.to(
+                  () => CityDetailScreen(city: cityController.cities[index]),
+                  transition: Transition.cupertino,
+                ), // Unique key for each card
+                ),)
+              );
+            },
+            separatorBuilder: (_, __) => const SizedBox(width: ASizes.spaceBtwItems),
+          ),
+        ),
+      ],
+    );
+  });
+}

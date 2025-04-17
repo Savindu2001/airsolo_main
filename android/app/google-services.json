@@ -12,7 +12,20 @@
           "package_name": "com.example.airsolo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "792576944881-esqmtntrakd7fmhr0vp7leoqd0u7f97r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.airsolo",
+            "certificate_hash": "ccb8f9875c23bd647818ff57d7e9064c2d35eb2b"
+          }
+        },
+        {
+          "client_id": "792576944881-enivvqnddjouallf8hv086gcn5o61lco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBauj8ZxF_eclQG919ILMkvlwddS7Xnb6I"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792576944881-enivvqnddjouallf8hv086gcn5o61lco.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "792576944881-l7ceistk1qdq6bhf8e02fgbu3e22o80d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.airsolo"
+              }
+            }
+          ]
         }
       }
     }

@@ -27,6 +27,10 @@ class AImages{
   static const String event = 'assets/images/icons/events.png';
   static const String guide = 'assets/images/icons/guides.png';
 
+  // Icons
+  static const String disconnect = 'assets/images/icons/disconect.png';
+  static const String help = 'assets/images/icons/support.png';
+
 
   //Banners
   static const String banner1 = 'assets/images/banners/banner1.png';
@@ -52,12 +56,10 @@ class AImages{
       // static const String restaurantImage4 = '';
       // static const String restaurantImage5 = '';
 
-  /// Places Images
+  /// City Images
       static const String placeImage1 = 'assets/images/items/place1.png';
       static const String placeImage2 = 'assets/images/items/place2.png';
-      // static const String placeImage3 = '';
-      // static const String placeImage4 = '';
-      // static const String placeImage5 = '';
+      static const String defaultCityImage = 'assets/images/items/place2.png';
 
 
 

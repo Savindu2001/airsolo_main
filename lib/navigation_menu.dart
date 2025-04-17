@@ -1,5 +1,5 @@
-import 'package:airsolo/features/app/screens/services/service_home.dart';
-import 'package:airsolo/features/app/screens/home/main_home.dart';
+import 'package:airsolo/features/informations/service_home.dart';
+import 'package:airsolo/features/home/main_home.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
 import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
 import 'package:airsolo/utils/constants/colors.dart';

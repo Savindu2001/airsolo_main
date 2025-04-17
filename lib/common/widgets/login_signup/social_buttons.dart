@@ -1,8 +1,12 @@
 
+import 'package:airsolo/features/authentication/controllers/social_login_controller.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:airsolo/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ASocialButton extends StatelessWidget {
   const ASocialButton({
@@ -11,13 +15,14 @@ class ASocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SocialLoginController());
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           decoration: BoxDecoration(border: Border.all(color: AColors.grey), borderRadius: BorderRadius.circular(100)),
           child: IconButton(
-            onPressed: (){}, 
+            onPressed: ()=> controller.signInWithGoogle(), 
             icon: const Image(
               width: ASizes.iconMd,
               height: ASizes.iconMd,
@@ -29,7 +34,10 @@ class ASocialButton extends StatelessWidget {
         Container(
           decoration: BoxDecoration(border: Border.all(color: AColors.grey), borderRadius: BorderRadius.circular(100)),
           child: IconButton(
-            onPressed: (){}, 
+            onPressed: (){
+              ALoaders.warningSnackBar(title: 'Coming Soon!', message: 'Facebook Login Coming Soon.. Stay Tuned!');
+             
+            }, 
             icon: const Image(
               width: ASizes.iconMd,
               height: ASizes.iconMd,
@@ -37,6 +45,9 @@ class ASocialButton extends StatelessWidget {
               )
             ),
         ),
+
+        
+        
         
     
       ],

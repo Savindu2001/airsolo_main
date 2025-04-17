@@ -1,4 +1,4 @@
-import 'package:airsolo/features/app/screens/taxi/driverDashboard.dart';
+import 'package:airsolo/features/taxi/driverDashboard.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:airsolo/navigation_menu.dart';
@@ -80,7 +80,7 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  // Private methods
+
   Future<void> _navigateBasedOnRole(String role) async {
     await Future.delayed(const Duration(milliseconds: 50));
     Get.offAll(
@@ -106,4 +106,5 @@ class AuthenticationRepository extends GetxController {
       Get.reset();
     }
   }
+
 }

@@ -31,12 +31,13 @@ class SignupController extends GetxController {
   Future<void> signup() async {
     try {
 
-       //  Validate Email First
+       //  Validate Email First & Validate Form
       final emailError = AValidator.validateEmail(email.text.trim());
       if (emailError != null) {
         ALoaders.errorSnackBar(title: 'Validation Error', message: emailError);
         return;
       }
+      if (!signupFormKey.currentState!.validate()) return;
       
       // 1. Start Loading
       AFullScreenLoader.openLoadingDialog(
@@ -48,8 +49,8 @@ class SignupController extends GetxController {
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) return;
 
-      // 3. Validate Form
-      if (!signupFormKey.currentState!.validate()) return;
+      
+      
 
       // 4. Check Privacy Policy
       if (!privacyPolicy.value) {

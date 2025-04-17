@@ -1,4 +1,4 @@
-import 'package:airsolo/features/app/screens/hostel/hostel_room_details.dart';
+import 'package:airsolo/features/hostel/hostel_room_details.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';

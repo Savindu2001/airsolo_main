@@ -2,7 +2,7 @@ import 'package:airsolo/common/widgets/appbar/appbar.dart';
 import 'package:airsolo/common/widgets/icon/a_circular_icon.dart';
 import 'package:airsolo/common/widgets/item_cards/vertical_item_card.dart';
 import 'package:airsolo/common/widgets/layout/grid_layout.dart';
-import 'package:airsolo/features/app/screens/home/main_home.dart';
+import 'package:airsolo/features/home/main_home.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';

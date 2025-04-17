@@ -1,5 +1,7 @@
 class Config {
   static const String baseUrl = 'http://127.0.0.1:3000'; 
+  static const String googleClientId = '785691024956-sl7fp2jktgtsoh854fr1a5nc9au179e4.apps.googleusercontent.com';
+  
 
   // Auth REST API Endpoints
   static const String loginEndpoint = '$baseUrl/api/users/login';
@@ -17,4 +19,7 @@ class Config {
   // Taxi REST API Endpoints
   static const String getTaxisEndpoint = '$baseUrl/api/taxis';
   static const String getTaxiByIdEndpoint = '$baseUrl/api/taxis/';
+
+  // City REST API Endpoints
+  static const String cityEndpoint = '$baseUrl/api/city';
 }

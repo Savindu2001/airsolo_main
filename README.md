@@ -1,1 +1,6 @@
-Routes With Navigations
+social login fix
+
+
+home
+
+ai finish tomoorow
