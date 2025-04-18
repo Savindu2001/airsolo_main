@@ -7,7 +7,6 @@ import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AProfileScreen extends StatelessWidget {
@@ -55,7 +54,7 @@ class AProfileScreen extends StatelessWidget {
               const SizedBox(height: ASizes.spaceBtwItems ),
 
               AProfileMenu(onPressed: (){}, title: 'User ID', value: '24883', icon: Iconsax.copy, ),
-              AProfileMenu(onPressed: (){ Get.to(()=>  ResetPasswordScreen());}, title: 'Password', value: '######' ),
+              AProfileMenu(onPressed: (){ Get.to(()=>  const ResetPasswordScreen());}, title: 'Password', value: '######' ),
               AProfileMenu(onPressed: (){}, title: 'E-mail', value: 'savindu.info@gmail.com', ),
               AProfileMenu(onPressed: (){}, title: 'Phone ', value: '+94-761794522', ),
               AProfileMenu(onPressed: (){}, title: 'Gender', value: 'Male', ),

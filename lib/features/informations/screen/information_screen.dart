@@ -225,7 +225,7 @@ class InformationScreen extends StatelessWidget {
                 ...controller.cities.map((city) => DropdownMenuItem(
                   value: city.id,
                   child: Text(city.name),
-                )).toList(),
+                )),
               ],
               onChanged: (value) => tempCityId.value = value ?? '',
             ),
@@ -248,7 +248,7 @@ class InformationScreen extends StatelessWidget {
                 ...controller.infoTypes.map((type) => DropdownMenuItem(
                   value: type,
                   child: Text(type),
-                )).toList(),
+                )),
               ],
               onChanged: (value) => tempInfoType.value = value ?? '',
             ),

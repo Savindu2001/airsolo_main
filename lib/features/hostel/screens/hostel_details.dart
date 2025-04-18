@@ -1,15 +1,15 @@
 import 'package:airsolo/common/widgets/appbar/appbar.dart';
-import 'package:airsolo/features/hostel/widgets/a_hostel_awards_batch.dart';
-import 'package:airsolo/features/hostel/widgets/a_hostel_Image_slider.dart';
-import 'package:airsolo/features/hostel/widgets/a_hostel_book_bottom_sheet.dart';
-import 'package:airsolo/features/hostel/widgets/a_hostel_event_card_linkups.dart';
+import 'package:airsolo/features/hostel/screens/widgets/a_hostel_awards_batch.dart';
+import 'package:airsolo/features/hostel/screens/widgets/a_hostel_Image_slider.dart';
+import 'package:airsolo/features/hostel/screens/widgets/a_hostel_book_bottom_sheet.dart';
+import 'package:airsolo/features/hostel/screens/widgets/a_hostel_event_card_linkups.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:airsolo/features/hostel/widgets/a_hostel_bottom_sheet.dart';
+import 'package:airsolo/features/hostel/screens/widgets/a_hostel_bottom_sheet.dart';
 
 class HostelDetails extends StatelessWidget {
   const HostelDetails({super.key});

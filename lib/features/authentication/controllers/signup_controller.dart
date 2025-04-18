@@ -84,7 +84,7 @@ class SignupController extends GetxController {
       // 7. Handle Response
       if (response.statusCode == 200) {
         AFullScreenLoader.stopLoading();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         ALoaders.successSnackBar(
           title: 'Success!',
           message: 'Account created. Please verify your email.',
@@ -109,7 +109,7 @@ class SignupController extends GetxController {
         throw Exception('Unexpected server error: ${response.statusCode}');
       }
     } 
-    on http.ClientException catch (e) {
+    on http.ClientException {
       ALoaders.errorSnackBar(
         title: 'Network Error',
         message: 'Could not connect to the server. Check your connection.',

@@ -60,7 +60,7 @@ class AAIHomeScreen extends StatelessWidget {
 
                       //Features Boxes
                       AGridLayout(
-                        itemCount: 2, 
+                        itemCount: 1, 
                         mainAxisExtent: 120,
                         itemBuilder: (_, index) {
                          return AAiFeaturesCategoryCard(showBorder: true, onTap: () => Get.to(()=> const AITripMakerScreen()),);

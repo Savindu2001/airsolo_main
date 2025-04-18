@@ -107,4 +107,6 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
+  refreshToken() {}
+
 }

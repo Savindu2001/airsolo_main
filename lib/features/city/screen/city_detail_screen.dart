@@ -73,7 +73,7 @@ class _CityDetailScreenState extends State<CityDetailScreen> {
             ),
             actions: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Iconsax.heart,
                   color: Colors.white,
                 ),
@@ -112,7 +112,7 @@ class _CityDetailScreenState extends State<CityDetailScreen> {
     return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Things to Do',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -269,11 +269,11 @@ class _CityDetailScreenState extends State<CityDetailScreen> {
         color: AHelperFunctions.isDarkMode(context)
             ? AColors.dark
             : Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.grey,
             blurRadius: 10,
-            offset: const Offset(0, -5),
+            offset: Offset(0, -5),
           ),
         ],
       ),
@@ -316,7 +316,7 @@ class _CityDetailScreenState extends State<CityDetailScreen> {
   Widget _buildHighlightChip(String text, IconData icon, Color color) {
     return Chip(
       avatar: Icon(icon, size: 18, color: Colors.white,),
-      label: Text(text ,style: TextStyle(color: Colors.white),),
+      label: Text(text ,style: const TextStyle(color: Colors.white),),
       backgroundColor: color,
     );
   }

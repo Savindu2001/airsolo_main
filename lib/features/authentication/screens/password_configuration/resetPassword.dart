@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
+
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }

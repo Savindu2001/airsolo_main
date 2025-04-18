@@ -12,14 +12,14 @@ class ForgetPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ForgotPasswordController controller = Get.put(ForgotPasswordController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(ASizes.defaultSpace),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

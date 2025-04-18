@@ -33,7 +33,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Admin data: ${data}');
+      print('Admin data: $data');
     } else {
       print('Failed to access admin data: ${response.body}');
     }

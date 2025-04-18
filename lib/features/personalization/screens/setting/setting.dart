@@ -10,7 +10,6 @@ import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ASettingScreen extends StatelessWidget {

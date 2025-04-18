@@ -42,6 +42,7 @@ dependencies:
   cached_network_image: ^3.4.1
   device_info_plus: ^11.3.3
   badges: ^3.1.2
+  shimmer: ^3.0.0
   
 
 

@@ -105,7 +105,7 @@ class InformationController extends GetxController {
     
     try {
       // Attempt token refresh
-      // await authRepo.refreshToken(); // Uncomment if you have refresh logic
+      // await authRepo.refreshToken(); 
       await fetchInformations(isRetry: true);
     } catch (e) {
       error('Session expired. Please login again.');
