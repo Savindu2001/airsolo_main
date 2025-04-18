@@ -1,4 +1,3 @@
-import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
 import 'package:airsolo/features/city/controller/city_controller.dart';
 import 'package:airsolo/features/city/model/city_model.dart';
 import 'package:airsolo/features/city/screen/city_detail_screen.dart';
@@ -11,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CityScreen extends StatelessWidget {
-  final CityController cityController = Get.put(CityController());
+  final CityController cityController = Get.find<CityController>();
 
   CityScreen({super.key});
 
@@ -32,21 +31,22 @@ class CityScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         color: AColors.primary,
+        backgroundColor: dark ? AColors.dark : AColors.light,
         onRefresh: cityController.fetchCities,
         child: Padding(
           padding: const EdgeInsets.all(ASizes.defaultSpace),
           child: Obx(() {
-            if (cityController.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+            if (cityController.isLoading.value && cityController.cities.isEmpty) {
+              return _buildLoadingGrid();
             }
-        
+
             if (cityController.error.isNotEmpty) {
               return ErrorWidget(
                 error: cityController.error.value,
                 onRetry: () => cityController.fetchCities(),
               );
             }
-        
+
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -55,54 +55,66 @@ class CityScreen extends StatelessWidget {
                 childAspectRatio: 0.8,
               ),
               itemCount: cityController.cities.length,
-              itemBuilder: (context, index) => CityCard(
-                city: cityController.cities[index],
-                onTap: () => Get.to(
-                  () => CityDetailScreen(city: cityController.cities[index]),
-                  transition: Transition.cupertino,
-                ),
-              ),
+              itemBuilder: (context, index) {
+                final city = cityController.cities[index];
+                return Hero(
+                  tag: 'city-${city.id}',
+                  child: CityCard(
+                    city: city,
+                    onTap: () => Get.to(
+                      () => CityDetailScreen(city: city),
+                      transition: Transition.cupertino,
+                    ),
+                  ),
+                );
+              },
             );
           }),
         ),
       ),
     );
   }
+
+  Widget _buildLoadingGrid() {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: ASizes.gridViewSpacing,
+        mainAxisSpacing: ASizes.gridViewSpacing,
+        childAspectRatio: 0.8,
+      ),
+      itemCount: 6,
+      itemBuilder: (_, __) => const CityCardSkeleton(),
+    );
+  }
 }
 
-
-// City Card
 class CityCard extends StatelessWidget {
   final City city;
   final VoidCallback onTap;
-  final double? width;
-  final double? height;
 
   const CityCard({
     super.key,
     required this.city,
     required this.onTap,
-    this.width,
-    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     final dark = AHelperFunctions.isDarkMode(context);
-    final imageUrl = city.imageUrl ?? city.images?.firstOrNull;
+    final imageUrl = city.images.isNotEmpty ? city.images.first : null;
     
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: width,
-        height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
           boxShadow: [
             BoxShadow(
-              color: dark ? Colors.black54 : Colors.grey.withOpacity(0.5),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
+              color: dark ? Colors.black54 : Colors.grey,
+              blurRadius: 8,
+              offset:  const Offset(0, 4),
             )
           ],
         ),
@@ -110,24 +122,27 @@ class CityCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
           child: Stack(
             children: [
-              // City Image with improved loading and error handling
-              _buildCityImage(imageUrl, context),
+              // Image with proper handling
+              AspectRatio(
+                aspectRatio: 1/1,
+                child: _buildImageContent(imageUrl, context),
+              ),
               
-              // Gradient Overlay
+              // Gradient overlay
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.7),
+                      Colors.black,
                     ],
                   ),
                 ),
               ),
               
-              // City Name
+              // City name
               Positioned(
                 bottom: ASizes.defaultSpace,
                 left: ASizes.defaultSpace,
@@ -138,10 +153,10 @@ class CityCard extends StatelessWidget {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.8),
+                      const Shadow(
+                        color: Colors.black,
                         blurRadius: 6,
-                        offset: const Offset(0, 1),
+                        offset:  Offset(0, 1),
                   )],
                   ),
                   maxLines: 2,
@@ -155,53 +170,63 @@ class CityCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCityImage(String? imageUrl, BuildContext context) {
-    if (imageUrl == null) {
-      return Image.asset(
-        AImages.defaultCityImage,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
-      );
+  Widget _buildImageContent(String? imageUrl, BuildContext context) {
+    if (!_isValidImageUrl(imageUrl)) {
+      return _buildDefaultImage();
     }
 
-    if (imageUrl.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          color: Colors.grey[200],
-          child: const Center(child: CircularProgressIndicator()),
+    return CachedNetworkImage(
+      imageUrl: imageUrl!,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      placeholder: (context, url) => Container(
+        color: Colors.grey[200],
+        child: const Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(AColors.primary),
+          ),
         ),
-        errorWidget: (context, url, error) => _buildDefaultImage(),
-      );
-    } else {
-      return Image.asset(
-        imageUrl,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _buildDefaultImage(),
-      );
-    }
+      ),
+      errorWidget: (context, url, error) => _buildDefaultImage(),
+    );
+  }
+
+  bool _isValidImageUrl(String? url) {
+    if (url == null) return false;
+    final uri = Uri.tryParse(url);
+    return uri != null && 
+           uri.hasAbsolutePath &&
+           (uri.scheme == 'http' || uri.scheme == 'https') &&
+           !url.contains('airsolo-assets.s3.ap-southeast-1.amazonaws.com/city/') &&
+           ['jpg', 'jpeg', 'png', 'webp'].contains(url.split('.').last.toLowerCase());
   }
 
   Widget _buildDefaultImage() {
     return Image.asset(
       AImages.defaultCityImage,
+      fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
-      fit: BoxFit.cover,
     );
   }
 }
 
+class CityCardSkeleton extends StatelessWidget {
+  const CityCardSkeleton({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
+        color: Colors.grey[200],
+      ),
+    );
+  }
+}
 
-
-// Error Widget
 class ErrorWidget extends StatelessWidget {
   final String error;
   final VoidCallback onRetry;
@@ -225,8 +250,12 @@ class ErrorWidget extends StatelessWidget {
           const SizedBox(height: ASizes.spaceBtwSections),
           Text(
             error,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
             textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: ASizes.spaceBtwItems),
           SizedBox(

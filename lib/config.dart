@@ -22,4 +22,7 @@ class Config {
 
   // City REST API Endpoints
   static const String cityEndpoint = '$baseUrl/api/city';
+
+  // Information REST API Endpoints
+  static const String informationEndpoint = '$baseUrl/api/information';
 }

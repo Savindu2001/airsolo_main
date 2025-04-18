@@ -6,7 +6,7 @@ class ATexts{
 
 
 // Onboarding Titles  
-static const String onboardingTitle1 = 'Discover the World, Solo';  
+static const String onboardingTitle1 = 'Discover the Sri Lanka, Solo';  
 static const String onboardingTitle2 = 'Plan Smart, Travel Free';  
 static const String onboardingTitle3 = 'Connect & Explore';  
 

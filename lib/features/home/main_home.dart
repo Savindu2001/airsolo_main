@@ -69,13 +69,14 @@ class MainHomeScreen extends StatelessWidget {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(ASizes.defaultSpace),
-                    child: APromoSlider(autoPlay: true ,banners:  [ AImages.banner1, AImages.banner2, AImages.banner5 , AImages.banner3, AImages.banner4]),
+                    child: APromoSlider(autoPlay: true ,banners:  [ AImages.banner1, AImages.banner2, AImages.banner5 ]),
                   ),
 
 
 
                   //Popular City Card
                   _buildPopularCities(),
+                  const SizedBox(height: ASizes.spaceBtwSections,),
 
                   //Popular Hostels Card
                   const Padding(

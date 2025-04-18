@@ -21,7 +21,7 @@ class AirsoloApp extends StatelessWidget {
       darkTheme: AAppTheme.darkTheme,
       themeMode: ThemeMode.system,
       initialBinding: GeneralBindings(),
-      home: const Scaffold(backgroundColor: AColors.buttonPrimary, body: Center(child: CircularProgressIndicator(color: Colors.white,),),),
+      //home: const Scaffold(backgroundColor: AColors.buttonPrimary, body: Center(child: CircularProgressIndicator(color: Colors.white,),),),
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => NavigationMenu()),

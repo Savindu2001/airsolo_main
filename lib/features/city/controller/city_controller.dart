@@ -25,7 +25,7 @@ class CityController extends GetxController {
     @override
   void onInit() {
     super.onInit();
-    fetchCities(); // Auto-fetch when controller initializes
+    fetchCities();  
     //_setupResumeListener();
   }
 
@@ -35,17 +35,19 @@ class CityController extends GetxController {
   Future<void> fetchCities({bool isRetry = false}) async {
     try {
       final isConnected = await NetworkManager.instance.isConnected();
-  if (!isConnected) {
-    error('No internet connection');
-    isLoading(false);
-    return;
-  }
+
+      // Network Check 
+      if (!isConnected) {
+        error('No internet connection');
+        isLoading(false);
+        return;
+      }
       if (!isRetry) {
         isLoading(true);
         error('');
         retryCount.value = 0;
       }
-      
+      // Get Token
       final authRepo = Get.find<AuthenticationRepository>();
       final token = await _getValidToken();
       if (token == null) {

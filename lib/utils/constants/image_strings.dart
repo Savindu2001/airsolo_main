@@ -18,6 +18,7 @@ class AImages{
   static const String verifyEmail = 'assets/images/verify/verify.png';
   static const String verifiedEmail = 'assets/images/verify/verified.png';
   static const String sentEmail = 'assets/images/verify/sentEmail.png';
+  static const String password = 'assets/images/verify/password.png';
 
   //Category Icons
   static const String hostel = 'assets/images/icons/hostel.png';
@@ -38,7 +39,15 @@ class AImages{
   static const String banner3 = 'assets/images/banners/banner3.png';
   static const String banner4 = 'assets/images/banners/banner4.png';
   static const String banner5 = 'assets/images/banners/banner5.png';
-
+  static const String banner6 = 'assets/images/banners/banner6.jpg';
+  static const String banner7 = 'assets/images/banners/banner7.jpg';
+  static const String banner8 = 'assets/images/banners/banner8.jpg';
+  static const String banner9 = 'assets/images/banners/banner9.jpg';
+  static const String banner10 = 'assets/images/banners/banner10.jpg';
+  static const String banner11 = 'assets/images/banners/banner11.jpg';
+  static const String banner12 = 'assets/images/banners/banner12.jpg';
+  static const String banner13 = 'assets/images/banners/banner13.jpg';
+  static const String banner14 = 'assets/images/banners/banner14.jpg';
 
   ///Item Images (Hostels, taxi, guides, restaurants etc....)
   

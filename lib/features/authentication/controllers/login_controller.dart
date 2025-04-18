@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
-import 'package:airsolo/features/city/controller/city_controller.dart';
 import 'package:airsolo/features/taxi/driverDashboard.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/navigation_menu.dart';
@@ -84,7 +83,7 @@ class LoginController extends GetxController {
       final String backendToken = data['token'];
       
       // Now fetch cities after successful login
-      await Get.find<CityController>().fetchCities();
+      //await Get.find<CityController>().fetchCities();
       
       final user = data['user'];
       final String role = user['role']?.toLowerCase() ?? 'traveler';
@@ -124,7 +123,9 @@ class LoginController extends GetxController {
     ALoaders.errorSnackBar(title: 'Timeout', message: 'Server took too long to respond');
   } catch (e) {
     AFullScreenLoader.stopLoading();
-    ALoaders.errorSnackBar(title: 'Error', message: 'Server Error');
+    print('error = $e');
+    ALoaders.errorSnackBar(title: 'Error', message: 'Server Error $e');
+    
   }
 }
 

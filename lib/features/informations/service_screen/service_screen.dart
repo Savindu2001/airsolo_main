@@ -3,7 +3,7 @@ import 'package:airsolo/common/widgets/category/a_category_card.dart';
 import 'package:airsolo/common/widgets/layout/grid_layout.dart';
 import 'package:airsolo/common/widgets/search_bar/default_searchbar.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
-import 'package:airsolo/features/informations/widgets/category_tab.dart';
+import 'package:airsolo/features/informations/service_screen/widgets/category_tab.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/constants/texts.dart';
