@@ -43,6 +43,8 @@ dependencies:
   device_info_plus: ^11.3.3
   badges: ^3.1.2
   shimmer: ^3.0.0
+  google_maps_flutter: ^2.12.1
+  payhere_mobilesdk_flutter: ^3.2.0
   
 
 

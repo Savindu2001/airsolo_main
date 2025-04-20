@@ -1,6 +1,7 @@
 import 'package:airsolo/bindings/general_bindings.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/features/city/screen/city_screen.dart';
+import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
 import 'package:airsolo/navigation_menu.dart';
 import 'package:airsolo/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class AirsoloApp extends StatelessWidget {
         GetPage(name: '/', page: () => const NavigationMenu()),
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/cities', page: () => CityScreen()),
+        GetPage(name: '/hostels', page: () => HostelListScreen()),
         
       ],
     );

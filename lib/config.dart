@@ -14,15 +14,20 @@ class Config {
 
   // Hostel REST API Endpoints
   static const String hostelEndpoint = '$baseUrl/api/hostels';
-  static const String getHostelByIdEndpoint = '$baseUrl/api/hostels/';
+  static const String getHostelByIdEndpoint = '$baseUrl/api/hostels';
   static const String facilityEndpoint = '$baseUrl/api/facilities';
   static const String roomsEndpoint = '$baseUrl/api/rooms';
   static const String houseRulesEndpoint = '$baseUrl/api/house-rules';
-  static const String houseRulesEndpointbyId = '$baseUrl/api/house-rules/:id';
+  static const String bookingEndpoint ='$baseUrl/api/bookings';
+  static const String bookingConfirm = '$baseUrl/api/bookings/confirm/';
+
+  // WEBHOOK_URL
+  
+  static const String payhere = '$baseUrl/api/bookings/payment/';
 
   // Taxi REST API Endpoints
   static const String getTaxisEndpoint = '$baseUrl/api/taxis';
-  static const String getTaxiByIdEndpoint = '$baseUrl/api/taxis/';
+  static const String getTaxiByIdEndpoint = '$baseUrl/api/taxis';
 
   // City REST API Endpoints
   static const String cityEndpoint = '$baseUrl/api/city';

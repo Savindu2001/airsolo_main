@@ -3,7 +3,7 @@ import 'package:airsolo/common/widgets/icon/a_circular_icon.dart';
 import 'package:airsolo/common/widgets/images/a_rounded_image.dart';
 import 'package:airsolo/common/widgets/item_cards/item_review_score_vertical.dart';
 import 'package:airsolo/common/widgets/texts/item_title_text.dart';
-import 'package:airsolo/features/hostel/screens/hostel_details.dart';
+import 'package:airsolo/features/hostel/screens/widgets/hostel_details.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/shadows.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -40,7 +40,7 @@ class AItemCardVertical extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = AHelperFunctions.isDarkMode(context);
     return GestureDetector(
-      onTap: () => Get.to( () => const HostelDetails()),
+      onTap: () {},
       child: Container(
         width: 180,
         padding: const EdgeInsets.all(1),

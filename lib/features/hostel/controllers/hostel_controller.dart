@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:airsolo/config.dart';
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
+import 'package:airsolo/features/hostel/models/facility_model.dart';
 import 'package:airsolo/features/hostel/models/hostel_model.dart';
-import 'package:airsolo/utils/helpers/network_manager.dart';
+import 'package:airsolo/features/hostel/models/house_rule_model.dart';
+import 'package:airsolo/features/hostel/models/room_model.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HostelController extends GetxController {
@@ -14,43 +18,52 @@ class HostelController extends GetxController {
 
   final RxList<Hostel> hostels = <Hostel>[].obs;
   final RxList<Hostel> filteredHostels = <Hostel>[].obs;
+  final RxMap<String, List<Room>> hostelRooms = <String, List<Room>>{}.obs;
+  final RxList<Room> rooms = <Room>[].obs;
+  final RxList<Facility> facilities = <Facility>[].obs;
+  final RxList<HouseRule> houseRules = <HouseRule>[].obs;
   final RxBool isLoading = false.obs;
-  final RxString error = ''.obs;
+  final RxBool isLoadingFacilities = false.obs;
+  final RxBool isLoadingRooms = false.obs;
+  final RxBool isLoadingHouseRules = false.obs;
   final RxInt retryCount = 0.obs;
-  final int maxRetries = 2;
+  final RxString error = ''.obs;
   final RxString searchQuery = ''.obs;
-  final RxString selectedCity = ''.obs;
-  final RxDouble minPrice = 0.0.obs;
-  final RxDouble maxPrice = 1000.0.obs;
-  final RxList<String> selectedFacilities = <String>[].obs;
+  final int maxRetries = 2;
+  final Rx<Hostel?> selectedHostel = Rx<Hostel?>(null);
+  final RxBool isDetailLoading = false.obs;
+  final Rx<Room?> selectedRoom = Rx<Room?>(null);
 
   @override
   void onInit() {
     super.onInit();
     fetchHostels();
-    debounce(searchQuery, (_) => filterHostels(), time: const Duration(milliseconds: 500));
+    debounce(
+      searchQuery,
+      (_) => filterHostels(),
+      time: const Duration(milliseconds: 400),
+    );
+  }
+
+
+  // Helper method to get rooms for a hostel
+  List<Room> getRoomsForHostel(String hostelId) {
+    return hostelRooms[hostelId] ?? [];
   }
 
   Future<void> fetchHostels({bool isRetry = false}) async {
     try {
-
-      // Network Check
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        error('No internet connection');
-        isLoading(false);
-        return;
-      }
-
+      
       if (!isRetry) {
+        retryCount.value = 0;
         isLoading(true);
         error('');
-        retryCount.value = 0;
       }
 
-      // Get Valid Auth token
       final token = await _getValidToken();
-      if (token == null) throw Exception('Authentication required');
+      if (token == null) {
+        throw Exception('Authentication required');
+      }
 
       final response = await http.get(
         Uri.parse(Config.hostelEndpoint),
@@ -60,7 +73,17 @@ class HostelController extends GetxController {
         },
       ).timeout(const Duration(seconds: 10));
 
-      _handleResponse(response);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        hostels.assignAll(data.map((json) => Hostel.fromJson(json)));
+        
+        filterHostels();
+      } else if (response.statusCode == 401 && retryCount.value < maxRetries) {
+        await _handleUnauthorizedError();
+        await fetchHostels(isRetry: true);
+      } else {
+        throw Exception('Failed to load hostels: ${response.statusCode}');
+      }
     } on http.ClientException catch (e) {
       _handleNetworkError(e);
     } on TimeoutException catch (e) {
@@ -72,69 +95,316 @@ class HostelController extends GetxController {
     }
   }
 
+
+Future<void> fetchRooms(String hostelId) async {
+    try {
+      isDetailLoading(true);
+      final response = await http.get(
+        Uri.parse('${Config.roomsEndpoint}/hostel/$hostelId')
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        hostelRooms[hostelId] = data.map((json) => Room.fromJson(json)).toList();
+        
+        // Update the hostel in the list if needed
+        final index = hostels.indexWhere((h) => h.id == hostelId);
+        if (index != -1) {
+          hostels[index] = hostels[index].copyWith(
+            rooms: hostelRooms[hostelId]!,
+          );
+        }
+      }
+    } finally {
+      isDetailLoading(false);
+    }
+  }
+
+  Future<Hostel?> fetchHostelDetails(String hostelId) async {
+    try {
+      isLoading(true);
+      error('');
+      retryCount.value = 0;
+
+      final token = await _getValidToken();
+      if (token == null) {
+        throw Exception('Authentication required');
+      }
+
+      final response = await http.get(
+        Uri.parse('${Config.hostelEndpoint}/$hostelId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return Hostel.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 401 && retryCount.value < maxRetries) {
+        await _handleUnauthorizedError();
+        return await fetchHostelDetails(hostelId);
+      } else {
+        throw Exception('Failed to load hostel: ${response.statusCode}');
+      }
+    } catch (e) {
+      error(e.toString());
+      return null;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+Future<void> loadHostelDetails(String hostelId) async {
+  try {
+    isDetailLoading(true);
+    error('');
+    
+    // Load hostel details first
+    final hostel = await fetchHostelDetails(hostelId);
+    if (hostel != null) {
+      selectedHostel(hostel);
+      
+      // Load other data in parallel but don't fail if some endpoints fail
+      await Future.wait([
+        fetchRoomsByHostel(hostelId).catchError((e) => debugPrint('Room error: $e')),
+        fetchFacilities().catchError((e) => debugPrint('Facility error: $e')),
+        fetchHouseRulesByHostel().catchError((e) => debugPrint('House rules error: $e')),
+      ], eagerError: false);
+    }
+  } catch (e) {
+    error('Failed to load hostel details: ${e.toString()}');
+  } finally {
+    isDetailLoading(false);
+  }
+}
+
+ Future<void> fetchRoomsByHostel(String hostelId) async {
+  try {
+    // Only show loading if we don't already have data
+    if (rooms.isEmpty) isLoading(true);
+    error('');
+    retryCount.value = 0;
+
+    final token = await _getValidToken();
+    if (token == null) {
+      throw Exception('Authentication required');
+    }
+
+    final response = await http.get(
+      Uri.parse('${Config.roomsEndpoint}/hostel/$hostelId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).timeout(const Duration(seconds: 15)); // Increased timeout
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      if (data.isNotEmpty) {
+        rooms.assignAll(data.map((json) => Room.fromJson(json)));
+      } else {
+        rooms.clear(); 
+        error('No rooms available for this hostel');
+      }
+    } else if (response.statusCode == 401) {
+      if (retryCount.value < maxRetries) {
+        retryCount.value++;
+        await _handleUnauthorizedError();
+        await fetchRoomsByHostel(hostelId);
+      } else {
+        throw Exception('Maximum retry attempts reached');
+      }
+    } else {
+      throw Exception('Server error: ${response.statusCode}');
+    }
+  } on TimeoutException {
+    error('Request timed out. Please try again.');
+    // Consider implementing a retry button in the UI
+  } on http.ClientException catch (e) {
+    error('Connection error: ${e.message}');
+  } catch (e) {
+    error('Failed to load rooms: ${e.toString()}');
+  } finally {
+    isLoading(false);
+  }
+}
+
+
+  Future<void> fetchFacilities() async {
+    try {
+      isLoading(true);
+      error('');
+      retryCount.value = 0;
+
+      final token = await _getValidToken();
+      if (token == null) {
+        throw Exception('Authentication required');
+      }
+
+      final response = await http.get(
+        Uri.parse('${Config.facilityEndpoint}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        facilities.assignAll(data.map((json) => Facility.fromJson(json)));
+      } else if (response.statusCode == 401 && retryCount.value < maxRetries) {
+        await _handleUnauthorizedError();
+        await fetchFacilities();
+      } else {
+        throw Exception('Failed to load facilities: ${response.statusCode}');
+      }
+    } catch (e) {
+      error(e.toString());
+    } finally {
+      isLoading(false);
+    }
+  }
+
+ 
+
+  Future<void> fetchHouseRulesByHostel() async {
+  try {
+    isLoadingHouseRules(true);
+    houseRules.clear();
+
+    final token = await _getValidToken();
+    if (token == null) {
+      throw Exception('Authentication required');
+    }
+
+    final response = await http.get(
+      Uri.parse('${Config.houseRulesEndpoint}'),
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+    ).timeout(const Duration(seconds: 10));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data is List) {
+        houseRules.assignAll(data.map((json) => HouseRule.fromJson(json)));
+      }
+    } else if (response.statusCode != 404) {
+      throw Exception('Failed to load house rules: ${response.statusCode}');
+    }
+    
+  } catch (e) {
+    if (e is! http.ClientException && e is! TimeoutException) {
+      error('Failed to load house rules: ${e.toString()}');
+      debugPrint('House rules error: $e');
+    }
+  } finally {
+    isLoadingHouseRules(false);
+  }
+}
+
+  Future<bool> bookRoom({
+    required String roomId,
+    required String bedType,
+    required DateTime checkInDate,
+    required DateTime checkOutDate,
+    required int numGuests,
+    String? specialRequests,
+  }) async {
+    try {
+      isLoading(true);
+      error('');
+      retryCount.value = 0;
+
+      final token = await _getValidToken();
+      if (token == null) {
+        throw Exception('Authentication required');
+      }
+
+      final response = await http.post(
+        Uri.parse(Config.bookingEndpoint),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'roomId': roomId,
+          'bedType': bedType,
+          'checkInDate': checkInDate.toIso8601String(),
+          'checkOutDate': checkOutDate.toIso8601String(),
+          'numGuests': numGuests,
+          'specialRequests': specialRequests,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 201) {
+        ALoaders.successSnackBar(title: 'Success', message: 'Room booked successfully');
+        return true;
+      } else if (response.statusCode == 401 && retryCount.value < maxRetries) {
+        await _handleUnauthorizedError();
+        return await bookRoom(
+          roomId: roomId,
+          bedType: bedType,
+          checkInDate: checkInDate,
+          checkOutDate: checkOutDate,
+          numGuests: numGuests,
+          specialRequests: specialRequests,
+        );
+      } else {
+        throw Exception('Failed to book room: ${response.statusCode}');
+      }
+    } catch (e) {
+      error(e.toString());
+      ALoaders.errorSnackBar(title: 'Error', message: e.toString());
+      return false;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  void filterHostels() {
+    if (searchQuery.isEmpty) {
+      filteredHostels.assignAll(hostels);
+    } else {
+      filteredHostels.assignAll(
+        hostels.where(
+          (hostel) =>
+              hostel.name.toLowerCase().contains(searchQuery.value.toLowerCase()) ||
+              (hostel.address?.toLowerCase().contains(searchQuery.value.toLowerCase()) ?? false) ||
+              hostel.cityId.toLowerCase().contains(searchQuery.value.toLowerCase()),
+        ),
+      );
+    }
+  }
+
   Future<String?> _getValidToken() async {
     try {
-      final authRepo = Get.find<AuthenticationRepository>();
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('jwtToken');
-      
-      if (token == null) {
-        await authRepo.logout();
-        Get.offAllNamed('/login');
-        return null;
-      }
-      return token;
+      return prefs.getString('jwtToken');
     } catch (e) {
-      ALoaders.errorSnackBar(title: 'Authentication Error', message: 'Please login again');
+      error('Failed to get authentication token');
       return null;
     }
   }
 
-  void _handleResponse(http.Response response) {
-    switch (response.statusCode) {
-      case 200:
-        final List<dynamic> data = jsonDecode(response.body);
-        hostels.assignAll(
-          data.map((hostelJson) => Hostel.fromJson(hostelJson)).toList()
-        );
-        filterHostels();
-        break;
-      case 401:
-        if (retryCount.value < maxRetries) {
-          _handleUnauthorizedError();
-        } else {
-          error('Session expired. Please login again.');
-          ALoaders.errorSnackBar(title: 'Session Expired', message: 'Please login again');
-        }
-        break;
-      case 403:
-        error('Permission denied');
-        ALoaders.errorSnackBar(title: 'Permission Denied', message: 'You don\'t have access');
-        break;
-      default:
-        error('Failed to load hostels: ${response.statusCode}');
-        ALoaders.errorSnackBar(
-          title: 'Error ${response.statusCode}',
-          message: 'Failed to load hostels'
-        );
-    }
+  Future<void> refreshHostels() async {
+    await fetchHostels();
   }
 
-  void _handleUnauthorizedError() async {
+  Future<void> _handleUnauthorizedError() async {
     retryCount.value++;
+    Get.find<AuthenticationRepository>();
+    
     try {
-      final authRepo = Get.find<AuthenticationRepository>();
-      final refreshed = await authRepo.refreshToken();
-      if (refreshed) {
-        await fetchHostels(isRetry: true);
-      } else {
-        await authRepo.logout();
-        Get.offAllNamed('/login');
-      }
+      error('Session expired. Please login again.');
+      ALoaders.errorSnackBar(
+        title: 'Session Expired', 
+        message: 'Please login again to continue',
+      );
     } catch (e) {
-      error('Authentication failed');
-      await Get.find<AuthenticationRepository>().logout();
-      Get.offAllNamed('/login');
+      error('Failed to refresh session: ${e.toString()}');
     }
   }
 
@@ -142,7 +412,7 @@ class HostelController extends GetxController {
     error('Network error: ${e.message}');
     ALoaders.errorSnackBar(
       title: 'Network Error',
-      message: 'Please check your internet connection'
+      message: 'Please check your internet connection',
     );
   }
 
@@ -150,7 +420,7 @@ class HostelController extends GetxController {
     error('Request timeout');
     ALoaders.errorSnackBar(
       title: 'Timeout',
-      message: 'Server took too long to respond'
+      message: 'Server took too long to respond',
     );
   }
 
@@ -158,26 +428,7 @@ class HostelController extends GetxController {
     error(e.toString());
     ALoaders.errorSnackBar(
       title: 'Error', 
-      message: 'Failed to fetch hostels: ${e.toString()}'
+      message: 'Failed to fetch hostels: ${e.toString()}',
     );
-  }
-
-  void filterHostels() {
-    filteredHostels.assignAll(hostels.where((hostel) {
-      final matchesSearch = hostel.name.toLowerCase().contains(searchQuery.value.toLowerCase()) || 
-                          hostel.cityId.toLowerCase().contains(searchQuery.value.toLowerCase());
-      final matchesCity = selectedCity.value.isEmpty || hostel.cityId == selectedCity.value;
-      final matchesPrice = hostel.rooms.any((room) => 
-                          room.pricePerPerson >= minPrice.value && 
-                          room.pricePerPerson <= maxPrice.value);
-      final matchesFacilities = selectedFacilities.isEmpty || 
-                              hostel.facilityIds?.any((id) => selectedFacilities.contains(id)) == true;
-      
-      return matchesSearch && matchesCity && matchesPrice && matchesFacilities;
-    }));
-  }
-
-  Future<void> refreshHostels() async {
-    await fetchHostels();
   }
 }

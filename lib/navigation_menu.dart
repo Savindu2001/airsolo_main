@@ -1,9 +1,9 @@
-import 'package:airsolo/features/hostel/screens/house_rules_screen.dart';
-import 'package:airsolo/features/hostel/screens/sample_hostel_list.dart';
+import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
+import 'package:airsolo/features/informations/screen/information_screen.dart';
 import 'package:airsolo/features/informations/service_screen/service_screen.dart';
 import 'package:airsolo/features/home/main_home.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
-import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
+//import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -70,5 +70,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const MainHomeScreen(),const ServiceHomeScreen(),HostelListScreen(), HouseRulesScreen(), const ASettingScreen(),];
+  final screens = [const MainHomeScreen(),const ServiceHomeScreen(),HostelListScreen(), InformationScreen(), const ASettingScreen(),];
 }
