@@ -24,7 +24,7 @@ dependencies:
   url_launcher: ^6.3.1
   iconsax: ^0.0.8
   get_storage: ^2.1.1
-  get: ^4.6.6
+  get: ^4.7.2
   smooth_page_indicator: ^1.2.0+3
   hugeicons: ^0.0.7
   carousel_slider: ^5.0.0
@@ -43,8 +43,13 @@ dependencies:
   device_info_plus: ^11.3.3
   badges: ^3.1.2
   shimmer: ^3.0.0
-  google_maps_flutter: ^2.12.1
   payhere_mobilesdk_flutter: ^3.2.0
+  webview_flutter: ^4.11.0
+  google_maps_flutter_ios: ^2.15.1
+  google_maps_flutter: ^2.12.1
+  printing: ^5.14.2
+  pdf: ^3.11.3
+  geolocator: ^14.0.0
   
 
 

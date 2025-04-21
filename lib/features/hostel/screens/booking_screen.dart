@@ -1,8 +1,11 @@
 import 'package:airsolo/features/hostel/controllers/booking_controller.dart';
 import 'package:airsolo/features/hostel/screens/hostel_checkout.dart';
+import 'package:airsolo/features/users/user_controller.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
+import 'package:airsolo/utils/popups/full_screen_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:airsolo/features/hostel/models/room_model.dart';
 import 'package:airsolo/utils/constants/colors.dart';
@@ -19,19 +22,18 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  final BookingController bookingController = Get.put(BookingController());
   final _formKey = GlobalKey<FormState>();
   DateTime? _checkInDate;
   DateTime? _checkOutDate;
   int _guests = 1;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _specialRequestsController = TextEditingController();
+
+  // Get controllers
+  final BookingController bookingController = Get.find<BookingController>();
+  final UserController userController = Get.find<UserController>();
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
     _specialRequestsController.dispose();
     super.dispose();
   }
@@ -65,70 +67,65 @@ class _BookingScreenState extends State<BookingScreen> {
     return widget.room.pricePerPerson * _guests * days;
   }
 
-void _submitBooking() async {
-  // Validate form first
+  Future<void> _submitBooking() async {
   if (!_formKey.currentState!.validate()) return;
   
-  // Check dates are selected
   if (_checkInDate == null || _checkOutDate == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please select check-in and check-out dates')),
-    );
+    Get.snackbar('Error', 'Please select check-in and check-out dates');
     return;
   }
 
   try {
-    // Show loading indicator
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
-    );
-
-    // Get controller instance
-    final bookingController = Get.find<BookingController>();
+    AFullScreenLoader.openLoadingDialog('Processing Booking', AImages.loading);
     
-    // Create pending booking
+    print('Creating booking with data:');
+    print({
+      'room': widget.room.id,
+      'checkIn': _checkInDate?.toIso8601String(),
+      'checkOut': _checkOutDate?.toIso8601String(),
+      'guests': _guests,
+    });
+
     final booking = await bookingController.createPendingBooking(
       hostelId: widget.room.hostelId,
+      userId: userController.currentUser!.id,
       roomId: widget.room.id,
       bedType: widget.room.bedType.name,
       checkInDate: _checkInDate!,
       checkOutDate: _checkOutDate!,
       numGuests: _guests,
+      amount: _calculateTotal(),
       specialRequests: _specialRequestsController.text,
     );
 
-    // Remove loading dialog
-    Get.back();
+    AFullScreenLoader.stopLoading();
 
-    if (booking != null) {
-      // Navigate to checkout screen with all required data
-      Get.to(() => CheckoutScreen(
-        room: widget.room,
-        total: _calculateTotal(),
-        checkInDate: _checkInDate!,
-        checkOutDate: _checkOutDate!,
-        guests: _guests,
-      ));
-    } else {
-      Get.snackbar(
-        'Error', 
-        'Failed to create booking',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+    if (booking == null) {
+      throw Exception('Booking creation failed - please try again');
     }
-  } catch (e) {
-    // Ensure loading dialog is removed if error occurs
-    if (Get.isDialogOpen!) Get.back();
+
+    print('Booking created successfully. ID: ${booking.id}');
+    
+    
+    Get.off(() => CheckoutScreen(
+      room: widget.room,
+      checkInDate: _checkInDate!,
+      checkOutDate: _checkOutDate!,
+      guests: _guests,
+      total: _calculateTotal(),
+      bookingId: booking.id,
+    ));
+    
+  } catch (e, stack) {
+    AFullScreenLoader.stopLoading();
+    print('Booking error: $e');
+    print('Stack trace: $stack');
     
     Get.snackbar(
-      'Error',
-      'Booking failed: ${e.toString()}',
+      'Booking Failed', 
+      e.toString(),
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
+      duration: const Duration(seconds: 5),
     );
   }
 }
@@ -136,7 +133,7 @@ void _submitBooking() async {
   @override
   Widget build(BuildContext context) {
     final dark = AHelperFunctions.isDarkMode(context);
-
+  
     return Scaffold(
       appBar: AppBar(
         title: Text('Book ${widget.room.name}'),
@@ -187,21 +184,60 @@ void _submitBooking() async {
               // Personal Information
               Text('Personal Information', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: ASizes.spaceBtwItems),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Full Name'),
-                validator: (value) => value == null || value.isEmpty ? 'Please enter your name' : null,
-              ),
-              const SizedBox(height: ASizes.spaceBtwItems),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) return 'Please enter your email';
-                  if (!value.contains('@')) return 'Please enter a valid email';
-                  return null;
-                },
-              ),
+              // Name Card
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(Iconsax.personalcard, color: Theme.of(context).primaryColor),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Full Name', style: Theme.of(context).textTheme.labelSmall),
+                            Text(
+                              userController.currentUser!.fullName,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: ASizes.spaceBtwItems),
+
+                // Email Card
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(Iconsax.attach_circle, color: Theme.of(context).primaryColor),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Email', style: Theme.of(context).textTheme.labelSmall),
+                            Text(
+                              userController.currentUser!.email,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               const SizedBox(height: ASizes.spaceBtwItems),
               TextFormField(
                 controller: _specialRequestsController,

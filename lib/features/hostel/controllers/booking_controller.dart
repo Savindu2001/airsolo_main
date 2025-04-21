@@ -3,7 +3,6 @@ import 'package:airsolo/config.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:airsolo/features/hostel/models/booking_model.dart';
-import 'package:airsolo/utils/constants/api_constants.dart';
 
 class BookingController extends GetxController {
   final RxList<HostelBooking> bookings = <HostelBooking>[].obs;
@@ -11,48 +10,70 @@ class BookingController extends GetxController {
   final RxString error = ''.obs;
 
   Future<HostelBooking?> createPendingBooking({
-    required String hostelId,
-    required String roomId,
-    required String bedType,
-    required DateTime checkInDate,
-    required DateTime checkOutDate,
-    required int numGuests,
-    String? specialRequests,
-  }) async {
-    try {
-      isLoading(true);
-      error('');
+  required String hostelId,
+  required String roomId,
+  required String userId,
+  required String bedType,
+  required DateTime checkInDate,
+  required DateTime checkOutDate,
+  required int numGuests,
+  required double amount,
+  String? specialRequests,
+}) async {
+  try {
+    isLoading(true);
+    error('');
 
-      final response = await http.post(
-        Uri.parse(Config.bookingEndpoint),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'hostelId': hostelId,
-          'roomId': roomId,
-          'bedType': bedType,
-          'checkInDate': checkInDate.toIso8601String(),
-          'checkOutDate': checkOutDate.toIso8601String(),
-          'numGuests': numGuests,
-          'specialRequests': specialRequests,
-          'status': 'pending',
-        }),
-      );
+    final response = await http.post(
+      Uri.parse(Config.bookingEndpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'hostelId': hostelId,
+        'userId': userId,
+        'roomId': roomId,
+        'bedType': bedType,
+        'checkInDate': checkInDate.toIso8601String(),
+        'checkOutDate': checkOutDate.toIso8601String(),
+        'numGuests': numGuests,
+        'amount' : amount,
+        'specialRequests': specialRequests,
+        'status': 'pending',
+      }),
+    );
 
-      if (response.statusCode == 201) {
-        final booking = HostelBooking.fromJson(jsonDecode(response.body));
-        bookings.add(booking);
-        return booking;
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+      
+      if (responseData['booking'] != null) {
+        try {
+          final booking = HostelBooking.fromJson(responseData['booking']);
+          bookings.add(booking);
+          print('Successfully parsed booking: ${booking.toJson()}');
+          return booking;
+        } catch (e, stack) {
+          print('Error parsing booking response: $e');
+          print('Stack trace: $stack');
+          throw Exception('Failed to parse booking response');
+        }
       } else {
-        throw Exception('Failed to create booking: ${response.body}');
+        throw Exception('Booking data not found in response');
       }
-    } catch (e) {
-      error(e.toString());
-      return null;
-    } finally {
-      isLoading(false);
+    } else {
+      throw Exception('Failed to create booking: ${response.statusCode} - ${response.body}');
     }
+  } catch (e, stack) {
+    print('Error in createPendingBooking: $e');
+    print('Stack trace: $stack');
+    error(e.toString());
+    return null;
+  } finally {
+    isLoading(false);
   }
-
+}
+  
   Future<bool> confirmBooking(String bookingId) async {
     try {
       isLoading(true);

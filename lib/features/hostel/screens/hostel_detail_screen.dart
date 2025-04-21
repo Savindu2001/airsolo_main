@@ -1,3 +1,5 @@
+import 'package:airsolo/common/widgets/map_widgets/embed_map.dart';
+import 'package:airsolo/config.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -6,8 +8,6 @@ import 'package:airsolo/utils/popups/loaders.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -147,7 +147,7 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
                       ),
                       const SizedBox(height: ASizes.md),
                       
-                      // Location Map
+                     // Location Map
                       if (hostel.latitude != null && hostel.longitude != null)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,8 +162,8 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
                                 IconButton(
                                   icon: const Icon(Iconsax.location),
                                   onPressed: () => _showMapChooser(
-                                    context, 
-                                    hostel.latitude!, 
+                                    context,
+                                    hostel.latitude!,
                                     hostel.longitude!,
                                   ),
                                 ),
@@ -171,42 +171,23 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
                             ),
                             const SizedBox(height: ASizes.sm),
                             Container(
-                              height: 200,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(ASizes.cardRadiusMd),
                                 border: Border.all(color: Colors.grey),
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(ASizes.cardRadiusMd),
-                                child: GoogleMap(
-                                  initialCameraPosition: CameraPosition(
-                                    target: LatLng(
-                                      hostel.latitude!,
-                                      hostel.longitude!,
-                                    ),
-                                    zoom: 15,
-                                  ),
-                                  markers: {
-                                    Marker(
-                                      markerId: MarkerId(hostel.id),
-                                      position: LatLng(
-                                        hostel.latitude!,
-                                        hostel.longitude!,
-                                      ),
-                                    ),
-                                  },
-                                  myLocationEnabled: true,
-                                  myLocationButtonEnabled: true,
-                                  onTap: (_) => _showMapChooser(
-                                    context, 
-                                    hostel.latitude!, 
-                                    hostel.longitude!,
-                                  ),
+                                child: MapBox(
+                                  latitude: hostel.latitude!,
+                                  longitude: hostel.longitude!,
                                 ),
                               ),
                             ),
                           ],
                         ),
+
+                                        
+                     
                       const SizedBox(height: ASizes.md),
                       
                       // Facilities
@@ -332,13 +313,13 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
   }
 
   IconData _getFacilityIcon(String? iconName) {
-    // Add your icon mapping logic here
+   
     switch (iconName) {
       case 'wifi':
         return Icons.wifi;
       case 'pool':
         return Icons.pool;
-      // Add more cases as needed
+      
       default:
         return Icons.check;
     }
@@ -370,6 +351,8 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
       ),
     );
   }
+
+
 
   Widget _buildDefaultImage() {
     return Image.asset(
@@ -539,15 +522,7 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.grey[400],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+            
             Text(
               'Open in Maps',
               style: Theme.of(context).textTheme.titleLarge,

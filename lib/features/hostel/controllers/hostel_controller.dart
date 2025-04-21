@@ -60,6 +60,7 @@ class HostelController extends GetxController {
         error('');
       }
 
+      final authRepo = Get.find<AuthenticationRepository>();
       final token = await _getValidToken();
       if (token == null) {
         throw Exception('Authentication required');
@@ -381,6 +382,7 @@ Future<void> loadHostelDetails(String hostelId) async {
 
   Future<String?> _getValidToken() async {
     try {
+      final authRepo = Get.find<AuthenticationRepository>();
       final prefs = await SharedPreferences.getInstance();
       return prefs.getString('jwtToken');
     } catch (e) {
@@ -395,7 +397,7 @@ Future<void> loadHostelDetails(String hostelId) async {
 
   Future<void> _handleUnauthorizedError() async {
     retryCount.value++;
-    Get.find<AuthenticationRepository>();
+    final authRepo = Get.find<AuthenticationRepository>();
     
     try {
       error('Session expired. Please login again.');

@@ -7,6 +7,7 @@ class HostelBooking {
   final DateTime checkInDate;
   final DateTime checkOutDate;
   final int numGuests;
+  final double amount;
   final String? specialRequests;
   final String status;
   final DateTime createdAt;
@@ -22,6 +23,7 @@ class HostelBooking {
     required this.checkOutDate,
     required this.numGuests,
     this.specialRequests,
+    required this.amount, 
     required this.status,
     required this.createdAt,
     required this.updatedAt,
@@ -37,6 +39,7 @@ class HostelBooking {
     DateTime? checkInDate,
     DateTime? checkOutDate,
     int? numGuests,
+    double? amount,
     String? specialRequests,
     String? status,
     DateTime? createdAt,
@@ -51,6 +54,7 @@ class HostelBooking {
       checkInDate: checkInDate ?? this.checkInDate,
       checkOutDate: checkOutDate ?? this.checkOutDate,
       numGuests: numGuests ?? this.numGuests,
+      amount: amount ?? this.amount,
       specialRequests: specialRequests ?? this.specialRequests,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
@@ -58,23 +62,50 @@ class HostelBooking {
     );
   }
 
-  factory HostelBooking.fromJson(Map<String, dynamic> json) {
-    return HostelBooking(
-      id: json['id'],
-      userId: json['userId'],
-      hostelId: json['hostelId'],
-      roomId: json['roomId'],
-      bedType: json['bedType'],
-      checkInDate: DateTime.parse(json['checkInDate']),
-      checkOutDate: DateTime.parse(json['checkOutDate']),
-      numGuests: json['numGuests'],
-      specialRequests: json['specialRequests'],
-      status: json['status'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
-  }
 
+ factory HostelBooking.fromJson(Map<String, dynamic> json) {
+  try {
+    // Helper function to parse dates safely
+    DateTime parseDate(dynamic date) {
+      try {
+        if (date is DateTime) return date;
+        if (date is String) return DateTime.parse(date);
+        return DateTime.now();
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
+    // Helper function to parse numbers safely
+    int parseInt(dynamic number) {
+      if (number is int) return number;
+      if (number is String) return int.tryParse(number) ?? 1;
+      return 1;
+    }
+
+    return HostelBooking(
+      id: json['id']?.toString() ?? '',
+      userId: json['userId']?.toString() ?? '',
+      hostelId: json['hostelId']?.toString() ?? '',
+      roomId: json['roomId']?.toString() ?? '',
+      bedType: json['bedType']?.toString() ?? '',
+      checkInDate: parseDate(json['checkInDate']),
+      checkOutDate: parseDate(json['checkOutDate']),
+      numGuests: parseInt(json['numGuests']), // Fixed parsing here
+      amount: (json['amount'] as num).toDouble(),
+      specialRequests: json['specialRequests']?.toString(),
+      status: json['status']?.toString() ?? 'pending',
+      createdAt: parseDate(json['createdAt']),
+      updatedAt: parseDate(json['updatedAt']), 
+    );
+  } catch (e, stack) {
+    print('Error parsing HostelBooking: $e');
+    print('Stack trace: $stack');
+    print('Problematic JSON: $json');
+    rethrow;
+  }
+}
+  
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -85,6 +116,7 @@ class HostelBooking {
       'checkInDate': checkInDate.toIso8601String(),
       'checkOutDate': checkOutDate.toIso8601String(),
       'numGuests': numGuests,
+      'amount': amount,
       'specialRequests': specialRequests,
       'status': status,
       'createdAt': createdAt.toIso8601String(),

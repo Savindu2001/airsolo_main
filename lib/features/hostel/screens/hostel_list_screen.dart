@@ -172,7 +172,9 @@ class HostelListScreen extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      Get.back();
+                      if (Get.isBottomSheetOpen ?? false) {
+                        Get.back(); 
+                      }
                     },
                     child: const Text('Reset'),
                   ),
@@ -182,7 +184,9 @@ class HostelListScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       _controller.filterHostels();
-                      Get.back();
+                      if (Get.isBottomSheetOpen ?? false) {
+                        Get.back(); 
+                      }
                     },
                     child: const Text('Apply'),
                   ),

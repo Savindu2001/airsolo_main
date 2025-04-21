@@ -1,10 +1,14 @@
-import 'package:airsolo/features/hostel/controllers/booking_controller.dart';
-import 'package:airsolo/features/hostel/screens/payment_sucees.dart';
+import 'dart:async';
+import 'package:airsolo/features/services/payhere_service.dart';
+import 'package:airsolo/features/users/user_controller.dart';
+import 'package:airsolo/utils/constants/image_strings.dart';
+import 'package:airsolo/utils/popups/full_screen_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:airsolo/features/hostel/models/room_model.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -13,6 +17,7 @@ class CheckoutScreen extends StatelessWidget {
   final DateTime checkOutDate;
   final int guests;
   final double total;
+  final String bookingId;
 
   const CheckoutScreen({
     super.key,
@@ -21,6 +26,7 @@ class CheckoutScreen extends StatelessWidget {
     required this.checkOutDate,
     required this.guests,
     required this.total,
+    required this.bookingId,
   });
 
   @override
@@ -107,21 +113,37 @@ class CheckoutScreen extends StatelessWidget {
         const SizedBox(height: ASizes.spaceBtwItems),
         // PayHere payment option
         ListTile(
-          leading: const Icon(Icons.payment, color: AColors.primary),
+          leading: const Icon(Iconsax.money, color: AColors.primary),
           title: const Text('PayHere'),
           subtitle: const Text('Secure online payments'),
           onTap: _handlePayment,
+          
         ),
+        const ListTile(
+          leading:  Icon(Iconsax.money, color: AColors.success),
+          title:  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Cash '),
+              Text('Coming Soon!', style: TextStyle(color: Colors.red),)
+            ],
+          ),
+          subtitle: Text('Pay by Cash to hostel  / Taxi'),
+           
+          
+        ),
+        
+       
         // Add more payment options as needed
       ],
     );
   }
 
-  Future<void> _handlePayment() async {
-    // In a real app, you would integrate with PayHere SDK
-    // This is a simplified version that simulates payment
-    
-    // 1. First show a confirmation dialog
+
+
+Future<void> _handlePayment() async {
+  try {
+    // 1. Show confirmation dialog
     final confirm = await Get.dialog<bool>(
       AlertDialog(
         title: const Text('Confirm Payment'),
@@ -141,34 +163,31 @@ class CheckoutScreen extends StatelessWidget {
 
     if (confirm != true) return;
 
-    // 2. Simulate payment processing
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
+    // 2. Show loading
+    AFullScreenLoader.openLoadingDialog('Processing Payment', AImages.paymentSuccess);
+
+    // 3. Initialize PayHere payment
+    final userController = Get.find<UserController>();
+    await PayHereService.initiatePayment(
+      amount: total,
+      bookingId: bookingId,
+      customerName: userController.currentUser!.fullName,
+      customerEmail: userController.currentUser!.email,
     );
 
-    // 3. Simulate payment success after delay
-    await Future.delayed(const Duration(seconds: 2));
-    Get.back(); // Close loading dialog
+    // 4. Close loading (PayHere will handle the rest)
+    AFullScreenLoader.stopLoading();
 
-    // 4. Update booking status to confirmed
-    final bookingController = Get.find<BookingController>();
-    final success = await bookingController.confirmBooking('booking-id'); // You need to track the booking ID
-
-    if (success) {
-      Get.offAll(() => PaymentSuccessScreen(
-        room: room,
-        checkInDate: checkInDate,
-        checkOutDate: checkOutDate,
-      ));
-    } else {
-      Get.snackbar(
-        'Payment Failed',
-        'Could not confirm your booking',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
+  } catch (e, stack) {
+    AFullScreenLoader.stopLoading();
+    print('Payment error: $e');
+    print('Stack trace: $stack');
+    
+    Get.snackbar(
+      'Payment Error',
+      'Failed to initiate payment: ${e.toString()}',
+      snackPosition: SnackPosition.BOTTOM,
+    );
   }
+}
 }

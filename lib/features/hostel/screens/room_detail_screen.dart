@@ -192,7 +192,7 @@ class RoomDetailScreen extends StatelessWidget {
         //if (room.size != null)
           _buildFeatureItem(
             icon: Icons.aspect_ratio,
-            label: room.sizeDescription!,
+            label: '18 sq ft',
             dark: dark,
           ),
         //if (room.hasPrivateBathroom)

@@ -12,6 +12,9 @@ class Config {
   static const String verifyEmailCheck = '$baseUrl/api/users/verify-email/check';
   static const String resetPassword = '$baseUrl/api/users/reset-password';
 
+  // User rest Api 
+  static const String userEndpoint = '$baseUrl/api/users';
+
   // Hostel REST API Endpoints
   static const String hostelEndpoint = '$baseUrl/api/hostels';
   static const String getHostelByIdEndpoint = '$baseUrl/api/hostels';
@@ -34,4 +37,14 @@ class Config {
 
   // Information REST API Endpoints
   static const String informationEndpoint = '$baseUrl/api/information';
+
+  // Activity Rest Api
+  static const String activityEndpoint ='$baseUrl/api/activity-events';
+
+  // TripGenie Rest Api
+  static const String tripGenieEndpoint = '$baseUrl/api/tripgenie';
+
+
+  // Api Key
+  static const String googleMapApiKey = 'AIzaSyC76NiQpUn4Frh1Qijj_D_NLFPel_a8fXM';
 }
