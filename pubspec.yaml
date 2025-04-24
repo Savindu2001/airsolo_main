@@ -50,6 +50,8 @@ dependencies:
   printing: ^5.14.2
   pdf: ^3.11.3
   geolocator: ^14.0.0
+  bottom_picker: ^3.0.0
+  credit_card_input_form: ^2.3.0
   
 
 

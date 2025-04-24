@@ -44,6 +44,10 @@ class Config {
   // TripGenie Rest Api
   static const String tripGenieEndpoint = '$baseUrl/api/tripgenie';
 
+  // Card Rest Api
+  static const String cardDetailEndpoint = '$baseUrl/api/paymentcards';
+  static const String cardDetailsByUserId = '$baseUrl/api/paymentcards/cards';
+
 
   // Api Key
   static const String googleMapApiKey = 'AIzaSyC76NiQpUn4Frh1Qijj_D_NLFPel_a8fXM';

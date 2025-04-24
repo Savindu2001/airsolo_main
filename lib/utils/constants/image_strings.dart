@@ -32,6 +32,15 @@ class AImages{
   static const String disconnect = 'assets/images/icons/disconect.png';
   static const String help = 'assets/images/icons/support.png';
 
+  // Card Images Icons
+  static const String visaCard = 'assets/images/icons/visa.jpeg';
+  static const String masterCard = 'assets/images/icons/mster.jpeg';
+  static const String amexCard = 'assets/images/icons/americalexp.png';
+  static const String discoverCard = 'assets/images/icons/discover.png';
+  static const String defaultCard = 'assets/images/icons/creditcard.jpeg';
+
+
+  
 
   //Banners
   static const String banner1 = 'assets/images/banners/banner1.png';
@@ -87,6 +96,7 @@ class AImages{
    static const String loading = 'assets/images/animations/141397-loading-juggle.json';
    static const String searching= 'assets/images/animations/72785-searching.json';
    static const String paymentSuccess = 'assets/images/animations/120978-payment-successful.json';
+   static const String pencilDrawing = 'assets/images/animations/140429-pencil-drawing.json';
 
   
 

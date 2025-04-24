@@ -34,14 +34,14 @@ class CityController extends GetxController {
 
   Future<void> fetchCities({bool isRetry = false}) async {
     try {
-      final isConnected = await NetworkManager.instance.isConnected();
+      // final isConnected = await NetworkManager.instance.isConnected();
 
-      // Network Check 
-      if (!isConnected) {
-        error('No internet connection');
-        isLoading(false);
-        return;
-      }
+      // // Network Check 
+      // if (!isConnected) {
+      //   error('No internet connection');
+      //   isLoading(false);
+      //   return;
+      // }
       if (!isRetry) {
         isLoading(true);
         error('');

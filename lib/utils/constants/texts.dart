@@ -48,6 +48,16 @@ static const String gender = 'Gender';
 
 
 
+// Payment Cards
+
+static const String cardNumber = 'Card Number';
+static const String cvv = 'CVV';
+static const String expDate = 'Exp.date';
+static const String nickName = 'Nickname (optional)';
+static const String save = 'SAVE';
+static const String cardType = 'Card Type';
+
+
 //Buttons Texts
 static const String  submit = 'Submit';
 static const String  done = 'Done';
