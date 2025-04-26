@@ -1,5 +1,4 @@
 import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
-import 'package:airsolo/features/home/widgets/home_app_bar.dart';
 import 'package:airsolo/features/tripGenie/screens/place_guide_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/trip_maker_screen.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -18,9 +17,8 @@ class AIHomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //App Bar
-            const AHomeAppBar(),
-            const SizedBox(height: ASizes.spaceBtwSections,),
+            
+            const SizedBox(height: ASizes.spaceBtwSections *3,),
             
             const SizedBox(height: 20),
             Text(
