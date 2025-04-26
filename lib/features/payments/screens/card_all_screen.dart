@@ -149,17 +149,7 @@ Widget _buildDismissibleCard(BuildContext context, PaymentCardController control
     },
     onDismissed: (direction) {
       controller.deleteCard(card.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("${card.nickName ?? 'Card'} deleted"),
-          action: SnackBarAction(
-            label: "UNDO",
-            onPressed: () {
-              // TODO: Implement undo functionality
-            },
-          ),
-        ),
-      );
+      
     },
     child: Padding(
       padding: const EdgeInsets.only(bottom: 16),

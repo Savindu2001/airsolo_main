@@ -1,5 +1,8 @@
+import 'package:airsolo/common/widgets/custome_shapes/containers/primary_hader_container.dart';
+import 'package:airsolo/features/home/widgets/home_app_bar.dart';
 import 'package:airsolo/features/tripGenie/screens/place_guide_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/trip_maker_screen.dart';
+import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -11,26 +14,25 @@ class AIHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('TripGenie AI'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: APrimaryHeaderContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            //App Bar
+            const AHomeAppBar(),
+            const SizedBox(height: ASizes.spaceBtwSections,),
+            
             const SizedBox(height: 20),
-            const Text(
-              'AI Travel Assistant',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              'TripGenie',
+              style: Get.textTheme.headlineMedium!.copyWith(color: AColors.white),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Choose an AI feature to help plan your perfect trip',
+             Text(
+              'AirSolo Ai for travelrs in srilanka',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: Get.textTheme.titleMedium!.copyWith(color: AColors.white),
             ),
             const SizedBox(height: 40),
             _buildFeatureCard(
@@ -45,7 +47,7 @@ class AIHomeScreen extends StatelessWidget {
               icon: Iconsax.calendar,
               title: 'Trip Maker',
               subtitle: 'Plan your perfect trip with AI',
-              color: AColors.secondary,
+              color: AColors.primary,
               onTap: () => Get.to(() => const TripMakerScreen()),
             ),
           ],

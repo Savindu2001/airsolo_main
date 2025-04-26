@@ -66,6 +66,8 @@
 		<array>
 			<string>payheremobilesdk</string>
 		</array>
+		<key>NSSpeechSynthesisUsageDescription</key>
+        <string>This app uses text-to-speech to read content aloud</string>
 
 	</dict>
 </plist>

@@ -56,7 +56,7 @@ class _TripMakerScreenState extends State<TripMakerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trip Maker'),
+        title: const Text('TripGenie Maker'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -66,7 +66,7 @@ class _TripMakerScreenState extends State<TripMakerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Plan your perfect trip with AI',
+                'Plan your perfect trip with TripGenie',
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
               const SizedBox(height: 20),
@@ -186,9 +186,7 @@ class _TripMakerScreenState extends State<TripMakerScreen> {
               Obx(() => SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: controller.isLoading.value
-                      ? null
-                      : () async {
+                  onPressed: () async {
                           if (_formKey.currentState!.validate() &&
                               _startDate != null &&
                               _endDate != null) {
@@ -223,7 +221,7 @@ class _TripMakerScreenState extends State<TripMakerScreen> {
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                          'Generate Trip Plan',
+                          'Generate My Trip Plan',
                           style: TextStyle(fontSize: 16),
                         ),
                 ),

@@ -60,12 +60,10 @@ class PlaceGuideScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 30),
-            Obx(() => SizedBox(
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: controller.isLoading.value
-                    ? null
-                    : () async {
+                onPressed: () async {
                         await controller.getPlaceGuide(locationController.text);
                         if (controller.placeGuide.value != null) {
                           Get.to(() => ResultsScreen(
@@ -81,14 +79,12 @@ class PlaceGuideScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: controller.isLoading.value
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
+                child: const Text(
                         'Get Guide',
                         style: TextStyle(fontSize: 16),
                       ),
               ),
-            )),
+            ),
           ],
         ),
       ),

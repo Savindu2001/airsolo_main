@@ -146,8 +146,8 @@ Future<void> fetchUserCards() async {
       },
     ).timeout(const Duration(seconds: 15));
 
-    debugPrint('Response status: ${response.statusCode}');
-    debugPrint('Response body: ${response.body}');
+    // debugPrint('Response status: ${response.statusCode}');
+    // debugPrint('Response body: ${response.body}');
 
     if (response.statusCode == 403) {
       if (response.body.contains('expired')) {
@@ -182,7 +182,7 @@ Future<void> fetchUserCards() async {
     for (final item in responseData) {
       try {
         if (item is! Map<String, dynamic>) {
-          debugPrint('Skipping invalid card item: $item');
+          //debugPrint('Skipping invalid card item: $item');
           continue;
         }
 
@@ -191,20 +191,20 @@ Future<void> fetchUserCards() async {
             item['card_type'] == null ||
             item['user_id'] == null ||
             item['exp_date'] == null) {
-          debugPrint('Card missing required fields: $item');
+          //debugPrint('Card missing required fields: $item');
           continue;
         }
 
         cards.add(PaymentCard.fromJson(item));
       } catch (e, stackTrace) {
-        debugPrint('Error parsing card: $e');
-        debugPrint('Stack trace: $stackTrace');
-        debugPrint('Problematic card data: $item');
+        // debugPrint('Error parsing card: $e');
+        // debugPrint('Stack trace: $stackTrace');
+        // debugPrint('Problematic card data: $item');
       }
     }
 
     paymentCardDetails.value = cards;
-    debugPrint('Successfully loaded ${cards.length} cards');
+   // debugPrint('Successfully loaded ${cards.length} cards');
 
   } on TimeoutException {
     error.value = 'Request timed out. Please try again.';
@@ -214,8 +214,8 @@ Future<void> fetchUserCards() async {
     error.value = 'Data format error: ${e.message}';
   } catch (e, stackTrace) {
     error.value = 'Failed to load cards: ${e.toString().replaceAll('Exception: ', '')}';
-    debugPrint('Error in fetchUserCards: $e');
-    debugPrint('Stack trace: $stackTrace');
+   // debugPrint('Error in fetchUserCards: $e');
+    //debugPrint('Stack trace: $stackTrace');
   } finally {
     
   }

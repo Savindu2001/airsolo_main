@@ -4,7 +4,7 @@ class TripPlan {
   final DateTime endDate;
   final String tripType;
   final int numberOfGuest;
-  final String tripDetails;
+  final String tripDetails; // Ensure this is String
   final DateTime? timestamp;
 
   TripPlan({
@@ -18,19 +18,26 @@ class TripPlan {
   });
 
   factory TripPlan.fromJson(Map<String, dynamic> json) {
+    // Convert tripDetails to String if it comes as List or other type
+    String details = '';
+    if (json['tripDetails'] is List) {
+      details = (json['tripDetails'] as List).join('\n\n');
+    } else {
+      details = json['tripDetails']?.toString() ?? '';
+    }
+
     return TripPlan(
       startCity: json['startCity'] ?? '',
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       tripType: json['tripType'] ?? '',
       numberOfGuest: json['numberOfGuest'] ?? 1,
-      tripDetails: json['tripDetails'] ?? '',
+      tripDetails: details, // Use converted string
       timestamp: json['timestamp'] != null 
           ? DateTime.parse(json['timestamp']) 
           : null,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'startCity': startCity,
