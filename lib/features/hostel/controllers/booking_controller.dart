@@ -73,8 +73,11 @@ class BookingController extends GetxController {
     isLoading(false);
   }
 }
+
+
+// add auto compltere lopcation to booking scren
   
-  Future<bool> confirmBooking(String bookingId) async {
+Future<bool> confirmBooking(String bookingId) async {
     try {
       isLoading(true);
       error('');
@@ -103,7 +106,7 @@ class BookingController extends GetxController {
     }
   }
 
-  Future<bool> notifyPaymentSuccess({
+Future<bool> notifyPaymentSuccess({
     required String bookingId,
     required String paymentId,
     required double amount,

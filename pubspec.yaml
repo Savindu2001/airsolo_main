@@ -55,6 +55,8 @@ dependencies:
   flutter_markdown: ^0.7.7
   flutter_tts: ^4.2.2
   speech_to_text: ^7.0.0
+  flutter_polyline_points: ^2.1.0
+  google_places_autocomplete_text_field: ^1.1.0
   
 
 

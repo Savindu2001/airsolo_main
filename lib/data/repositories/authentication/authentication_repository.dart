@@ -1,4 +1,4 @@
-import 'package:airsolo/features/taxi/driverDashboard.dart';
+import 'package:airsolo/features/driver/driverDashboard.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:airsolo/navigation_menu.dart';

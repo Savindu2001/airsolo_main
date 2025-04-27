@@ -31,6 +31,7 @@ class Config {
   // Taxi REST API Endpoints
   static const String getTaxisEndpoint = '$baseUrl/api/taxis';
   static const String getTaxiByIdEndpoint = '$baseUrl/api/taxis';
+  static const String getVehicleType = '$baseUrl/api/vehicle-type';
 
   // City REST API Endpoints
   static const String cityEndpoint = '$baseUrl/api/city';

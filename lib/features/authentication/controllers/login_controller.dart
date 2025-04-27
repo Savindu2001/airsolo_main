@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
-import 'package:airsolo/features/taxi/driverDashboard.dart';
+import 'package:airsolo/features/driver/driverDashboard.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/navigation_menu.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';

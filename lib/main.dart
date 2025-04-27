@@ -8,6 +8,7 @@ import 'package:airsolo/features/hostel/controllers/hostel_controller.dart';
 import 'package:airsolo/features/hostel/controllers/house_rule_controller.dart';
 import 'package:airsolo/features/hostel/controllers/room_controller.dart';
 import 'package:airsolo/features/payments/controllers/card_controller.dart';
+import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 import 'package:airsolo/features/users/user_controller.dart';
 import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,6 +39,7 @@ void main() async {
   Get.put(CityController(), permanent: true);
   Get.put(NetworkManager(), permanent: true);
   Get.put(PaymentCardController(), permanent: true);
+  Get.put(TaxiBookingController(), permanent: true);
 
 
 
