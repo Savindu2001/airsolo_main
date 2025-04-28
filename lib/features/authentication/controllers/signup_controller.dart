@@ -1,23 +1,24 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:airsolo/config.dart';
 import 'package:airsolo/features/authentication/screens/signup/verify_email.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:airsolo/utils/popups/full_screen_loader.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
-import 'package:airsolo/utils/validators/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http; 
-import 'dart:convert'; 
-import 'package:airsolo/config.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:http/http.dart' as http;
 
 class SignupController extends GetxController {
   static SignupController get instance => Get.find();
 
   // --- Form Controllers --- //
   final hidePassword = true.obs;
-  final privacyPolicy = false.obs; // Default to false (user must explicitly accept)
+  final privacyPolicy = false.obs; 
   final email = TextEditingController();
   final firstName = TextEditingController();
   final lastName = TextEditingController();
@@ -30,38 +31,44 @@ class SignupController extends GetxController {
   // --- Signup Logic --- //
   Future<void> signup() async {
     try {
-
-       //  Validate Email First & Validate Form
-      final emailError = AValidator.validateEmail(email.text.trim());
-      if (emailError != null) {
-        ALoaders.errorSnackBar(title: 'Validation Error', message: emailError);
-        return;
+      // 1. First validate form
+      if (!signupFormKey.currentState!.validate()) {
+        debugPrint('Form validation failed');
+        // Show error message if you want
+        ALoaders.warningSnackBar(
+          title: 'Validation Error',
+          message: 'Please fill all required fields correctly',
+        );
+        return; // Stop execution if validation fails
       }
-      if (!signupFormKey.currentState!.validate()) return;
+
+    // 2. Check Privacy Policy with more explicit check
+    debugPrint('Current privacy policy value: ${privacyPolicy.value}');
+    if (privacyPolicy.value != true) {
+      ALoaders.warningSnackBar(
+        title: 'Privacy Policy Required',
+        message: 'You must accept the Privacy Policy to register.',
+      );
+      // Force UI update
+      privacyPolicy.refresh(); 
+      return;
+    }
       
-      // 1. Start Loading
+      // 3. Start Loading - Only if validations passed
       AFullScreenLoader.openLoadingDialog(
         'We are processing your information...', 
         AImages.proccessingDocer,
       );
 
-      // 2. Check Internet
+      // 4. Check Internet
       final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) return;
-
-      
-      
-
-      // 4. Check Privacy Policy
-      if (!privacyPolicy.value) {
-        ALoaders.warningSnackBar(
-          title: 'Privacy Policy Required',
-          message: 'You must accept the Privacy Policy to register.',
-        );
+      if (!isConnected) {
+        AFullScreenLoader.stopLoading();
+        ALoaders.errorSnackBar(title: 'No Internet', message: 'Please check your connection');
         return;
       }
 
-      // 5. Prepare Data for Node.js Backend
+      // 5. Prepare Data
       final userData = {
         'firstName': firstName.text.trim(),
         'lastName': lastName.text.trim(),
@@ -74,30 +81,25 @@ class SignupController extends GetxController {
         'profile_photo': 'https://example.com/default_profile.png', 
       };
 
-      // 6. API Call to Node.js Backend
+      // 6. API Call
       final response = await http.post(
         Uri.parse(Config.registerEndpoint),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(userData),
-      ).timeout(const Duration(seconds: 10)); // Add timeout
+      ).timeout(const Duration(seconds: 10));
 
       // 7. Handle Response
       if (response.statusCode == 200) {
         AFullScreenLoader.stopLoading();
-        await Future.delayed(const Duration(milliseconds: 100));
         ALoaders.successSnackBar(
           title: 'Success!',
           message: 'Account created. Please verify your email.',
         );
-        
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.to(() => VerifyEmailScreen(email: email.text.trim()));
-        });
-
+        // Only navigate after successful creation
+        Get.to(() => VerifyEmailScreen(email: email.text.trim()));
       } 
       else if (response.statusCode == 400 || response.statusCode == 409) {
-        
+        AFullScreenLoader.stopLoading();
         final errorData = jsonDecode(response.body);
         ALoaders.errorSnackBar(
           title: 'Registration Failed',
@@ -105,34 +107,43 @@ class SignupController extends GetxController {
         );
       } 
       else {
-        // Unknown server error
+        AFullScreenLoader.stopLoading();
         throw Exception('Unexpected server error: ${response.statusCode}');
       }
     } 
     on http.ClientException {
+      AFullScreenLoader.stopLoading();
       ALoaders.errorSnackBar(
         title: 'Network Error',
         message: 'Could not connect to the server. Check your connection.',
       );
     } 
     on TimeoutException catch (_) {
+      AFullScreenLoader.stopLoading();
       ALoaders.errorSnackBar(
         title: 'Timeout',
         message: 'Request took too long. Please try again.',
       );
     } 
     catch (e) {
-      // Generic error fallback
+      AFullScreenLoader.stopLoading();
       ALoaders.errorSnackBar(
         title: 'Oh Snap!',
-        message: e.toString(),
+        message: 'An error occurred. Please try again.',
       );
-      // Log the error for debugging (use a logger like `logger` or `Firebase Crashlytics`)
       debugPrint('Signup Error: $e');
-    } 
-    finally {
-      // Always remove loader
-      AFullScreenLoader.stopLoading();
     }
+  }
+
+  @override
+  void onClose() {
+    email.dispose();
+    firstName.dispose();
+    lastName.dispose();
+    username.dispose();
+    country.dispose();
+    password.dispose();
+    gender.dispose();
+    super.onClose();
   }
 }

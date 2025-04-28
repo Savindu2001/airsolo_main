@@ -3,12 +3,14 @@ import 'package:airsolo/config.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
 import 'package:airsolo/features/taxi/models/vehicle_type_model.dart';
+import 'package:airsolo/features/taxi/screens/available_taxi.dart';
 import 'package:airsolo/utils/constants/colors.dart';
+import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
-import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,7 +41,7 @@ class _TaxiBookingScreenState extends State<TaxiBookingScreen> {
     _getCurrentLocation();
   }
 
-  Future<void> _getCurrentLocation() async {
+Future<void> _getCurrentLocation() async {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) return;
@@ -60,7 +62,7 @@ class _TaxiBookingScreenState extends State<TaxiBookingScreen> {
     }
   }
 
-  Future<void> _getPlaceCoordinates(String placeId, bool isPickup) async {
+Future<void> _getPlaceCoordinates(String placeId, bool isPickup) async {
     final url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${Config.googleMapApiKey}';
     final response = await http.get(Uri.parse(url));
 
@@ -100,7 +102,7 @@ Future<void> _calculateDistanceAndFare() async {
       final distanceMeters = data['routes'][0]['legs'][0]['distance']['value'];
       final distanceKm = distanceMeters / 1000;
 
-      // 🛠 Move encodedPolyline inside the if block
+      //  Move encodedPolyline inside the if block
       final encodedPolyline = data['routes'][0]['overview_polyline']['points'];
       print('Encoded polyline: $encodedPolyline');
 
@@ -153,7 +155,7 @@ List<LatLng> _decodePolyline(String encoded) {
 }
 
 
-
+  // Calculation
   void _calculateEstimatedFare() {
     if (_distanceInKm == null ) return;
 
@@ -177,9 +179,9 @@ List<LatLng> _decodePolyline(String encoded) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Book a Taxi', style: TextStyle(color: Colors.white)),
+        title: Text('Book a Taxi', style: TextStyle(color:AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.white)),
         centerTitle: true,
-        backgroundColor: Colors.blue[800],
+        backgroundColor: AHelperFunctions.isDarkMode(context) ? AColors.primary : AColors.homePrimary,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -191,16 +193,18 @@ List<LatLng> _decodePolyline(String encoded) {
               if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() else Text('data'),
               
               
-              if (_distanceInKm != null) _buildDistanceAndFareCard(),
+              
               _buildLocationSection(),
-              SizedBox(height: 20),
+              const SizedBox(height: ASizes.spaceBtwItems),
               _buildDateTimeSection(),
-              SizedBox(height: 20),
+              const SizedBox(height: ASizes.spaceBtwItems),
               
               _buildVehicleTypeSection(),
-              SizedBox(height: 20),
+              const SizedBox(height: ASizes.spaceBtwItems),
+              if (_distanceInKm != null) Center(child: _buildDistanceAndFareCard()),
+              const SizedBox(height: ASizes.spaceBtwItems),
               _buildSharedBookingToggle(),
-              SizedBox(height: 20),
+              const SizedBox(height: ASizes.spaceBtwItems),
               _buildBookNowButton(),
             ],
           ),
@@ -229,7 +233,7 @@ List<LatLng> _decodePolyline(String encoded) {
   Widget _buildAutoCompleteField(String label, TextEditingController controller, bool isPickup) {
     return Row(
       children: [
-        Icon(isPickup ? Icons.my_location : Icons.location_on, color: isPickup ? Colors.green : Colors.red),
+        Icon(isPickup ? Icons.my_location : Icons.location_on, color: isPickup ? AColors.primary : AColors.homePrimary),
         SizedBox(width: 10),
         Expanded(
           child: GooglePlacesAutoCompleteTextFormField(
@@ -279,8 +283,8 @@ List<LatLng> _decodePolyline(String encoded) {
                     icon: Icon(Icons.access_time),
                     label: Text('Now'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: _isNowSelected() ? Colors.blue : Colors.grey,
-                      side: BorderSide(color: _isNowSelected() ? Colors.blue : Colors.grey),
+                      foregroundColor: _isNowSelected() ? AColors.homePrimary : Colors.white,
+                      side: BorderSide(color: _isNowSelected() ? AColors.homePrimary : Colors.white),
                     ),
                   ),
                 ),
@@ -291,8 +295,8 @@ List<LatLng> _decodePolyline(String encoded) {
                     icon: Icon(Icons.calendar_today),
                     label: Text('Later'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: !_isNowSelected() ? Colors.blue : Colors.grey,
-                      side: BorderSide(color: !_isNowSelected() ? Colors.blue : Colors.grey),
+                      foregroundColor: !_isNowSelected() ? AColors.homePrimary : Colors.white,
+                      side: BorderSide(color: !_isNowSelected() ? AColors.homePrimary : Colors.white),
                     ),
                   ),
                 ),
@@ -306,31 +310,26 @@ List<LatLng> _decodePolyline(String encoded) {
 
   Widget _buildMapPreview() {
   if (_pickupLocation == null || _dropLocation == null) {
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          7.00, 81.00
-          ),
-        zoom: 12
-        ),
-      );
+    return SizedBox();
   }
 
   return Card(
     elevation: 2,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     child: Container(
-      height: 600,
+      height: 450,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: GoogleMap(
           myLocationButtonEnabled: false,
+          zoomGesturesEnabled: false,
+          zoomControlsEnabled: true,
           initialCameraPosition: CameraPosition(
             target: LatLng(
               (_pickupLocation!.latitude + _dropLocation!.latitude) / 2,
               (_pickupLocation!.longitude + _dropLocation!.longitude) / 2,
             ),
-            zoom: 15, 
+            zoom: 10, 
           ),
           markers: {
             Marker(markerId: MarkerId('pickup'), position: _pickupLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)),
@@ -356,6 +355,7 @@ List<LatLng> _decodePolyline(String encoded) {
 
   Widget _buildDistanceAndFareCard() {
     return Card(
+      borderOnForeground: true,
       margin: EdgeInsets.only(top: 20),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -365,7 +365,7 @@ List<LatLng> _decodePolyline(String encoded) {
           children: [
             Text('Distance: ${_distanceInKm!.toStringAsFixed(2)} km', style: TextStyle(fontSize: 16)),
             if (_estimatedFare != null)
-              Text('Estimated Fare: LKR ${_estimatedFare!.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, color: Colors.green)),
+              Text('Estimated Fare: LKR ${_estimatedFare!.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, color: AColors.success)),
           ],
         ),
       ),
@@ -401,6 +401,24 @@ List<LatLng> _decodePolyline(String encoded) {
   Widget _buildVehicleTypeCard(VehicleType type) {
     final isSelected = _selectedVehicleTypeId == type.id;
 
+
+    String vehicleImage;
+    switch (type.type) {
+      case 'Tuk Tuk':
+        vehicleImage = 'assets/images/icons/tuk.png';
+        break;
+      case 'Car':
+        vehicleImage = 'assets/images/icons/car.png';
+        break;
+      case 'Van':
+        vehicleImage = 'assets/images/icons/van.png';
+        break;
+      case 'SUV':
+        vehicleImage = 'assets/images/icons/suv.png';
+      default:
+        vehicleImage = 'assets/images/icons/taxi.png'; 
+    }
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -412,18 +430,17 @@ List<LatLng> _decodePolyline(String encoded) {
         width: 140,
         margin: EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[50] : Colors.white,
+          color: isSelected ? AColors.primary: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey[300]!),
+          border: Border.all(color: isSelected ? AColors.primary : AColors.homePrimary),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/icons/taxi.png', width: 80, height: 60),
+            Image.asset(vehicleImage, width: 80, height: 60),
             SizedBox(height: 8),
-            Text(type.type, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(type.type, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.homePrimary)),
             SizedBox(height: 8,),
-            Text(_estimatedFare.toString()),
             
           ],
         ),
@@ -433,14 +450,15 @@ List<LatLng> _decodePolyline(String encoded) {
 
   Widget _buildSharedBookingToggle() {
     return Card(
+      color: AColors.homePrimary,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Shared Ride', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('Shared Ride', style: Get.textTheme.titleLarge),
             Switch(
               value: _isShared,
               onChanged: (value) {
@@ -448,7 +466,8 @@ List<LatLng> _decodePolyline(String encoded) {
                   _isShared = value;
                 });
               },
-              activeColor: Colors.blue,
+              activeColor: AColors.white,
+              inactiveTrackColor: AColors.black,
             ),
           ],
         ),
@@ -461,15 +480,11 @@ List<LatLng> _decodePolyline(String encoded) {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: _submitPrivateBooking,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Text('BOOK NOW', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue[800],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      ),
+        child: Text('BOOK TAXI', 
+            style: Get.textTheme.titleLarge!.copyWith(color: AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.primary)))
+            ,
+        
+      
     );
   }
 
@@ -499,7 +514,9 @@ List<LatLng> _decodePolyline(String encoded) {
   }
 
   
-  void _submitPrivateBooking() {
+
+
+void _submitPrivateBooking() async {
   if (_pickupLocation == null || _dropLocation == null) {
     Get.snackbar('Missing Info', 'Please select both pickup and drop locations.');
     return;
@@ -511,18 +528,65 @@ List<LatLng> _decodePolyline(String encoded) {
   }
 
   if (_formKey.currentState!.validate()) {
-    final request = BookingRequest(
-      pickupLocation: _pickupController.text,
-      dropLocation: _dropController.text,
-      pickupLat: _pickupLocation!.latitude,
-      pickupLng: _pickupLocation!.longitude,
-      dropLat: _dropLocation!.latitude,
-      dropLng: _dropLocation!.longitude,
-      date: _selectedDate,
-      time: _selectedTime,
-      vehicleTypeId: _selectedVehicleTypeId!,
+    // Show loading
+    Get.dialog(
+      Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
     );
-    controller.createBooking(request, _isShared);
+
+    try {
+      // Create booking request
+      final bookingRequest = {
+        'pickupLocation': _pickupController.text,
+        'dropLocation': _dropController.text,
+        'pickupLat': _pickupLocation!.latitude,
+        'pickupLng': _pickupLocation!.longitude,
+        'dropLat': _dropLocation!.latitude,
+        'dropLng': _dropLocation!.longitude,
+        'vehicleTypeId': _selectedVehicleTypeId!,
+        'isShared': _isShared,
+        'distance': _distanceInKm,
+        'totalPrice': _estimatedFare,
+        'bookedSeats': _isShared ? 2 : 1, // Default to 2 seats for shared, 1 for private
+        'scheduledAt': _isNowSelected() 
+            ? null 
+            : DateTime(
+                _selectedDate.year,
+                _selectedDate.month,
+                _selectedDate.day,
+                _selectedTime.hour,
+                _selectedTime.minute,
+              ).toIso8601String(),
+      };
+
+      // Call controller to create booking
+      await controller.createBooking(
+        pickupLocation: _pickupController.text,
+        dropLocation: _dropController.text,
+        pickupLat: _pickupLocation!.latitude,
+        pickupLng: _pickupLocation!.longitude,
+        dropLat: _dropLocation!.latitude,
+        dropLng: _dropLocation!.longitude,
+        vehicleTypeId: _selectedVehicleTypeId!,
+        isShared: _isShared,
+        seats: _isShared ? 2 : 1,
+        scheduledAt: _isNowSelected() 
+            ? null 
+            : DateTime(
+                _selectedDate.year,
+                _selectedDate.month,
+                _selectedDate.day,
+                _selectedTime.hour,
+                _selectedTime.minute,
+              ),
+      );
+
+      // Navigate to available drivers screen
+      Get.to(() => AvailableDriversScreen());
+    } catch (e) {
+      Get.back(); // Dismiss loading
+      Get.snackbar('Error', 'Failed to create booking: ${e.toString()}');
+    }
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
 import 'package:airsolo/features/home/main_home.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
 import 'package:airsolo/features/taxi/screens/taxi_book.dart';
-import 'package:airsolo/features/taxi/screens/taxi_booking_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/ai_home_screen.dart';
 //import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
 import 'package:airsolo/utils/constants/colors.dart';

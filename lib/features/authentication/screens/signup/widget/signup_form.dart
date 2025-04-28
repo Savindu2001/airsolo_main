@@ -21,9 +21,11 @@ class SignupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = AHelperFunctions.isDarkMode(context);
-    final controller = Get.put(SignupController());
+    final controller = Get.put(SignupController(), permanent: true);
+   
     return Form(
       key: controller.signupFormKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
     
@@ -76,7 +78,7 @@ class SignupForm extends StatelessWidget {
               onTap: () {
                 showCountryPicker(
                   context: context,
-                  showPhoneCode: false, // Optional: to show +94
+                  showPhoneCode: false, 
                   onSelect: (Country country) {
                     controller.country.text = country.name;
                   },
@@ -176,4 +178,5 @@ class SignupForm extends StatelessWidget {
       ),
       );
   }
+   
 }

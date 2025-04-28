@@ -22,6 +22,7 @@ class AuthenticationRepository extends GetxController {
     if (!_initialized.value) {
       FlutterNativeSplash.remove();
       _initialized.value = true;
+       initializeAuthState();
     }
   }
 
@@ -84,7 +85,7 @@ class AuthenticationRepository extends GetxController {
   Future<void> _navigateBasedOnRole(String role) async {
     await Future.delayed(const Duration(milliseconds: 50));
     Get.offAll(
-      () => role == 'driver' ? const DriverDashboard() : const NavigationMenu(),
+      () => role == 'driver' ? DriverHomeScreen() : const NavigationMenu(),
       transition: Transition.cupertino,
       duration: const Duration(milliseconds: 300),
     );

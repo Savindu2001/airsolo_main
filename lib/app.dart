@@ -2,9 +2,11 @@ import 'package:airsolo/bindings/general_bindings.dart';
 import 'package:airsolo/features/activity/activities_screen.dart';
 import 'package:airsolo/features/authentication/screens/loging/login.dart';
 import 'package:airsolo/features/city/screen/city_screen.dart';
+import 'package:airsolo/features/driver/driverDashboard.dart';
+import 'package:airsolo/features/driver/vehicle_register.dart';
 import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
+import 'package:airsolo/features/taxi/screens/booking_confirmation_screen.dart';
 import 'package:airsolo/features/taxi/screens/taxi_book.dart';
-import 'package:airsolo/features/taxi/screens/taxi_booking_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/ai_home_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/place_guide_screen.dart';
 import 'package:airsolo/features/tripGenie/screens/trip_maker_screen.dart';
@@ -39,6 +41,10 @@ class AirsoloApp extends StatelessWidget {
         GetPage(name: '/ai/place-guide',page: () => const PlaceGuideScreen(),),
         GetPage(name: '/ai/trip-maker',page: () => const TripMakerScreen(),),
         GetPage(name: '/book-taxi', page: () => TaxiBookingScreen()),   
+        GetPage(name: '/driver/home', page: () => DriverHomeScreen()),
+        GetPage(name: '/driver/register', page: () => VehicleRegistrationScreen()),
+        //GetPage(name: '/driver/booking', page: () => BookingDetailsScreen()),
+        GetPage(name: '/booking/confirm', page: () => BookingConfirmationScreen()),
         
       ],
     );

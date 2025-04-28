@@ -25,7 +25,7 @@ class LoginController extends GetxController {
   final rememberMe = true.obs;
   final email = TextEditingController();
   final password = TextEditingController();
-  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState>  loginFormKey = GlobalKey<FormState>();
 
 
   // --- check existing sessions ---
@@ -36,7 +36,7 @@ class LoginController extends GetxController {
 
     if (token != null && currentUser != null) {
       final role = box.read('userRole') ?? 'traveler';
-      Get.offAllNamed(role == 'driver' ? '/driver' : '/home');
+      Get.offAllNamed(role == 'driver' ? '/driver/home' : '/home');
     }
   }
   // --- Login Method ---
@@ -132,7 +132,7 @@ class LoginController extends GetxController {
   // --- Safe Navigation Method ---
 void _navigateBasedOnRole(String role) {
   Widget destination = role == 'driver' 
-      ? const DriverDashboard() 
+      ?  DriverHomeScreen() 
       : const NavigationMenu();
 
   // Using GetX with transition
@@ -172,22 +172,26 @@ void _navigateBasedOnRole(String role) {
     }
   }
 
-  // --- Logout ---
-  Future<void> logout() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
-      
-      // Use rootNavigator for logout
-      Navigator.of(Get.context!, rootNavigator: true).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-        (route) => false,
-      );
-    } catch (e) {
-      ALoaders.errorSnackBar(title: 'Logout Failed', message: e.toString());
-    }
+// --- Logout ---
+Future<void> logout() async {
+  try {
+    // Sign out from Firebase Auth
+    await FirebaseAuth.instance.signOut();
+    
+    // Clear any stored preferences (e.g., user data)
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    
+    // Navigate to LoginScreen and clear the navigation stack
+    Navigator.of(Get.context!, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()), 
+      (route) => false, // This removes all the previous routes
+    );
+  } catch (e) {
+    // If an error occurs, show an error snackbar
+    ALoaders.errorSnackBar(title: 'Logout Failed', message: e.toString());
   }
+}
 
   
 }
