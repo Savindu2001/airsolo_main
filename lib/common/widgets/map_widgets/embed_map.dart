@@ -20,20 +20,20 @@ class _MapBoxState extends State<MapBox> {
 
   @override
   Widget build(BuildContext context) {
-    final LatLng _location = LatLng(widget.latitude, widget.longitude);
+    final LatLng location = LatLng(widget.latitude, widget.longitude);
 
     return SizedBox(
       height: 200,
       child: GoogleMap(
         onMapCreated: (controller) => mapController = controller,
         initialCameraPosition: CameraPosition(
-          target: _location,
+          target: location,
           zoom: 14.0,
         ),
         markers: {
           Marker(
             markerId: const MarkerId("location"),
-            position: _location,
+            position: location,
           ),
         },
         myLocationButtonEnabled: false,

@@ -17,57 +17,59 @@ class VehicleRegistrationScreen extends StatelessWidget {
   final TextEditingController seatsController = TextEditingController();
   String? selectedVehicleTypeId;
 
+  VehicleRegistrationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register Vehicle'),
+        title: const Text('Register Vehicle'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               TextFormField(
                 controller: vehicleNumberController,
-                decoration: InputDecoration(labelText: 'Vehicle Number'),
+                decoration: const InputDecoration(labelText: 'Vehicle Number'),
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
               TextFormField(
                 controller: makeController,
-                decoration: InputDecoration(labelText: 'Make'),
+                decoration: const InputDecoration(labelText: 'Make'),
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(labelText: 'Model'),
+                decoration: const InputDecoration(labelText: 'Model'),
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
               TextFormField(
                 controller: yearController,
-                decoration: InputDecoration(labelText: 'Year'),
+                decoration: const InputDecoration(labelText: 'Year'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
               TextFormField(
                 controller: colorController,
-                decoration: InputDecoration(labelText: 'Color'),
+                decoration: const InputDecoration(labelText: 'Color'),
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
               TextFormField(
                 controller: seatsController,
-                decoration: InputDecoration(labelText: 'Number of Seats'),
+                decoration: const InputDecoration(labelText: 'Number of Seats'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Obx(() {
                 if (bookingController.vehicleTypes.isEmpty) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 return DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Vehicle Type'),
+                  decoration: const InputDecoration(labelText: 'Vehicle Type'),
                   items: bookingController.vehicleTypes.map((type) {
                     return DropdownMenuItem(
                       value: type.id,
@@ -78,10 +80,10 @@ class VehicleRegistrationScreen extends StatelessWidget {
                   validator: (value) => value == null ? 'Required' : null,
                 );
               }),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               Obx(() {
                 if (controller.isLoading.value) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 return ElevatedButton(
                   onPressed: () {
@@ -97,10 +99,10 @@ class VehicleRegistrationScreen extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text('Register Vehicle'),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
+                  child: const Text('Register Vehicle'),
                 );
               }),
             ],

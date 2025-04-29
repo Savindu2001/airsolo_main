@@ -213,7 +213,7 @@ Future<void> _saveFcmTokenToBackend(String token, String userId) async {
 void _navigateBasedOnRole(String role) {
   Future.delayed(Duration.zero, () {
     Get.offAll(
-      () => role == 'driver' ? DriverHomeScreen() : const NavigationMenu(),
+      () => role == 'driver' ?  DriverHomeScreen() : const NavigationMenu(),
       transition: Transition.cupertino,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,

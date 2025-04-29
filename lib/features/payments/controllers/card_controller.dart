@@ -196,7 +196,7 @@ Future<void> fetchUserCards() async {
         }
 
         cards.add(PaymentCard.fromJson(item));
-      } catch (e, stackTrace) {
+      } catch (e) {
         // debugPrint('Error parsing card: $e');
         // debugPrint('Stack trace: $stackTrace');
         // debugPrint('Problematic card data: $item');
@@ -212,7 +212,7 @@ Future<void> fetchUserCards() async {
     error.value = 'Network error: ${e.message}';
   } on FormatException catch (e) {
     error.value = 'Data format error: ${e.message}';
-  } catch (e, stackTrace) {
+  } catch (e) {
     error.value = 'Failed to load cards: ${e.toString().replaceAll('Exception: ', '')}';
    // debugPrint('Error in fetchUserCards: $e');
     //debugPrint('Stack trace: $stackTrace');

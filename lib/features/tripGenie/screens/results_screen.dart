@@ -98,7 +98,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         title: Text(widget.title),
         actions: [
           IconButton(
-            icon: isSpeaking ? Icon(Iconsax.pause) : Icon(Iconsax.play),
+            icon: isSpeaking ? const Icon(Iconsax.pause) : const Icon(Iconsax.play),
             onPressed: _speak,
           ),
         ],

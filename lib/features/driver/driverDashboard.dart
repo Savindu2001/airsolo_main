@@ -11,46 +11,42 @@ class DriverHomeScreen extends StatelessWidget {
   final TaxiBookingController bookingController = Get.put(TaxiBookingController());
   final VehicleController vehicleController = Get.put(VehicleController());
   final LoginController loginController = Get.put(LoginController());
-  
+
+   DriverHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Text(
-    'Driver Dashboard',
-    style: TextStyle(fontWeight: FontWeight.bold),
-  ),
-  centerTitle: true,
-  actions: [
-    Padding(
-      padding: EdgeInsets.only(right: 12),
-      child: Row(
-        children: [
-         
-
-          Obx(() {
-              final isAvailable = vehicleController.currentVehicle.value?.isAvailable ?? false;
-              return Switch(
-                value: isAvailable,
-                onChanged: (value) => vehicleController.toggleAvailability(value),
-                activeColor: Colors.green,
-                inactiveThumbColor: Colors.grey[200],
-              );
-            }),
-
-
-          SizedBox(width: 12),
-          IconButton(
-            onPressed: () => loginController.logout(),
-            icon: Icon(Iconsax.logout, size: 22),
-            tooltip: 'Logout',
+        title: const Text(
+          'Driver Dashboard',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                Obx(() => Switch(
+                  value: vehicleController.currentVehicle.value?.isAvailable ?? false,
+                  onChanged: (value) {
+                    vehicleController.toggleAvailability(value);
+                  },
+                  activeColor: Colors.green,
+                  inactiveThumbColor: Colors.grey[200],
+                )),
+                const SizedBox(width: 12),
+                IconButton(
+                  onPressed: () => loginController.logout(),
+                  icon: const Icon(Iconsax.logout, size: 22),
+                  tooltip: 'Logout',
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    ),
-  ],
-),
       body: DefaultTabController(
         length: 3,
         child: Column(
@@ -70,16 +66,52 @@ class DriverHomeScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async => await bookingController.getDriverBookings(),
-                child: TabBarView(
-                  children: [
-                    _buildPendingBookings(),
-                    _buildActiveBookings(),
-                    _buildBookingHistory(),
-                  ],
-                ),
-              ),
+              child: Obx(() {
+                if (bookingController.error.value.isNotEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Iconsax.warning_2, size: 48, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error loading bookings',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          bookingController.error.value,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => bookingController.getNearByBookings(),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                
+                return RefreshIndicator(
+                  onRefresh: () async => await bookingController.getNearByBookings(),
+                  child: TabBarView(
+                    children: [
+                      _buildPendingBookings(),
+                      _buildActiveBookings(),
+                      _buildBookingHistory(),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),
@@ -90,7 +122,7 @@ class DriverHomeScreen extends StatelessWidget {
   Widget _buildPendingBookings() {
     return Obx(() {
       if (bookingController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
       
       final pendingBookings = bookingController.bookings
@@ -102,13 +134,14 @@ class DriverHomeScreen extends StatelessWidget {
           icon: Iconsax.clock,
           title: 'No Pending Rides',
           subtitle: 'When you receive new ride requests, they\'ll appear here',
+          onRetry: bookingController.getNearByBookings,
         );
       }
       
       return ListView.separated(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         itemCount: pendingBookings.length,
-        separatorBuilder: (context, index) => SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final booking = pendingBookings[index];
           return _buildBookingCard(booking);
@@ -120,7 +153,7 @@ class DriverHomeScreen extends StatelessWidget {
   Widget _buildActiveBookings() {
     return Obx(() {
       if (bookingController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
       
       final activeBookings = bookingController.bookings
@@ -132,13 +165,14 @@ class DriverHomeScreen extends StatelessWidget {
           icon: Iconsax.activity,
           title: 'No Active Rides',
           subtitle: 'Your current rides will appear here',
+          onRetry: bookingController.getNearByBookings,
         );
       }
       
       return ListView.separated(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         itemCount: activeBookings.length,
-        separatorBuilder: (context, index) => SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final booking = activeBookings[index];
           return _buildBookingCard(booking);
@@ -150,7 +184,7 @@ class DriverHomeScreen extends StatelessWidget {
   Widget _buildBookingHistory() {
     return Obx(() {
       if (bookingController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
       
       final completedBookings = bookingController.bookings
@@ -162,13 +196,14 @@ class DriverHomeScreen extends StatelessWidget {
           icon: Iconsax.calendar,
           title: 'No Ride History',
           subtitle: 'Your completed rides will appear here',
+          onRetry: bookingController.getNearByBookings,
         );
       }
       
       return ListView.separated(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         itemCount: completedBookings.length,
-        separatorBuilder: (context, index) => SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final booking = completedBookings[index];
           return _buildBookingCard(booking);
@@ -177,13 +212,18 @@ class DriverHomeScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildEmptyState({required IconData icon, required String title, required String subtitle}) {
+  Widget _buildEmptyState({
+    required IconData icon, 
+    required String title, 
+    required String subtitle,
+    required VoidCallback onRetry,
+  }) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 48, color: Colors.grey[400]),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             title,
             style: TextStyle(
@@ -192,9 +232,9 @@ class DriverHomeScreen extends StatelessWidget {
               color: Colors.grey[600],
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               subtitle,
               textAlign: TextAlign.center,
@@ -204,18 +244,20 @@ class DriverHomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: onRetry,
+            child: const Text('Refresh'),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildBookingCard(TaxiBooking booking) {
-    final dateFormat = DateFormat('MMM dd, yyyy');
     final timeFormat = DateFormat('hh:mm a');
     final isPending = booking.status == 'pending';
     final isActive = ['driver_accepted', 'driver_arrived', 'ride_started'].contains(booking.status);
-    final isCompleted = booking.status == 'ride_completed';
-    final isCancelled = booking.status == 'cancelled';
 
     return Card(
       elevation: 2,
@@ -225,11 +267,10 @@ class DriverHomeScreen extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          // Show booking details
           _showBookingDetails(booking);
         },
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -238,20 +279,20 @@ class DriverHomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Booking #${booking.id.substring(0, 8).toUpperCase()}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(booking.status),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       booking.status.replaceAll('_', ' '),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                       ),
@@ -259,15 +300,15 @@ class DriverHomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(Iconsax.location, size: 16, color: Colors.red),
-                  SizedBox(width: 8),
+                  const Icon(Iconsax.location, size: 16, color: Colors.red),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       booking.pickupLocation,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -275,7 +316,7 @@ class DriverHomeScreen extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 7),
+                padding: const EdgeInsets.only(left: 7),
                 child: Container(
                   height: 20,
                   width: 2,
@@ -284,28 +325,28 @@ class DriverHomeScreen extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(Iconsax.location, size: 16, color: Colors.green),
-                  SizedBox(width: 8),
+                  const Icon(Iconsax.location, size: 16, color: Colors.green),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       booking.dropLocation,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 12),
-              Divider(height: 1),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
+              const Divider(height: 1),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Distance',
                         style: TextStyle(
                           fontSize: 12,
@@ -314,7 +355,7 @@ class DriverHomeScreen extends StatelessWidget {
                       ),
                       Text(
                         '${booking.distance.toStringAsFixed(1)} km',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -323,7 +364,7 @@ class DriverHomeScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Fare',
                         style: TextStyle(
                           fontSize: 12,
@@ -332,7 +373,7 @@ class DriverHomeScreen extends StatelessWidget {
                       ),
                       Text(
                         '\$${booking.totalPrice.toStringAsFixed(2)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -341,7 +382,7 @@ class DriverHomeScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Time',
                         style: TextStyle(
                           fontSize: 12,
@@ -350,7 +391,7 @@ class DriverHomeScreen extends StatelessWidget {
                       ),
                       Text(
                         timeFormat.format(booking.bookingDateTime),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -358,58 +399,58 @@ class DriverHomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              if (isPending || isActive) SizedBox(height: 12),
+              if (isPending || isActive) const SizedBox(height: 12),
               if (isPending)
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => bookingController.updateBookingStatus(booking.id, 'cancelled'),
-                        child: Text('Reject'),
+                        onPressed: () => bookingController.updateBookingStatus(bookingId: booking.id, status: 'cancelled'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.red,
-                          side: BorderSide(color: Colors.red),
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          side: const BorderSide(color: Colors.red),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
+                        child: const Text('Reject'),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => bookingController.acceptBooking(booking.id),
-                        child: Text('Accept'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
+                        child: const Text('Accept'),
                       ),
                     ),
                   ],
                 ),
               if (isActive && booking.status == 'driver_accepted')
                 ElevatedButton(
-                  onPressed: () => bookingController.updateBookingStatus(booking.id, 'driver_arrived'),
-                  child: Text('Mark as Arrived'),
+                  onPressed: () => bookingController.updateBookingStatus(bookingId: booking.id, status: 'driver_arrived'),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 48),
+                    minimumSize: const Size(double.infinity, 48),
                   ),
+                  child: const Text('Mark as Arrived'),
                 ),
               if (isActive && booking.status == 'driver_arrived')
                 ElevatedButton(
-                  onPressed: () => bookingController.updateBookingStatus(booking.id, 'ride_started'),
-                  child: Text('Start Ride'),
+                  onPressed: () => bookingController.updateBookingStatus(bookingId: booking.id, status: 'ride_started'),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 48),
+                    minimumSize: const Size(double.infinity, 48),
                   ),
+                  child: const Text('Start Ride'),
                 ),
               if (isActive && booking.status == 'ride_started')
                 ElevatedButton(
-                  onPressed: () => bookingController.updateBookingStatus(booking.id, 'ride_completed'),
-                  child: Text('Complete Ride'),
+                  onPressed: () => bookingController.updateBookingStatus(bookingId: booking.id, status: 'ride_completed'),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 48),
+                    minimumSize: const Size(double.infinity, 48),
                   ),
+                  child: const Text('Complete Ride'),
                 ),
             ],
           ),
@@ -440,8 +481,8 @@ class DriverHomeScreen extends StatelessWidget {
   void _showBookingDetails(TaxiBooking booking) {
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
@@ -459,15 +500,15 @@ class DriverHomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Booking Details',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDetailRow('Booking ID', booking.id.substring(0, 8).toUpperCase()),
               _buildDetailRow('Status', booking.status.replaceAll('_', ' ')),
               _buildDetailRow('Pickup Location', booking.pickupLocation),
@@ -477,7 +518,7 @@ class DriverHomeScreen extends StatelessWidget {
               _buildDetailRow('Booking Type', booking.isShared ? 'Shared Ride' : 'Private Ride'),
               if (booking.isShared) _buildDetailRow('Seats Booked', booking.bookedSeats.toString()),
               _buildDetailRow('Created At', DateFormat('MMM dd, yyyy hh:mm a').format(booking.bookingDateTime)),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               if (booking.status == 'pending')
                 Row(
                   children: [
@@ -485,29 +526,29 @@ class DriverHomeScreen extends StatelessWidget {
                       child: OutlinedButton(
                         onPressed: () {
                           Get.back();
-                          bookingController.updateBookingStatus(booking.id, 'cancelled');
+                          bookingController.updateBookingStatus(bookingId: booking.id, status: 'cancelled');
                         },
-                        child: Text('Reject'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.red,
-                          side: BorderSide(color: Colors.red),
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          side: const BorderSide(color: Colors.red),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
+                        child: const Text('Reject'),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
                           Get.back();
                           bookingController.acceptBooking(booking.id);
                         },
-                        child: Text('Accept'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
+                        child: const Text('Accept'),
                       ),
                     ),
                   ],
@@ -522,7 +563,7 @@ class DriverHomeScreen extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -540,7 +581,7 @@ class DriverHomeScreen extends StatelessWidget {
             flex: 3,
             child: Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w500,
               ),
             ),

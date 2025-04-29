@@ -6,7 +6,6 @@ import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class AHomeAppBar extends StatelessWidget {
   const AHomeAppBar({

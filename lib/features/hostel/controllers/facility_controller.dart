@@ -16,7 +16,7 @@ class FacilityController extends GetxController {
       isLoading(true);
       
       final response = await http.get(
-        Uri.parse('${Config.facilityEndpoint}'),
+        Uri.parse(Config.facilityEndpoint),
         headers: {'Content-Type': 'application/json'},
       );
 

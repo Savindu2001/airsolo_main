@@ -116,11 +116,8 @@ class Hostel {
 
 
   static List<Room> _parseRoomList(List<dynamic> data) {
-    if (data == null) return [];
-    if (data is List){
-      return data.map((json) => Room.fromJson(json)).toList();
-    }
-    return [];
+    return data.map((json) => Room.fromJson(json)).toList();
+      return [];
   }
 
   static List<Facility> _parseFacilityList(List<dynamic> data) {

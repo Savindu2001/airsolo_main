@@ -183,7 +183,7 @@ Widget _buildHostelCard() {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 50, color: Colors.red),
+            const Icon(Icons.error_outline, size: 50, color: Colors.red),
             const SizedBox(height: ASizes.md),
             Text(
               hostelController.error.value,
@@ -207,7 +207,7 @@ Widget _buildHostelCard() {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 50, color: Colors.grey),
+            const Icon(Icons.search_off, size: 50, color: Colors.grey),
             const SizedBox(height: ASizes.md),
             Text(
               'No hostels found',
@@ -361,8 +361,8 @@ String _getPriceRange(List<Room> rooms) {
   if (rooms.isEmpty) return 'Loading prices...';
   
   final validPrices = rooms
-      .where((room) => room.pricePerPerson != null && room.pricePerPerson! > 0)
-      .map((room) => room.pricePerPerson!)
+      .where((room) => room.pricePerPerson > 0)
+      .map((room) => room.pricePerPerson)
       .toList();
 
   if (validPrices.isEmpty) return 'View hostel';

@@ -6,21 +6,23 @@ import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 class AvailableDriversScreen extends StatelessWidget {
   final TaxiBookingController controller = Get.find();
 
+   AvailableDriversScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available Drivers'),
+        title: const Text('Available Drivers'),
       ),
       body: Obx(() {
         // Check if the loading flag is true, show loading indicator
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         // If no drivers are available, display a message
         if (controller.availableVehicles.isEmpty) {
-          return Center(child: Text('No available drivers found.'));
+          return const Center(child: Text('No available drivers found.'));
         }
 
         // List of available drivers
@@ -30,18 +32,18 @@ class AvailableDriversScreen extends StatelessWidget {
             final vehicle = controller.availableVehicles[index];
 
             return ListTile(
-              leading: CircleAvatar(
+              leading: const CircleAvatar(
                 child: Icon(Icons.person),
               ),
               title: Text(vehicle.driverId ?? 'Driver Not Available'),
               subtitle: Text('${vehicle.model} - ${vehicle.vehicleNumber}'),
               trailing: ElevatedButton(
-                child: Text('Select'),
+                child: const Text('Select'),
                 onPressed: () async {
                   // Trigger the accept booking method with the current booking ID and selected driver
-                  await controller.acceptBooking(
-                    controller.currentBooking.value?.id ?? '',
-                  );
+                  // await controller.acceptBooking(
+                  //   controller.currentBooking.value?.id ?? '',
+                  // );
 
                   // Navigate to the confirmation screen after selecting a driver
                   Get.to(() => BookingConfirmationScreen(

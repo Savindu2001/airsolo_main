@@ -1,5 +1,4 @@
 import 'package:airsolo/common/widgets/map_widgets/embed_map.dart';
-import 'package:airsolo/config.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -21,7 +20,7 @@ import 'room_detail_screen.dart';
 class HostelDetailScreen extends StatefulWidget {
   final String hostelId;
 
-  const HostelDetailScreen({Key? key, required this.hostelId}) : super(key: key);
+  const HostelDetailScreen({super.key, required this.hostelId});
 
   @override
   State<HostelDetailScreen> createState() => _HostelDetailScreenState();
@@ -42,7 +41,7 @@ class _HostelDetailScreenState extends State<HostelDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome to Hostel'),
+        title: const Text('Welcome to Hostel'),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),

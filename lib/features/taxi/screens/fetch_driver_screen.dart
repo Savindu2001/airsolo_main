@@ -6,16 +6,19 @@ import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 class FetchingDriverScreen extends StatelessWidget {
   final TaxiBookingController controller = Get.find();
 
+   FetchingDriverScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fetching Driver'),
+        title: const Text('Fetching Driver'),
+        centerTitle: true,
       ),
       body: Obx(() {
         // Show loading while searching for driver
         if (controller.isLoading.value) {
-          return Center(
+          return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -29,7 +32,7 @@ class FetchingDriverScreen extends StatelessWidget {
 
         // If no vehicles are found, show a message
         if (controller.availableVehicles.isEmpty) {
-          return Center(child: Text('No drivers available in your area.'));
+          return const Center(child: Text('No drivers available in your area.'));
         }
 
         // If a driver is found, show booking confirmation
@@ -39,18 +42,18 @@ class FetchingDriverScreen extends StatelessWidget {
             final vehicle = controller.availableVehicles[index];
 
             return ListTile(
-              leading: CircleAvatar(
+              leading: const CircleAvatar(
                 child: Icon(Icons.person),
               ),
               title: Text(vehicle.driverId ?? 'Driver Not Available'),
               subtitle: Text('${vehicle.model} - ${vehicle.vehicleNumber}'),
               trailing: ElevatedButton(
-                child: Text('Select'),
+                child: const Text('Select'),
                 onPressed: () async {
                   // Accept the booking and send a notification to the driver
-                  await controller.acceptBooking(
-                    controller.currentBooking.value?.id ?? '',
-                  );
+                  // await controller.acceptBooking(
+                  //   controller.currentBooking.value?.id ?? '',
+                  // );
                   // After accepting, notify the driver using FCM
                   controller;
                   

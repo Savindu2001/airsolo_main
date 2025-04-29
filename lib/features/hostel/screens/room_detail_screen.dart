@@ -12,7 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 class RoomDetailScreen extends StatelessWidget {
   final Room room;
 
-  RoomDetailScreen({Key? key, required this.room}) : super(key: key);
+  RoomDetailScreen({super.key, required this.room});
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +244,7 @@ class RoomDetailScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(Icons.bed, size: 24, color: AColors.primary),
+              const Icon(Icons.bed, size: 24, color: AColors.primary),
               const SizedBox(width: ASizes.spaceBtwItems),
               Expanded(
                 child: Column(

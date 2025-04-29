@@ -117,7 +117,7 @@ class ActivityScreen extends StatelessWidget {
                     value: city.id,
                     child: Text(city.name),
                   );
-                }).toList(),
+                }),
               ],
               onChanged: (value) {
                 controller.applyFilters(cityId: value ?? '');
@@ -144,7 +144,7 @@ class ActivityScreen extends StatelessWidget {
                     value: type,
                     child: Text(type),
                   );
-                }).toList(),
+                }),
               ],
               onChanged: (value) {
                 controller.applyFilters(type: value ?? '');

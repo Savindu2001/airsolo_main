@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:airsolo/config.dart';
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
 import 'package:airsolo/features/city/model/city_model.dart';
-import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

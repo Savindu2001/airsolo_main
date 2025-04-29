@@ -85,7 +85,7 @@ class AuthenticationRepository extends GetxController {
   Future<void> _navigateBasedOnRole(String role) async {
     await Future.delayed(const Duration(milliseconds: 50));
     Get.offAll(
-      () => role == 'driver' ? DriverHomeScreen() : const NavigationMenu(),
+      () => role == 'driver' ?  DriverHomeScreen() : const NavigationMenu(),
       transition: Transition.cupertino,
       duration: const Duration(milliseconds: 300),
     );

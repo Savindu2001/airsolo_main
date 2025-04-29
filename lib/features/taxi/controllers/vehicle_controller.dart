@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:airsolo/config.dart';
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

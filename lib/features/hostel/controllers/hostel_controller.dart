@@ -244,7 +244,7 @@ Future<void> loadHostelDetails(String hostelId) async {
       }
 
       final response = await http.get(
-        Uri.parse('${Config.facilityEndpoint}'),
+        Uri.parse(Config.facilityEndpoint),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -280,7 +280,7 @@ Future<void> loadHostelDetails(String hostelId) async {
     }
 
     final response = await http.get(
-      Uri.parse('${Config.houseRulesEndpoint}'),
+      Uri.parse(Config.houseRulesEndpoint),
       headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

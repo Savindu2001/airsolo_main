@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:airsolo/config.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 import 'package:airsolo/features/taxi/models/vehicle_type_model.dart';
-import 'package:airsolo/features/taxi/screens/available_taxi.dart';
 import 'package:airsolo/features/taxi/screens/fetch_driver_screen.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
@@ -15,6 +14,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class TaxiBookingScreen extends StatefulWidget {
+  const TaxiBookingScreen({super.key});
+
   @override
   _TaxiBookingScreenState createState() => _TaxiBookingScreenState();
 }
@@ -184,13 +185,13 @@ List<LatLng> _decodePolyline(String encoded) {
         backgroundColor: AHelperFunctions.isDarkMode(context) ? AColors.primary : AColors.homePrimary,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() else Text('data'),
+              if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() else const Text('data'),
               
               
               
@@ -218,11 +219,11 @@ List<LatLng> _decodePolyline(String encoded) {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             _buildAutoCompleteField('Pickup Location', _pickupController, true),
-            Divider(height: 20),
+            const Divider(height: 20),
             _buildAutoCompleteField('Drop Location', _dropController, false),
           ],
         ),
@@ -234,7 +235,7 @@ List<LatLng> _decodePolyline(String encoded) {
     return Row(
       children: [
         Icon(isPickup ? Icons.my_location : Icons.location_on, color: isPickup ? AColors.primary : AColors.homePrimary),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: GooglePlacesAutoCompleteTextFormField(
                   textEditingController: controller,
@@ -263,12 +264,12 @@ List<LatLng> _decodePolyline(String encoded) {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Schedule', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            SizedBox(height: 12),
+            const Text('Schedule', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -280,20 +281,20 @@ List<LatLng> _decodePolyline(String encoded) {
                         _selectedTime = TimeOfDay.now();
                       });
                     },
-                    icon: Icon(Icons.access_time),
-                    label: Text('Now'),
+                    icon: const Icon(Icons.access_time),
+                    label: const Text('Now'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: _isNowSelected() ? AColors.homePrimary : Colors.white,
                       side: BorderSide(color: _isNowSelected() ? AColors.homePrimary : Colors.white),
                     ),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _showDateTimePicker(context),
-                    icon: Icon(Icons.calendar_today),
-                    label: Text('Later'),
+                    icon: const Icon(Icons.calendar_today),
+                    label: const Text('Later'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: !_isNowSelected() ? AColors.homePrimary : Colors.white,
                       side: BorderSide(color: !_isNowSelected() ? AColors.homePrimary : Colors.white),
@@ -310,13 +311,13 @@ List<LatLng> _decodePolyline(String encoded) {
 
   Widget _buildMapPreview() {
   if (_pickupLocation == null || _dropLocation == null) {
-    return SizedBox();
+    return const SizedBox();
   }
 
   return Card(
     elevation: 2,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    child: Container(
+    child: SizedBox(
       height: 450,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -332,13 +333,13 @@ List<LatLng> _decodePolyline(String encoded) {
             zoom: 10, 
           ),
           markers: {
-            Marker(markerId: MarkerId('pickup'), position: _pickupLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)),
-            Marker(markerId: MarkerId('drop'), position: _dropLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)),
+            Marker(markerId: const MarkerId('pickup'), position: _pickupLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)),
+            Marker(markerId: const MarkerId('drop'), position: _dropLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)),
           },
           polylines: _routePoints.isNotEmpty
               ? {
                   Polyline(
-                    polylineId: PolylineId('route'),
+                    polylineId: const PolylineId('route'),
                     points: _routePoints,
                     color: AColors.primary,
                     width: 7,
@@ -356,16 +357,16 @@ List<LatLng> _decodePolyline(String encoded) {
   Widget _buildDistanceAndFareCard() {
     return Card(
       borderOnForeground: true,
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Text('Distance: ${_distanceInKm!.toStringAsFixed(2)} km', style: TextStyle(fontSize: 16)),
+            Text('Distance: ${_distanceInKm!.toStringAsFixed(2)} km', style: const TextStyle(fontSize: 16)),
             if (_estimatedFare != null)
-              Text('Estimated Fare: LKR ${_estimatedFare!.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, color: AColors.success)),
+              Text('Estimated Fare: LKR ${_estimatedFare!.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: AColors.success)),
           ],
         ),
       ),
@@ -376,13 +377,13 @@ List<LatLng> _decodePolyline(String encoded) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choose Vehicle', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        SizedBox(height: 12),
+        const Text('Choose Vehicle', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
         Obx(() {
           if (controller.vehicleTypes.isEmpty) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
-          return Container(
+          return SizedBox(
             height: 160,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -428,7 +429,7 @@ List<LatLng> _decodePolyline(String encoded) {
       },
       child: Container(
         width: 140,
-        margin: EdgeInsets.only(right: 12),
+        margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
           color: isSelected ? AColors.primary: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -438,9 +439,9 @@ List<LatLng> _decodePolyline(String encoded) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(vehicleImage, width: 80, height: 60),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(type.type, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.homePrimary)),
-            SizedBox(height: 8,),
+            const SizedBox(height: 8,),
             
           ],
         ),
@@ -454,7 +455,7 @@ List<LatLng> _decodePolyline(String encoded) {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -500,7 +501,7 @@ List<LatLng> _decodePolyline(String encoded) {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
     );
     if (date != null) {
       final time = await showTimePicker(context: context, initialTime: _selectedTime);
@@ -529,7 +530,7 @@ void _submitPrivateBooking() async {
   if (_formKey.currentState!.validate()) {
     // Show loading indicator
     Get.dialog(
-      Center(child: CircularProgressIndicator()),
+      const Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
 
@@ -559,7 +560,7 @@ void _submitPrivateBooking() async {
       // Check booking result status
       if (bookingResult != null) {
         // Successfully created booking, show available drivers UI
-        Get.to(() => FetchingDriverScreen());
+        Get.to(() =>  FetchingDriverScreen());
       } else {
         // Booking failed, show error
         Get.snackbar('Booking Error', 'Unable to create the booking. Please try again.');

@@ -39,8 +39,8 @@ class AirsoloApp extends StatelessWidget {
         GetPage(name: '/ai',page: () => const AIHomeScreen(),),
         GetPage(name: '/ai/place-guide',page: () => const PlaceGuideScreen(),),
         GetPage(name: '/ai/trip-maker',page: () => const TripMakerScreen(),),
-        GetPage(name: '/book-taxi', page: () => TaxiBookingScreen()),   
-        GetPage(name: '/driver/home', page: () => DriverHomeScreen()),
+        GetPage(name: '/book-taxi', page: () => const TaxiBookingScreen()),   
+        GetPage(name: '/driver/home', page: () =>  DriverHomeScreen()),
         GetPage(name: '/driver/register', page: () => VehicleRegistrationScreen()),
         
       ],

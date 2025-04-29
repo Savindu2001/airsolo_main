@@ -1,7 +1,5 @@
 import 'package:airsolo/features/hostel/screens/payment_sucees.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:payhere_mobilesdk_flutter/payhere_mobilesdk_flutter.dart';
 
 class PayHereService {
@@ -44,7 +42,7 @@ class PayHereService {
         (paymentId) {
           // Payment success
           print("Payment Success: $paymentId");
-          Get.offAll(() => PaymentSuccessScreen(
+          Get.offAll(() => const PaymentSuccessScreen(
             //bookingId: bookingId,
           ));
         },
