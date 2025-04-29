@@ -3,27 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 
-class AvailableDriversScreen extends StatelessWidget {
+class FetchingDriverScreen extends StatelessWidget {
   final TaxiBookingController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available Drivers'),
+        title: Text('Fetching Driver'),
       ),
       body: Obx(() {
-        // Check if the loading flag is true, show loading indicator
+        // Show loading while searching for driver
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Finding nearest available driver...')
+              ],
+            ),
+          );
         }
 
-        // If no drivers are available, display a message
+        // If no vehicles are found, show a message
         if (controller.availableVehicles.isEmpty) {
-          return Center(child: Text('No available drivers found.'));
+          return Center(child: Text('No drivers available in your area.'));
         }
 
-        // List of available drivers
+        // If a driver is found, show booking confirmation
         return ListView.builder(
           itemCount: controller.availableVehicles.length,
           itemBuilder: (context, index) {
@@ -38,15 +47,17 @@ class AvailableDriversScreen extends StatelessWidget {
               trailing: ElevatedButton(
                 child: Text('Select'),
                 onPressed: () async {
-                  // Trigger the accept booking method with the current booking ID and selected driver
+                  // Accept the booking and send a notification to the driver
                   await controller.acceptBooking(
                     controller.currentBooking.value?.id ?? '',
                   );
-
-                  // Navigate to the confirmation screen after selecting a driver
+                  // After accepting, notify the driver using FCM
+                  controller;
+                  
+                  // Navigate to the confirmation page
                   Get.to(() => BookingConfirmationScreen(
                     bookingId: controller.currentBooking.value?.id ?? '',
-                    driverName: vehicle.driverId ?? 'Unknown Driver',
+                    driverName: vehicle.driverId ?? 'Unknown',
                     vehicleModel: vehicle.model,
                     vehicleNumber: vehicle.vehicleNumber,
                   ));

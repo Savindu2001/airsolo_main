@@ -1,6 +1,9 @@
 // controllers/vehicle_controller.dart
+import 'dart:async';
+
 import 'package:airsolo/config.dart';
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -144,33 +147,51 @@ class VehicleController extends GetxController {
     }
   }
 
-  Future<void> toggleAvailability() async {
-    try {
-      isLoading(true);
-      final token = await _getValidToken();
-      if (token == null) throw Exception('Authentication required');
 
-      final response = await http.put(
-        Uri.parse('${Config.baseUrl}/vehicles/${currentVehicle.value?.id}/availability'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
+
+// online & offline method
+Future<void> toggleAvailability(bool isLive) async {
+  try {
+    isLoading(true);
+    final token = await _getValidToken();
+    if (token == null) throw 'Authentication required';
+
+    final response = await http.put(
+      Uri.parse('${Config.baseUrl}/api/vehicles/v2/availability'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'is_available': isLive}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print("API Response: ${response.body}");
+      
+      // Option 1: Update only `isAvailable` (if backend returns minimal data)
+      currentVehicle.value = currentVehicle.value?.copyWith(
+        isAvailable: data['isAvailable'] ?? isLive,
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        currentVehicle.value = Vehicle.fromJson(data);
-        Get.snackbar('Success', 'Availability updated');
-      } else {
-        throw Exception('Failed to toggle availability');
-      }
-    } catch (e) {
-      error(e.toString());
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading(false);
+      // Option 2: Full update (if backend returns full Vehicle JSON)
+      // currentVehicle.value = Vehicle.fromJson(data);
+
+      Get.snackbar('Success', 'Vehicle is now ${isLive ? 'live' : 'offline'}');
+    } else {
+      throw 'Failed to toggle availability';
     }
+  } catch (e) {
+    Get.snackbar('Error', e.toString());
+  } finally {
+    isLoading(false);
   }
+}
+
+
+
+
+
 
   Future<void> updateLocation(double lat, double lng) async {
     try {

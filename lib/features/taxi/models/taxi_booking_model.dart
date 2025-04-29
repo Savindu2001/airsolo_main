@@ -67,7 +67,7 @@ class TaxiBooking {
     bookingDateTime: DateTime.parse(bookingData['bookingDateTime'] ?? DateTime.now().toIso8601String()),
     status: bookingData['status'] ?? 'pending',
     paymentStatus: bookingData['payment_status'] ?? 'pending',
-    scheduledAt: bookingData['scheduled_at'] != null ? DateTime.parse(bookingData['scheduled_at']) : null,
+    scheduledAt: bookingData['scheduled_at'] != null ? DateTime.tryParse(bookingData['scheduled_at']) ?? DateTime.now() : null,
     startedAt: bookingData['started_at'] != null ? DateTime.parse(bookingData['started_at']) : null,
     completedAt: bookingData['completed_at'] != null ? DateTime.parse(bookingData['completed_at']) : null,
   );

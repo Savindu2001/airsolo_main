@@ -1,10 +1,19 @@
-// screens/booking_confirmation_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/taxi_booking_controller.dart';
 
 class BookingConfirmationScreen extends StatelessWidget {
-  final TaxiBookingController controller = Get.find();
+  final String bookingId;
+  final String driverName;
+  final String vehicleModel;
+  final String vehicleNumber;
+
+  const BookingConfirmationScreen({
+    Key? key,
+    required this.bookingId,
+    required this.driverName,
+    required this.vehicleModel,
+    required this.vehicleNumber,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,68 +21,66 @@ class BookingConfirmationScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Booking Confirmation'),
       ),
-      body: Obx(() {
-        if (controller.currentBooking.value == null) {
-          return Center(child: Text('No booking found'));
-        }
-        
-        final booking = controller.currentBooking.value!;
-        
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Trip Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Text('From: ${booking.pickupLocation}'),
-                      Text('To: ${booking.dropLocation}'),
-                      Text('Distance: ${booking.distance.toStringAsFixed(2)} km'),
-                      Text('Price: \$${booking.totalPrice.toStringAsFixed(2)}'),
-                      if (booking.isShared)
-                        Text('Shared Ride: ${booking.bookedSeats} seat(s)'),
-                    ],
-                  ),
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Booking ID: $bookingId',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-              SizedBox(height: 16),
-              if (booking.vehicleId != null)
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Driver Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8),
-                        Text('Driver Name: John Doe'), // Replace with actual data
-                        Text('Vehicle Number: ABC-1234'),
-                        Text('Contact: +94 77 123 4567'),
-                      ],
-                    ),
-                  ),
-                ),
-              SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  // Implement payment logic
-                  Get.snackbar('Success', 'Payment processed');
-                },
-                child: Text('Confirm & Pay Now'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Driver: $driverName',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-            ],
-          ),
-        );
-      }),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Vehicle: $vehicleModel',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              'Vehicle Number: $vehicleNumber',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Proceed to payment or take further booking actions
+                Get.snackbar('Booking Confirmed', 'Your booking is confirmed!');
+              },
+              child: Text('Confirm Booking'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, // You can choose the color as you like
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              ),
+            ),
+            SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                // Go back to the available drivers screen
+                Get.back();
+              },
+              child: Text('Back to Drivers'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey, // A secondary action for going back
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

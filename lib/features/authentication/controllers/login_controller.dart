@@ -9,6 +9,7 @@ import 'package:airsolo/utils/helpers/network_manager.dart';
 import 'package:airsolo/utils/popups/full_screen_loader.dart';
 import 'package:airsolo/utils/popups/loaders.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:airsolo/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
@@ -26,6 +29,9 @@ class LoginController extends GetxController {
   final email = TextEditingController();
   final password = TextEditingController();
   GlobalKey<FormState>  loginFormKey = GlobalKey<FormState>();
+
+
+  
 
 
   // --- check existing sessions ---
@@ -103,6 +109,14 @@ class LoginController extends GetxController {
           role: role,
           userData: user,
         );
+
+        // After user is logged in successfully \
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          if (fcmToken != null) {
+            print('Device FCM Token: $fcmToken');
+            await _saveFcmTokenToBackend(fcmToken, user['id'] ?? userCredential.user?.uid ?? '');
+          }
+
         
       AFullScreenLoader.stopLoading();
       await Future.delayed(const Duration(milliseconds: 50));
@@ -117,60 +131,29 @@ class LoginController extends GetxController {
     }
   } on FirebaseAuthException catch (e) {
     AFullScreenLoader.stopLoading();
-    ALoaders.errorSnackBar(title: 'Login Failed', message: _getFirebaseErrorMessage(e));
+    ALoaders.errorSnackBar(title: 'Login Failed', message: '$e');
   } on TimeoutException catch (_) {
     AFullScreenLoader.stopLoading();
     ALoaders.errorSnackBar(title: 'Timeout', message: 'Server took too long to respond');
   } catch (e) {
     AFullScreenLoader.stopLoading();
-    print('error = $e');
-    ALoaders.errorSnackBar(title: 'Error', message: 'Server Error $e');
-    
+  if (e is FirebaseAuthException) {
+    ALoaders.errorSnackBar(title: 'Login Failed', message: '$e');
+  } else if (e is PlatformException && e.code == 'apns-token-not-set') {
+    // Ignore this specific error
+    print('APNS token not set (iOS-specific)');
+  } else {
+    print('Login error: $e');
+    ALoaders.errorSnackBar(title: 'Error', message: 'An unexpected error occurred');
   }
 }
 
-  // --- Safe Navigation Method ---
-void _navigateBasedOnRole(String role) {
-  Widget destination = role == 'driver' 
-      ?  DriverHomeScreen() 
-      : const NavigationMenu();
 
-  // Using GetX with transition
-  Get.offAll(
-    () => destination,
-    transition: Transition.cupertino,
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeOut,
-  );
-  // Show role-specific success message
-  Future.delayed(const Duration(milliseconds: 60), () {
-    if (role == 'driver') {
-      ALoaders.successSnackBar(
-        title: 'Welcome Driver!',
-        message: 'Ready for new bookings',
-      );
-    } else {
-      ALoaders.successSnackBar(
-        title: 'Welcome Back!',
-        message: 'Happy travels!',
-      );
-    }
-  });
 
-    
-  }
+ 
 
-  // --- Firebase Error Messages ---
-  String _getFirebaseErrorMessage(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'user-not-found': return 'No account found with this email';
-      case 'wrong-password': return 'Incorrect password';
-      case 'invalid-email': return 'Invalid email format';
-      case 'user-disabled': return 'Account disabled';
-      case 'too-many-requests': return 'Too many attempts. Try later';
-      default: return 'Login failed. Code: ${e.code}';
-    }
-  }
+
+}
 
 // --- Logout ---
 Future<void> logout() async {
@@ -193,5 +176,71 @@ Future<void> logout() async {
   }
 }
 
-  
+
+Future<void> _saveFcmTokenToBackend(String token, String userId) async {
+  try {
+    if (userId.isEmpty) {
+      print('⚠️ User ID is empty - cannot save FCM token');
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwtToken');
+
+    if (jwtToken == null) {
+      print('⚠️ JWT Token not found');
+      return;
+    }
+
+    final response = await http.put(
+      Uri.parse('${Config.saveFcmTokenEndpoint}/$userId'), 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: jsonEncode({'fcm_token': token}),
+    ).timeout(const Duration(seconds: 10));
+
+    if (response.statusCode != 200) {
+      print('❌ Failed to save FCM Token: ${response.statusCode} - ${response.body}');
+    }
+  } catch (e) {
+    print('❌ Error saving FCM Token: $e');
+  }
 }
+
+  // --- Safe Navigation Method ---
+void _navigateBasedOnRole(String role) {
+  Future.delayed(Duration.zero, () {
+    Get.offAll(
+      () => role == 'driver' ? DriverHomeScreen() : const NavigationMenu(),
+      transition: Transition.cupertino,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  });
+  
+  // Show role-specific success message
+  Future.delayed(const Duration(milliseconds: 100), () {
+    if (role == 'driver') {
+      ALoaders.successSnackBar(
+        title: 'Welcome Driver!',
+        message: 'Ready for new bookings',
+      );
+    } else {
+      ALoaders.successSnackBar(
+        title: 'Welcome Back!',
+        message: 'Happy travels!',
+      );
+    }
+  });
+}
+
+
+  @override
+void dispose() {
+  email.dispose();
+  password.dispose();
+  super.dispose();
+}
+  }

@@ -55,4 +55,7 @@ class Config {
 
   // Api Key
   static const String googleMapApiKey = 'AIzaSyC76NiQpUn4Frh1Qijj_D_NLFPel_a8fXM';
+
+  // FCM Token
+  static const String saveFcmTokenEndpoint = '$baseUrl/api/vehicles/';
 }

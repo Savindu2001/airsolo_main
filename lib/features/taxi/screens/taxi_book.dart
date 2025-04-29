@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:airsolo/config.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
-import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
 import 'package:airsolo/features/taxi/models/vehicle_type_model.dart';
 import 'package:airsolo/features/taxi/screens/available_taxi.dart';
+import 'package:airsolo/features/taxi/screens/fetch_driver_screen.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
@@ -515,7 +515,6 @@ List<LatLng> _decodePolyline(String encoded) {
 
   
 
-
 void _submitPrivateBooking() async {
   if (_pickupLocation == null || _dropLocation == null) {
     Get.snackbar('Missing Info', 'Please select both pickup and drop locations.');
@@ -528,39 +527,15 @@ void _submitPrivateBooking() async {
   }
 
   if (_formKey.currentState!.validate()) {
-    // Show loading
+    // Show loading indicator
     Get.dialog(
       Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
 
     try {
-      // Create booking request
-      final bookingRequest = {
-        'pickupLocation': _pickupController.text,
-        'dropLocation': _dropController.text,
-        'pickupLat': _pickupLocation!.latitude,
-        'pickupLng': _pickupLocation!.longitude,
-        'dropLat': _dropLocation!.latitude,
-        'dropLng': _dropLocation!.longitude,
-        'vehicleTypeId': _selectedVehicleTypeId!,
-        'isShared': _isShared,
-        'distance': _distanceInKm,
-        'totalPrice': _estimatedFare,
-        'bookedSeats': _isShared ? 2 : 1, // Default to 2 seats for shared, 1 for private
-        'scheduledAt': _isNowSelected() 
-            ? null 
-            : DateTime(
-                _selectedDate.year,
-                _selectedDate.month,
-                _selectedDate.day,
-                _selectedTime.hour,
-                _selectedTime.minute,
-              ).toIso8601String(),
-      };
-
-      // Call controller to create booking
-      await controller.createBooking(
+      // Call the controller to create booking
+      final bookingResult = await controller.createBooking(
         pickupLocation: _pickupController.text,
         dropLocation: _dropController.text,
         pickupLat: _pickupLocation!.latitude,
@@ -570,8 +545,8 @@ void _submitPrivateBooking() async {
         vehicleTypeId: _selectedVehicleTypeId!,
         isShared: _isShared,
         seats: _isShared ? 2 : 1,
-        scheduledAt: _isNowSelected() 
-            ? null 
+        scheduledAt: _isNowSelected()
+            ? null
             : DateTime(
                 _selectedDate.year,
                 _selectedDate.month,
@@ -581,13 +556,23 @@ void _submitPrivateBooking() async {
               ),
       );
 
-      // Navigate to available drivers screen
-      Get.to(() => AvailableDriversScreen());
+      // Check booking result status
+      if (bookingResult != null) {
+        // Successfully created booking, show available drivers UI
+        Get.to(() => FetchingDriverScreen());
+      } else {
+        // Booking failed, show error
+        Get.snackbar('Booking Error', 'Unable to create the booking. Please try again.');
+      }
     } catch (e) {
-      Get.back(); // Dismiss loading
+      // Dismiss loading indicator
+      Get.back();
+      // Show error message
       Get.snackbar('Error', 'Failed to create booking: ${e.toString()}');
     }
   }
 }
+
+
 
 }

@@ -1,7 +1,6 @@
 // controllers/taxi_booking_controller.dart
 import 'package:airsolo/config.dart';
 import 'package:airsolo/data/repositories/authentication/authentication_repository.dart';
-import 'package:airsolo/features/taxi/screens/available_taxi.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +18,7 @@ class TaxiBookingController extends GetxController {
   final RxString error = ''.obs;
 
   // Get valid token 
-  Future<String?> _getValidToken() async {
+Future<String?> _getValidToken() async {
     try {
       Get.find<AuthenticationRepository>();
       final prefs = await SharedPreferences.getInstance();
@@ -32,7 +31,7 @@ class TaxiBookingController extends GetxController {
 
 
   // Fetch Vehicle Types
-  Future<void> fetchVehicleTypes() async {
+Future<void> fetchVehicleTypes() async {
   try {
     isLoading(true);
     error(''); // Clear previous errors
@@ -65,7 +64,8 @@ class TaxiBookingController extends GetxController {
   }
 }
 
-Future<void> createBooking({
+// Create Booking
+Future<TaxiBooking?> createBooking({
   required String pickupLocation,
   required String dropLocation,
   required double pickupLat,
@@ -78,11 +78,14 @@ Future<void> createBooking({
   DateTime? scheduledAt,
 }) async {
   try {
-    isLoading(true);
-    error('');
+    isLoading(true); // Show loading spinner
+    error(''); // Clear any previous error
+
+    // Get the valid token
     final token = await _getValidToken();
     if (token == null) throw Exception('Authentication required');
 
+    // Prepare the request body for the API call
     final requestBody = {
       'pickupLocation': pickupLocation,
       'dropLocation': dropLocation,
@@ -92,7 +95,7 @@ Future<void> createBooking({
       'dropLng': dropLng,
       'vehicleTypeId': vehicleTypeId,
       'isShared': isShared,
-      'seatsToShare': isShared ? seats : null,
+      'seatsToBook': seats, // Number of seats to book
       'scheduledAt': scheduledAt?.toIso8601String(),
     };
 
@@ -105,33 +108,47 @@ Future<void> createBooking({
         'Content-Type': 'application/json',
       },
       body: jsonEncode(requestBody),
-    );
+    ).timeout(Duration(seconds: 30));
 
+    // Debugging logs
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
+    // Check if the response is successful
     if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
-      
-      // Debug print to see the actual response structure
       print('Parsed response data: $data');
-      
-      currentBooking.value = TaxiBooking.fromJson(data);
-      Get.to(() => AvailableDriversScreen());
+      // if (data['bookingId'] != null) {
+      //   currentBooking.value = TaxiBooking.fromJson(data);
+      //   return currentBooking.value;
+
+       
+      // } else {
+      //   throw Exception('Booking creation failed, no booking ID returned');
+      // }
+      if (data['booking'] != null && data['booking']['id'] != null) {
+        currentBooking.value = TaxiBooking.fromJson(data['booking']);
+        return currentBooking.value;
+      } else {
+        throw Exception('Booking creation failed, no booking ID returned');
+      }
+
     } else {
       throw Exception('Failed to create booking: ${response.body}');
     }
   } catch (e, stackTrace) {
     print('Error creating booking: $e');
     print('Stack trace: $stackTrace');
-    error(e.toString());
-    Get.snackbar('Error', e.toString());
+    error(e.toString()); // Set error message
+    Get.snackbar('Error', e.toString()); // Show error to user
   } finally {
-    isLoading(false);
+    isLoading(false); // Hide loading spinner
   }
 }
 
-  Future<void> getAvailableDrivers({
+
+
+Future<void> getAvailableDrivers({
     required String vehicleTypeId,
     required double lat,
     required double lng,
@@ -255,11 +272,11 @@ Future<void> createBooking({
       if (token == null) throw Exception('Authentication required');
 
       final response = await http.get(
-        Uri.parse('${Config.baseUrl}/bookings/driver/history'),
+        Uri.parse('${Config.getTaxiBooking}/driver'),
         headers: {
           'Authorization': 'Bearer $token',
         },
-      );
+      ).timeout(Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List;

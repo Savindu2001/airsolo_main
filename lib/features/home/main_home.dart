@@ -322,22 +322,25 @@ Widget _buildHostelCard() {
                               ],
                             ),
                             const SizedBox(height: ASizes.sm),
-                            Row(
-                              children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 16),
-                                const SizedBox(width: ASizes.xs),
-                                Text(
-                                  hostel.rating?.toStringAsFixed(1) ?? 'N/A',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                const Spacer(),
-                                Text(
-                                  hasRooms 
-                                      ? _getPriceRange(rooms)
-                                      : 'View hostel',
-                                  style: Get.textTheme.titleMedium,
-                                ),
-                              ],
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star, color: Colors.amber, size: 16),
+                                  const SizedBox(width: ASizes.xs),
+                                  Text(
+                                    hostel.rating?.toStringAsFixed(1) ?? 'N/A',
+                                    style: Get.textTheme.bodyMedium,
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    hasRooms 
+                                        ? _getPriceRange(rooms)
+                                        : 'View hostel',
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -386,36 +389,38 @@ class _HostelCardSkeleton extends StatelessWidget {
         borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
       ),
       child: Shimmer.fromColors(
-        baseColor: dark ? Colors.grey[700]! : Colors.grey[300]!,
-        highlightColor: dark ? Colors.grey[600]! : Colors.grey[100]!,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 180,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(ASizes.defaultSpace),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: ASizes.sm),
-                  Container(
-                    width: 150,
-                    height: 16,
-                    color: Colors.white,
-                  ),
-                ],
+        baseColor: dark ? AColors.primary : AColors.homePrimary,
+        highlightColor: dark ? AColors.primary : AColors.homePrimary,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 180,
+                width: double.infinity,
+                color: Colors.white,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(ASizes.defaultSpace),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 20,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(height: ASizes.sm),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
