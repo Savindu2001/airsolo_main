@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:airsolo/config.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
+import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
 import 'package:airsolo/features/taxi/models/vehicle_type_model.dart';
 import 'package:airsolo/features/taxi/screens/fetch_driver_screen.dart';
+import 'package:airsolo/features/taxi/screens/ongoing_booking_screen.dart';
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
@@ -12,6 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:iconsax/iconsax.dart';
 
 class TaxiBookingScreen extends StatefulWidget {
   const TaxiBookingScreen({super.key});
@@ -191,7 +194,11 @@ List<LatLng> _decodePolyline(String encoded) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() else const Text('data'),
+              if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() 
+              else  Container(
+                height: 300,
+                child: Text('dummy Map Current map'),
+              ),
               
               
               
@@ -516,6 +523,64 @@ List<LatLng> _decodePolyline(String encoded) {
 
   
 
+// void _submitPrivateBooking() async {
+//   if (_pickupLocation == null || _dropLocation == null) {
+//     Get.snackbar('Missing Info', 'Please select both pickup and drop locations.');
+//     return;
+//   }
+
+//   if (_selectedVehicleTypeId == null) {
+//     Get.snackbar('Missing Info', 'Please select a vehicle type.');
+//     return;
+//   }
+
+//   if (_formKey.currentState!.validate()) {
+//     // Show loading indicator
+//     Get.dialog(
+//       const Center(child: CircularProgressIndicator()),
+//       barrierDismissible: false,
+//     );
+
+//     try {
+//       // Call the controller to create booking
+//       final bookingResult = await controller.createBooking(
+//         pickupLocation: _pickupController.text,
+//         dropLocation: _dropController.text,
+//         pickupLat: _pickupLocation!.latitude,
+//         pickupLng: _pickupLocation!.longitude,
+//         dropLat: _dropLocation!.latitude,
+//         dropLng: _dropLocation!.longitude,
+//         vehicleTypeId: _selectedVehicleTypeId!,
+//         isShared: _isShared,
+//         seats: _isShared ? 2 : 1,
+//         scheduledAt: _isNowSelected()
+//             ? null
+//             : DateTime(
+//                 _selectedDate.year,
+//                 _selectedDate.month,
+//                 _selectedDate.day,
+//                 _selectedTime.hour,
+//                 _selectedTime.minute,
+//               ),
+//       );
+
+//       // Check booking result status
+//       if (bookingResult != null) {
+//         // Successfully created booking, show available drivers UI
+//         Get.to(() =>  FetchingDriverScreen());
+//       } else {
+//         // Booking failed, show error
+//         Get.snackbar('Booking Error', 'Unable to create the booking. Please try again.');
+//       }
+//     } catch (e) {
+//       // Dismiss loading indicator
+//       Get.back();
+//       // Show error message
+//       Get.snackbar('Error', 'Failed to create booking: ${e.toString()}');
+//     }
+//   }
+// }
+
 void _submitPrivateBooking() async {
   if (_pickupLocation == null || _dropLocation == null) {
     Get.snackbar('Missing Info', 'Please select both pickup and drop locations.');
@@ -527,53 +592,148 @@ void _submitPrivateBooking() async {
     return;
   }
 
-  if (_formKey.currentState!.validate()) {
-    // Show loading indicator
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
+  Get.dialog(
+    const Center(child: CircularProgressIndicator()),
+    barrierDismissible: false,
+  );
+
+  try {
+    final bookingResult = await controller.createBooking(
+      pickupLocation: _pickupController.text,
+      dropLocation: _dropController.text,
+      pickupLat: _pickupLocation!.latitude,
+      pickupLng: _pickupLocation!.longitude,
+      dropLat: _dropLocation!.latitude,
+      dropLng: _dropLocation!.longitude,
+      vehicleTypeId: _selectedVehicleTypeId!,
+      isShared: _isShared,
+      seats: _isShared ? 2 : 1,
+      scheduledAt: _isNowSelected() ? null : DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        _selectedTime.hour,
+        _selectedTime.minute,
+      ),
     );
 
-    try {
-      // Call the controller to create booking
-      final bookingResult = await controller.createBooking(
-        pickupLocation: _pickupController.text,
-        dropLocation: _dropController.text,
-        pickupLat: _pickupLocation!.latitude,
-        pickupLng: _pickupLocation!.longitude,
-        dropLat: _dropLocation!.latitude,
-        dropLng: _dropLocation!.longitude,
-        vehicleTypeId: _selectedVehicleTypeId!,
-        isShared: _isShared,
-        seats: _isShared ? 2 : 1,
-        scheduledAt: _isNowSelected()
-            ? null
-            : DateTime(
-                _selectedDate.year,
-                _selectedDate.month,
-                _selectedDate.day,
-                _selectedTime.hour,
-                _selectedTime.minute,
-              ),
-      );
-
-      // Check booking result status
-      if (bookingResult != null) {
-        // Successfully created booking, show available drivers UI
-        Get.to(() =>  FetchingDriverScreen());
-      } else {
-        // Booking failed, show error
-        Get.snackbar('Booking Error', 'Unable to create the booking. Please try again.');
-      }
-    } catch (e) {
-      // Dismiss loading indicator
+    if (bookingResult != null) {
+      Get.back(); // Dismiss initial loading
+      
+      // Navigate to fetching screen
+      Get.to(() => FetchingDriverScreen(
+        bookingId: bookingResult.id,
+        onDriverAccepted: (booking) {
+          // Show booking details when driver accepts
+          _showBookingDetails(booking);
+        },
+        onTimeout: () {
+          Get.back();
+          Get.snackbar('Timeout', 'No driver found. Please try again later.');
+        },
+      ));
+    } else {
       Get.back();
-      // Show error message
-      Get.snackbar('Error', 'Failed to create booking: ${e.toString()}');
+      Get.snackbar('Error', 'Failed to create booking');
     }
+  } catch (e) {
+    Get.back();
+    Get.snackbar('Error', 'Failed to create booking: ${e.toString()}');
   }
 }
 
+void _showBookingDetails(TaxiBooking booking) {
+  // Extract driver and vehicle details safely
+  final driverName = booking.assignedVehicle?.driverId ?? 'Driver';
+  final vehicleInfo = booking.assignedVehicle != null 
+      ? '(${booking.assignedVehicle!.vehicleNumber})'
+      : 'Vehicle info not available';
 
+  Get.bottomSheet(
+    Container(
+      //height: MediaQuery.of(Get.context).size.height *0.75,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Driver Found!', style: Get.textTheme.titleLarge),
+            SizedBox(height: 20),
+            
+            // Driver Information
+            ListTile(
+              leading: Icon(Iconsax.user, color: Colors.blue),
+              title: Text('Driver', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                '$driverName.substring(0, 8).toUpperCase()'
+                'Rating: 4.8 ★', // You can add actual rating if available
+                style: TextStyle(color: Colors.black54),
+              ),
+            ),
+            
+            // Vehicle Information
+            ListTile(
+              leading: Icon(Iconsax.car, color: Colors.green),
+              title: Text('Vehicle', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(vehicleInfo),
+                  
+                ],
+              ),
+            ),
+            
+            // Trip Information
+            ListTile(
+              leading: Icon(Iconsax.location3, color: Colors.red),
+              title: Text('Pickup Location', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                booking.pickupLocation,
+                style: TextStyle(color: Colors.black87),
+              ),
+            ),
+            
+            ListTile(
+              leading: Icon(Iconsax.flag, color: Colors.orange),
+              title: Text('Drop Location', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                booking.dropLocation,
+                style: TextStyle(color: Colors.black87),
+              ),
+            ),
+            
+            // Fare Information
+            ListTile(
+              leading: Icon(Icons.attach_money, color: Colors.green),
+              title: Text('Estimated Fare', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                'LKR ${booking.totalPrice}',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Get.back(); 
+                Get.to(()=> OngoingBookingScreen(booking: booking)); 
+              },
+              child: Text('VIEW TRIP DETAILS', style: Get.textTheme.titleLarge),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
 
 }

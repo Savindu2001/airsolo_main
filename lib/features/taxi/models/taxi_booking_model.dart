@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:airsolo/features/taxi/models/vehicle_model.dart';
+import 'package:airsolo/features/users/user_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TaxiBooking {
@@ -19,6 +23,8 @@ class TaxiBooking {
   final DateTime? scheduledAt;
   final DateTime? startedAt;
   final DateTime? completedAt;
+  final Vehicle? assignedVehicle;
+  final User? traveler;
 
   TaxiBooking({
     required this.id,
@@ -39,39 +45,82 @@ class TaxiBooking {
     this.scheduledAt,
     this.startedAt,
     this.completedAt,
+    this.assignedVehicle,
+    this.traveler,
   });
 
-  factory TaxiBooking.fromJson(Map<String, dynamic> json) {
-  // Check if the response has a nested 'booking' object
-  final bookingData = json['booking'] ?? json;
-  
+
+
+
+
+
+factory TaxiBooking.fromJson(Map<String, dynamic> json) {
+  // Helper function to parse dynamic values to double
+  double parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  // Helper to parse travelerIds which comes as a JSON string
+  List<String> parseTravelerIds(dynamic value) {
+    if (value == null) return [];
+    if (value is List) return List<String>.from(value);
+    if (value is String) {
+      try {
+        return List<String>.from(jsonDecode(value));
+      } catch (e) {
+        return [value];
+      }
+    }
+    return [];
+  }
+
   return TaxiBooking(
-    id: bookingData['id'] ?? '',
-    travelerId: bookingData['travelerId'] ?? '',
-    vehicleId: bookingData['vehicleId'],
-    pickupLocation: bookingData['pickupLocation'] ?? '',
-    dropLocation: bookingData['dropLocation'] ?? '',
+    id: json['id']?.toString() ?? '',
+    travelerId: json['travelerId']?.toString() ?? '',
+    vehicleId: json['vehicleId']?.toString(),
+    pickupLocation: json['pickupLocation']?.toString() ?? '',
+    dropLocation: json['dropLocation']?.toString() ?? '',
     pickupLatLng: LatLng(
-      (bookingData['pickupLat'] ?? 0).toDouble(),
-      (bookingData['pickupLng'] ?? 0).toDouble(),
+      parseDouble(json['pickupLat']),
+      parseDouble(json['pickupLng']),
     ),
     dropLatLng: LatLng(
-      (bookingData['dropLat'] ?? 0).toDouble(),
-      (bookingData['dropLng'] ?? 0).toDouble(),
+      parseDouble(json['dropLat']),
+      parseDouble(json['dropLng']),
     ),
-    distance: (bookingData['distance'] ?? 0).toDouble(),
-    totalPrice: (bookingData['totalPrice'] ?? 0).toDouble(),
-    isShared: bookingData['isShared'] ?? false,
-    bookedSeats: bookingData['bookedSeats'] ?? 1,
-    travelerIds: List<String>.from(bookingData['travelerIds'] ?? []),
-    bookingDateTime: DateTime.parse(bookingData['bookingDateTime'] ?? DateTime.now().toIso8601String()),
-    status: bookingData['status'] ?? 'pending',
-    paymentStatus: bookingData['payment_status'] ?? 'pending',
-    scheduledAt: bookingData['scheduled_at'] != null ? DateTime.tryParse(bookingData['scheduled_at']) ?? DateTime.now() : null,
-    startedAt: bookingData['started_at'] != null ? DateTime.parse(bookingData['started_at']) : null,
-    completedAt: bookingData['completed_at'] != null ? DateTime.parse(bookingData['completed_at']) : null,
+    distance: parseDouble(json['distance']),
+    totalPrice: parseDouble(json['totalPrice']), // Handles string "1036.72"
+    isShared: json['isShared'] ?? false,
+    bookedSeats: json['bookedSeats'] is int ? json['bookedSeats'] : int.tryParse(json['bookedSeats']?.toString() ?? '1') ?? 1,
+    travelerIds: parseTravelerIds(json['travelerIds']), // Handles JSON string
+    bookingDateTime: DateTime.parse(json['bookingDateTime'] ?? DateTime.now().toIso8601String()),
+    status: json['status']?.toString() ?? 'pending',
+    paymentStatus: json['paymentStatus']?.toString() ?? 'pending',
+    scheduledAt: json['scheduledAt'] != null ? DateTime.tryParse(json['scheduledAt'].toString()) : null,
+    startedAt: json['startedAt'] != null ? DateTime.tryParse(json['startedAt'].toString()) : null,
+    completedAt: json['completedAt'] != null ? DateTime.tryParse(json['completedAt'].toString()) : null,
+
+    assignedVehicle: json['assignedVehicle'] != null 
+          ? Vehicle.fromJson(json['assignedVehicle'])
+          : null,
+      traveler: json['traveler'] != null
+          ? User.fromJson(json['traveler'])
+          : null,
+          
   );
 }
+
+
+
+
+
+
+
+
 
   Map<String, dynamic> toJson() {
     return {

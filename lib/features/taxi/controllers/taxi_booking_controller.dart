@@ -12,6 +12,7 @@ import '../models/vehicle_type_model.dart';
 class TaxiBookingController extends GetxController {
   final RxList<TaxiBooking> bookings = <TaxiBooking>[].obs;
   final nearbyBookings = <TaxiBooking>[].obs;
+  final historyBookings = <TaxiBooking>[].obs;
   final availableDrivers = <Map<String, dynamic>>[].obs;
   final RxList<Vehicle> availableVehicles = <Vehicle>[].obs;
   final RxList<VehicleType> vehicleTypes = <VehicleType>[].obs;
@@ -150,37 +151,97 @@ Future<TaxiBooking?> createBooking({
 }
 
 
+//cancel booking
+Future<void> cancelBooking(String bookingId) async {
+  try {
+    isLoading(true);
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
 
+    // update status
 
+    await updateBookingStatus(bookingId: bookingId, status: 'cancelled');
 
-
-// Get nearby bookings for driver
-  Future<void> getNearByBookings() async {
-    try {
-      isLoading(true);
-      error('');
-
-      final token = await _getValidToken();
-      if (token == null) throw Exception('Authentication required');
-
-      final response = await http.get(
-        Uri.parse('${Config.getTaxiBooking}/taxi-bookings/nearby'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        nearbyBookings.assignAll(data.map((e) => TaxiBooking.fromJson(e)));
-      } else {
-        throw Exception('Failed to get nearby bookings: ${response.body}');
-      }
-    } catch (e) {
-      error(e.toString());
-    } finally {
-      isLoading(false);
-    }
+    
+  } catch (e) {
+    Get.snackbar('Error', 'Failed to cancel booking: ${e.toString()}');
+  } finally {
+    isLoading(false);
   }
+}
 
+
+// Get nearby bookings for drivers
+Future<void> getNearByBookings() async {
+  try {
+    isLoading(true);
+    error('');
+
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
+
+    final response = await http.get(
+      Uri.parse('${Config.getTaxiBooking}/driver-nearby'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      
+      // Clear existing bookings
+      bookings.clear();
+      
+      // Add all new bookings
+      for (var item in responseData) {
+        try {
+          bookings.add(TaxiBooking.fromJson(item));
+        } catch (e) {
+          print('Error parsing booking: $e');
+        }
+      }
+      
+      print('Successfully loaded ${bookings.length} bookings');
+    } else {
+      throw Exception('Failed to load bookings: ${response.statusCode}');
+    }
+  } catch (e) {
+    error(e.toString());
+    print('Error in getNearByBookings: $e');
+  } finally {
+    isLoading(false);
+  }
+}
+
+
+
+// Get History of Booking
+Future<void> getHistoryBookings() async {
+  try {
+    isLoading(true);
+    error('');
+
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
+
+    final response = await http.get(
+      Uri.parse('${Config.getTaxiBooking}/taxiBooking-history'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      historyBookings.assignAll(data.map((e) => TaxiBooking.fromJson(e)));
+      print('Successfully loaded ${historyBookings.length} history bookings');
+    } else {
+      throw Exception('Failed to get history: ${response.body}');
+    }
+  } catch (e) {
+    error(e.toString());
+    print('Error fetching history: $e');
+  } finally {
+    isLoading(false);
+  }
+}
 
 
 
@@ -198,7 +259,7 @@ Future<TaxiBooking?> createBooking({
         if (isShared != null) 'isShared': isShared.toString(),
       };
 
-      final uri = Uri.parse('${Config.baseUrl}/taxi-bookings').replace(
+      final uri = Uri.parse('${Config.getTaxiBooking}').replace(
         queryParameters: queryParams,
       );
 
@@ -266,7 +327,7 @@ Future<TaxiBooking?> createBooking({
 
 
 
-// Update payment status
+// Update payment status (customer)
   Future<void> updatePaymentStatus({
     required String bookingId,
     required String paymentStatus,
@@ -303,7 +364,7 @@ Future<TaxiBooking?> createBooking({
   }
 
 
-  // Get available drivers
+  // Get available drivers 
   Future<void> getAvailableDrivers({
     required String vehicleTypeId,
     required double pickupLat,
@@ -346,7 +407,7 @@ Future<TaxiBooking?> createBooking({
 
 
 
-  // Get accepted booking details
+  // Get accepted booking details (driver & traveler)
   Future<void> getAcceptedBooking(String bookingId) async {
     try {
       isLoading(true);
@@ -356,12 +417,17 @@ Future<TaxiBooking?> createBooking({
       if (token == null) throw Exception('Authentication required');
 
       final response = await http.get(
-        Uri.parse('${Config.baseUrl}/taxi-bookings/$bookingId/accepted'),
+        Uri.parse('${Config.getTaxiBooking}/driver-accept/$bookingId'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
+      //update status
+
+      await updateBookingStatus(bookingId: bookingId, status: 'driver_accepted');
+      
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print(data);
         currentBooking.value = TaxiBooking.fromJson(data);
       } else {
         throw Exception('Failed to get booking: ${response.body}');
@@ -372,6 +438,10 @@ Future<TaxiBooking?> createBooking({
       isLoading(false);
     }
   }
+
+
+
+
 
   // Update booking status
   Future<void> updateBookingStatus({
@@ -386,7 +456,7 @@ Future<TaxiBooking?> createBooking({
       if (token == null) throw Exception('Authentication required');
 
       final response = await http.put(
-        Uri.parse('${Config.baseUrl}/taxi-bookings/$bookingId/status'),
+        Uri.parse('${Config.getTaxiBooking}/update-booking/$bookingId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -416,39 +486,63 @@ Future<TaxiBooking?> createBooking({
     }
   }
 
-  // Accept a booking (specific method for driver)
-  Future<void> acceptBooking(String bookingId) async {
-    try {
-      isLoading(true);
-      error('');
 
-      final token = await _getValidToken();
-      if (token == null) throw Exception('Authentication required');
 
-      final response = await http.post(
-        Uri.parse('${Config.baseUrl}/taxi-bookings/$bookingId/accept'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        currentBooking.value = TaxiBooking.fromJson(data['booking']);
-        
-        // Remove from nearby bookings if it exists there
-        nearbyBookings.removeWhere((b) => b.id == bookingId);
-        
-        Get.snackbar('Success', 'Booking accepted successfully');
-      } else {
-        throw Exception('Failed to accept booking: ${response.body}');
-      }
-    } catch (e) {
-      error(e.toString());
-      Get.snackbar('Error', 'Failed to accept booking');
-    } finally {
-      isLoading(false);
+
+// Just checks status without modifying it
+Future<String> checkBookingStatus(String bookingId) async {
+  try {
+    isLoading(true);
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
+
+    final response = await http.get(
+      Uri.parse('${Config.getTaxiBooking}/status/$bookingId'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['status'] ?? 'pending';
+    } else {
+      throw Exception('Failed to check status: ${response.body}');
     }
+  } catch (e) {
+    error(e.toString());
+    return 'error';
+  } finally {
+    isLoading(false);
   }
 }
+
+// Gets full booking details
+Future<void> getBookingDetails(String bookingId) async {
+  try {
+    isLoading(true);
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
+
+    final response = await http.get(
+      Uri.parse('${Config.getTaxiBooking}/details/$bookingId'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      currentBooking.value = TaxiBooking.fromJson(data);
+    } else {
+      throw Exception('Failed to get booking details: ${response.body}');
+    }
+  } catch (e) {
+    error(e.toString());
+  } finally {
+    isLoading(false);
+  }
+}
+
+}
+
 
 
 

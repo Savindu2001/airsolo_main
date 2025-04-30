@@ -46,12 +46,7 @@ class AvailableDriversScreen extends StatelessWidget {
                   // );
 
                   // Navigate to the confirmation screen after selecting a driver
-                  Get.to(() => BookingConfirmationScreen(
-                    bookingId: controller.currentBooking.value?.id ?? '',
-                    driverName: vehicle.driverId ?? 'Unknown Driver',
-                    vehicleModel: vehicle.model,
-                    vehicleNumber: vehicle.vehicleNumber,
-                  ));
+                  Get.to(() => ConfirmDismissCallback);
                 },
               ),
             );

@@ -13,6 +13,7 @@ class VehicleController extends GetxController {
   final Rx<Vehicle?> currentVehicle = Rx<Vehicle?>(null);
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
+  RxBool isAvailable = true.obs;
 
   // Get valid token 
   Future<String?> _getValidToken() async {
@@ -148,12 +149,13 @@ class VehicleController extends GetxController {
 
 
 
-// online & offline method
+//online & offline method
 Future<void> toggleAvailability(bool isLive) async {
   try {
     isLoading(true);
     final token = await _getValidToken();
     if (token == null) throw 'Authentication required';
+    isAvailable.value = true;
 
     final response = await http.put(
       Uri.parse('${Config.baseUrl}/api/vehicles/v2/availability'),
@@ -186,6 +188,10 @@ Future<void> toggleAvailability(bool isLive) async {
     isLoading(false);
   }
 }
+
+
+
+
 
 
 

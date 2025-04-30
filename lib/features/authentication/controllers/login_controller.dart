@@ -111,11 +111,11 @@ class LoginController extends GetxController {
         );
 
         // After user is logged in successfully \
-          final fcmToken = await FirebaseMessaging.instance.getToken();
-          if (fcmToken != null) {
-            print('Device FCM Token: $fcmToken');
-            await _saveFcmTokenToBackend(fcmToken, user['id'] ?? userCredential.user?.uid ?? '');
-          }
+          // final fcmToken = await FirebaseMessaging.instance.getToken();
+          // if (fcmToken != null) {
+          //   print('Device FCM Token: $fcmToken');
+          //   await _saveFcmTokenToBackend(fcmToken, user['id'] ?? userCredential.user?.uid ?? '');
+          // }
 
         
       AFullScreenLoader.stopLoading();
@@ -177,37 +177,37 @@ Future<void> logout() async {
 }
 
 
-Future<void> _saveFcmTokenToBackend(String token, String userId) async {
-  try {
-    if (userId.isEmpty) {
-      print('⚠️ User ID is empty - cannot save FCM token');
-      return;
-    }
+// Future<void> _saveFcmTokenToBackend(String token, String userId) async {
+//   try {
+//     if (userId.isEmpty) {
+//       print('⚠️ User ID is empty - cannot save FCM token');
+//       return;
+//     }
 
-    final prefs = await SharedPreferences.getInstance();
-    final jwtToken = prefs.getString('jwtToken');
+//     final prefs = await SharedPreferences.getInstance();
+//     final jwtToken = prefs.getString('jwtToken');
 
-    if (jwtToken == null) {
-      print('⚠️ JWT Token not found');
-      return;
-    }
+//     if (jwtToken == null) {
+//       print('⚠️ JWT Token not found');
+//       return;
+//     }
 
-    final response = await http.put(
-      Uri.parse('${Config.saveFcmTokenEndpoint}/$userId'), 
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $jwtToken',
-      },
-      body: jsonEncode({'fcm_token': token}),
-    ).timeout(const Duration(seconds: 10));
+//     final response = await http.put(
+//       Uri.parse('${Config.saveFcmTokenEndpoint}/$userId'), 
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer $jwtToken',
+//       },
+//       body: jsonEncode({'fcm_token': token}),
+//     ).timeout(const Duration(seconds: 10));
 
-    if (response.statusCode != 200) {
-      print('❌ Failed to save FCM Token: ${response.statusCode} - ${response.body}');
-    }
-  } catch (e) {
-    print('❌ Error saving FCM Token: $e');
-  }
-}
+//     if (response.statusCode != 200) {
+//       print('❌ Failed to save FCM Token: ${response.statusCode} - ${response.body}');
+//     }
+//   } catch (e) {
+//     print('❌ Error saving FCM Token: $e');
+//   }
+// }
 
   // --- Safe Navigation Method ---
 void _navigateBasedOnRole(String role) {
