@@ -3,8 +3,10 @@ import 'package:airsolo/common/widgets/images/a_circular_image.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
 import 'package:airsolo/features/personalization/screens/profile/widget/profile_menu.dart';
 import 'package:airsolo/features/authentication/screens/password_configuration/resetPassword.dart';
+import 'package:airsolo/features/users/user_controller.dart';
 import 'package:airsolo/utils/constants/image_strings.dart';
 import 'package:airsolo/utils/constants/sizes.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -14,6 +16,15 @@ class AProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserController controller = Get.find<UserController>();
+    final fullName = controller.currentUser!.fullName;
+    final userName = controller.currentUser!.username;
+    final userId = controller.currentUser!.id.substring(0,8).toUpperCase();
+    final email =controller.currentUser!.email;
+    final gender = controller.currentUser!.gender;
+    final country = controller.currentUser!.country;
+    final profilePhoto = controller.currentUser!.profilePhoto.toString(); 
+
     return Scaffold(
       appBar: const AAppBar(showBackArrow: true, title: Text('Profile'),),
       /// -- Body
@@ -27,8 +38,16 @@ class AProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    const ACircularImage(image: AImages.userProfile, width: 80, height: 80,),
-                    TextButton(onPressed: (){}, child: const Text('Change Profile Picture'))
+                    CachedNetworkImage(
+                      imageUrl: profilePhoto,
+                      fit: BoxFit.contain,
+                      width: 80,
+                      height: 80,
+                      errorWidget: (context, url, error) => _buildDefaultImage(),
+                      ),
+                    
+                    TextButton(onPressed: (){
+                    }, child: const Text('Change Profile Picture'))
                   ],
                 ),
               ),
@@ -42,8 +61,8 @@ class AProfileScreen extends StatelessWidget {
 
 
               // Heading Profile Menu
-              AProfileMenu(onPressed: (){}, title: 'Name', value: 'Savindu Senanayake', ),
-              AProfileMenu(onPressed: (){}, title: 'Username', value: 'Savizz_2001', ),
+              AProfileMenu(onPressed: (){}, title: 'Name', value: fullName, ),
+              AProfileMenu(onPressed: (){}, title: 'Username', value: userName, ),
 
               const SizedBox(height: ASizes.spaceBtwItems ),
               const Divider(),
@@ -53,12 +72,12 @@ class AProfileScreen extends StatelessWidget {
               const ASectionHeading(title: 'Personal Information', showActionButton: false),
               const SizedBox(height: ASizes.spaceBtwItems ),
 
-              AProfileMenu(onPressed: (){}, title: 'User ID', value: '24883', icon: Iconsax.copy, ),
-              AProfileMenu(onPressed: (){ Get.to(()=>  const ResetPasswordScreen());}, title: 'Password', value: '######' ),
-              AProfileMenu(onPressed: (){}, title: 'E-mail', value: 'savindu.info@gmail.com', ),
+              AProfileMenu(onPressed: (){}, title: 'User ID', value: userId, icon: Iconsax.copy, ),
+              AProfileMenu(onPressed: (){}, title: 'E-mail', value: email, ),
               AProfileMenu(onPressed: (){}, title: 'Phone ', value: '+94-761794522', ),
-              AProfileMenu(onPressed: (){}, title: 'Gender', value: 'Male', ),
-              AProfileMenu(onPressed: (){}, title: 'Date of Birth', value: '23 Feb, 2001', ),
+              
+              AProfileMenu(onPressed: (){}, title: 'Country', value: country, ),
+              AProfileMenu(onPressed: (){}, title: 'Gender', value: gender, ),
               const SizedBox(height: ASizes.spaceBtwItems ),
 
               Center(
@@ -70,5 +89,11 @@ class AProfileScreen extends StatelessWidget {
       ),
     ),
     );
+  }
+
+
+
+  Widget _buildDefaultImage (){
+    return ACircularImage(image: AImages.userProfile, width: 80, height: 80,);
   }
 }

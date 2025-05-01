@@ -4,6 +4,9 @@ import 'package:airsolo/common/widgets/list_tiles/setting_menu_tile.dart';
 import 'package:airsolo/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:airsolo/common/widgets/texts/section_heading.dart';
 import 'package:airsolo/features/payments/screens/card_all_screen.dart';
+import 'package:airsolo/features/personalization/screens/setting/privacy.dart';
+import 'package:airsolo/features/users/coupon.dart';
+import 'package:airsolo/features/users/user_history.dart';
 import 'package:airsolo/features/wishlist/wishlist.dart';
 import 'package:airsolo/features/authentication/controllers/login_controller.dart';
 import 'package:airsolo/features/personalization/screens/profile/profile.dart';
@@ -18,6 +21,7 @@ class ASettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return  Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -52,13 +56,13 @@ class ASettingScreen extends StatelessWidget {
                 const SizedBox(height: ASizes.spaceBtwItems,),
 
                 
-                ASettingMenuTile(title: 'My Bookings', subTitle: 'View My All Bookings of Services', icon: Iconsax.ticket,onTap: () {},),
+                ASettingMenuTile(title: 'My Bookings', subTitle: 'View My All Bookings of Services', icon: Iconsax.ticket,onTap: () => Get.to(()=>  CustomerBookingHistoryPage()),),
                 ASettingMenuTile(title: 'My Wishlist', subTitle: 'View, Add, Edit or Remove Favourites', icon: Iconsax.heart,onTap: () => Get.to(()=> const AWishListPage()),),
                 ASettingMenuTile(title: 'My Emergancy', subTitle: 'Add Emergency Contacts for Secure ', icon: Iconsax.format_circle,onTap: () {},),
                 ASettingMenuTile(title: 'Wallet', subTitle: 'Manage Your Payments', icon: Iconsax.wallet,onTap: () => Get.to(()=> const CardHomePage()),),
-                ASettingMenuTile(title: 'My Coupons', subTitle: 'List of All Discounted Coupons', icon: Iconsax.discount_shape,onTap: () {},),
+                ASettingMenuTile(title: 'My Coupons', subTitle: 'List of All Discounted Coupons', icon: Iconsax.discount_shape,onTap: () => Get.to(()=>  CouponPage()),),
                 ASettingMenuTile(title: 'Notifications', subTitle: 'Set any kind of notification messages', icon: Iconsax.notification,onTap: () {},),
-                ASettingMenuTile(title: 'Account Privacy', subTitle: 'Manage data usage and connected accounts', icon: Iconsax.security_card,onTap: () {},),
+                ASettingMenuTile(title: 'Account Privacy', subTitle: 'Manage data usage and connected accounts', icon: Iconsax.security_card,onTap: () => Get.to(()=>  PrivacyPolicyPage()),),
 
 
                 // -- App Setting
@@ -73,7 +77,9 @@ class ASettingScreen extends StatelessWidget {
                   icon: Iconsax.security_user, 
                   trailing: Switch(
                     value: false, 
-                    onChanged: (falese){}),
+                    onChanged: (
+                      falese){}
+                      ),
                     ),
 
                     ASettingMenuTile(

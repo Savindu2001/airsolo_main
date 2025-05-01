@@ -139,13 +139,13 @@ Future<bool> notifyPaymentSuccess({
     }
   }
 
-  Future<void> fetchUserBookings(String userId) async {
+Future<void> fetchUserBookings() async {
     try {
       isLoading(true);
       error('');
 
       final response = await http.get(
-        Uri.parse('${Config.bookingEndpoint}/userBookings/$userId'),
+        Uri.parse('${Config.bookingEndpoint}'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -162,7 +162,7 @@ Future<bool> notifyPaymentSuccess({
     }
   }
 
-  Future<bool> checkRoomAvailability({
+Future<bool> checkRoomAvailability({
     required String roomId,
     required DateTime checkInDate,
     required DateTime checkOutDate,

@@ -17,7 +17,7 @@ class AHomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserController controller = Get.find<UserController>();
-    final userName = controller.currentUser?.fullName;
+    final userName = controller.currentUser!.fullName;
     return AAppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

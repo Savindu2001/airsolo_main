@@ -22,22 +22,22 @@ class AHomeCategories extends StatelessWidget {
       },
       {
         'title': 'Information',
-        'image': AImages.hostel,
+        'image': AImages.place,
         'onTap': () => Get.toNamed('/info'),
       },
       {
         'title': 'Events',
         'image': AImages.event,
-        'onTap': () => Get.toNamed('/events'),
+        'onTap': () => Get.toNamed('/activities'),
       },
       {
         'title': 'Activities',
-        'image': AImages.hostel,
+        'image': AImages.restaurant,
         'onTap': () => Get.toNamed('/activities'),
       },
       {
         'title': 'Cities',
-        'image': AImages.restaurant,
+        'image': AImages.place,
         'onTap': () => Get.toNamed('/cities'),
       },
     ];

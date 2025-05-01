@@ -13,6 +13,7 @@ class TaxiBookingController extends GetxController {
   final RxList<TaxiBooking> bookings = <TaxiBooking>[].obs;
   final nearbyBookings = <TaxiBooking>[].obs;
   final historyBookings = <TaxiBooking>[].obs;
+  final historyTravelerBookings = <TaxiBooking>[].obs;
   final availableDrivers = <Map<String, dynamic>>[].obs;
   final RxList<Vehicle> availableVehicles = <Vehicle>[].obs;
   final RxList<VehicleType> vehicleTypes = <VehicleType>[].obs;
@@ -214,7 +215,7 @@ Future<void> getNearByBookings() async {
 
 
 
-// Get History of Booking
+// Get History of Booking for drivers
 Future<void> getHistoryBookings() async {
   try {
     isLoading(true);
@@ -232,6 +233,35 @@ Future<void> getHistoryBookings() async {
       final List<dynamic> data = jsonDecode(response.body);
       historyBookings.assignAll(data.map((e) => TaxiBooking.fromJson(e)));
       print('Successfully loaded ${historyBookings.length} history bookings');
+    } else {
+      throw Exception('Failed to get history: ${response.body}');
+    }
+  } catch (e) {
+    error(e.toString());
+    print('Error fetching history: $e');
+  } finally {
+    isLoading(false);
+  }
+}
+
+// Get History of Booking for travelers
+Future<void> getTravelersHistoryBookings() async {
+  try {
+    isLoading(true);
+    error('');
+
+    final token = await _getValidToken();
+    if (token == null) throw Exception('Authentication required');
+
+    final response = await http.get(
+      Uri.parse('${Config.getTaxiBooking}/traveler-history'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      historyTravelerBookings.assignAll(data.map((e) => TaxiBooking.fromJson(e)));
+      print('Successfully loaded ${historyTravelerBookings.length} history -travelers- bookings');
     } else {
       throw Exception('Failed to get history: ${response.body}');
     }

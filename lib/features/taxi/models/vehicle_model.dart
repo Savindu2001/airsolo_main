@@ -6,6 +6,7 @@ class Vehicle {
   final int? year;
   final String color;
   final int? numberOfSeats;
+  final int seats;
   final bool isAvailable;
   final String driverId;
   final String vehicleTypeId;
@@ -18,6 +19,7 @@ class Vehicle {
     required this.vehicleNumber,
     required this.model,
     this.year,
+    this.seats = 4,
     required this.color,
     this.numberOfSeats,
     required this.isAvailable,
@@ -36,6 +38,7 @@ class Vehicle {
       year: json['year'] as int? ?? 0,
       color: json['color'] as String? ?? '',
       numberOfSeats: json['number_of_seats'] as int? ?? 2,
+      seats: json['seats'] as int? ?? 4,
       isAvailable: json['is_available'] as bool? ?? false,
       driverId: json['driver_id'] as String? ?? '',
       vehicleTypeId: json['vehicle_type_id'] as String? ?? '',
@@ -55,6 +58,7 @@ class Vehicle {
       'number_of_seats': numberOfSeats,
       'is_available': isAvailable,
       'driver_id': driverId,
+      'seats': seats,
       'vehicle_type_id': vehicleTypeId,
       'current_lat': currentLat,
       'current_lng': currentLng,

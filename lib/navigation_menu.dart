@@ -3,6 +3,7 @@ import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
 import 'package:airsolo/features/home/main_home.dart';
 import 'package:airsolo/features/personalization/screens/setting/setting.dart';
 import 'package:airsolo/features/taxi/screens/taxi_book.dart';
+import 'package:airsolo/features/taxi/screens/taxi_homepage.dart';
 import 'package:airsolo/features/tripGenie/screens/ai_home_screen.dart';
 //import 'package:airsolo/features/tripgenie/screens/home/a_ai_trip.dart';
 import 'package:airsolo/utils/constants/colors.dart';
@@ -43,7 +44,7 @@ class NavigationMenu extends StatelessWidget {
 
               NavigationDestination(
               icon: Icon(Iconsax.search_favorite), 
-              label: 'Informations'
+              label: 'Hostels'
               ),
 
               NavigationDestination(
@@ -54,10 +55,6 @@ class NavigationMenu extends StatelessWidget {
                NavigationDestination(
               icon: Icon(Iconsax.user), 
               label: 'Account'
-              ),
-              NavigationDestination(
-              icon: Icon(Iconsax.add_circle), 
-              label: 'Activity'
               ),
               
               
@@ -75,5 +72,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const MainHomeScreen(),const TaxiBookingScreen(),HostelListScreen(), const AIHomeScreen(), const ASettingScreen(), const ActivityScreen()];
+  final screens = [const MainHomeScreen(),TaxiHomePage(),HostelListScreen(), const AIHomeScreen(), const ASettingScreen()];
 }

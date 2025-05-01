@@ -13,6 +13,7 @@ class User {
   final String email;
   final String country;
   final String username;
+  final String gender;
   final UserRole role;
   final String? profilePhoto;
   final DateTime createdAt;
@@ -26,6 +27,7 @@ class User {
     required this.country,
     required this.username,
     required this.role,
+    required this.gender,
     this.profilePhoto,
     required this.createdAt,
     required this.updatedAt,
@@ -38,6 +40,7 @@ class User {
       lastName: json['lastName'] ?? '',
       email: json['email'] ?? '',
       country: json['country'] ?? '',
+      gender: json['gender'] ?? 'Male',
       username: json['username'] ?? '',
       role: _parseRole(json['role']),
       profilePhoto: json['profile_photo'],

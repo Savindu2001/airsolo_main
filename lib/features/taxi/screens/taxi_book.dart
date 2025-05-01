@@ -183,7 +183,7 @@ List<LatLng> _decodePolyline(String encoded) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Book a Taxi', style: TextStyle(color:AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.white)),
+        title: Text('Book a Taxi', style: Get.textTheme.headlineMedium!.copyWith(color:AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.white)),
         centerTitle: true,
         backgroundColor: AHelperFunctions.isDarkMode(context) ? AColors.primary : AColors.homePrimary,
       ),
@@ -197,7 +197,8 @@ List<LatLng> _decodePolyline(String encoded) {
               if (_pickupLocation != null && _dropLocation != null) _buildMapPreview() 
               else  Container(
                 height: 300,
-                child: Text('dummy Map Current map'),
+                
+                child: Image.asset('assets/images/banners/taxi.jpg'),
               ),
               
               
@@ -466,7 +467,7 @@ List<LatLng> _decodePolyline(String encoded) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Shared Ride', style: Get.textTheme.titleLarge),
+            Text('Shared Ride', style: Get.textTheme.titleLarge!.copyWith(color:AHelperFunctions.isDarkMode(context) ? AColors.black : AColors.white)),
             Switch(
               value: _isShared,
               onChanged: (value) {

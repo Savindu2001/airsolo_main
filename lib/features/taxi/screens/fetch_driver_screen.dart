@@ -143,30 +143,3 @@ void _startPolling() {
 
 
 
-// Add to FetchingDriverScreen's initState
-// void _setupFirebaseListener() {
-//   FirebaseFirestore.instance
-//       .collection('bookings')
-//       .doc(widget.bookingId)
-//       .snapshots()
-//       .listen((snapshot) {
-//     if (snapshot.exists) {
-//       final status = snapshot.data()?['status'];
-//       if (status == 'driver_accepted') {
-//         // Stop the timer
-//         _timer.cancel();
-        
-//         // Fetch full booking details
-//         controller.getAcceptedBooking(widget.bookingId).then((_) {
-//           if (controller.currentBooking.value != null) {
-//             widget.onDriverAccepted(controller.currentBooking.value!);
-//           }
-//         });
-//       } else if (status == 'cancelled' || status == 'rejected') {
-//         _timer.cancel();
-//         Get.back();
-//         Get.snackbar('Info', 'No driver accepted your booking');
-//       }
-//     }
-//   });
-// }

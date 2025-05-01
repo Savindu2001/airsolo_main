@@ -1,9 +1,14 @@
-import 'dart:async';
+import 'dart:ui';
 
-import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
+import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
+import 'package:airsolo/features/users/user_controller.dart' show UserController;
+import 'package:airsolo/utils/constants/colors.dart';
+import 'package:airsolo/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
+import 'package:iconsax/iconsax.dart';
 
 class OngoingBookingScreen extends StatefulWidget {
   final TaxiBooking booking;
@@ -15,276 +20,334 @@ class OngoingBookingScreen extends StatefulWidget {
 }
 
 class _OngoingBookingScreenState extends State<OngoingBookingScreen> {
-  late Timer _pollingTimer;
   final TaxiBookingController _bookingController = Get.find();
+  final UserController _userController = Get.find();
   TaxiBooking? _currentBooking;
   bool _isLoading = false;
-  bool _isDisposed = false;
 
   @override
   void initState() {
     super.initState();
     _currentBooking = widget.booking;
-    _startPolling();
+    _loadUserData();
   }
 
-  void _startPolling() {
-    if (_currentBooking?.status == 'ride_completed') return;
-
-    _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      if (_isDisposed) return;
-
-      try {
-        if (!mounted) return;
-        setState(() => _isLoading = true);
-        
-        final updatedBooking = await _bookingController.getBookingDetails(_currentBooking!.id);
-        
-        // if (updatedBooking != null && mounted) {
-        //   setState(() {
-        //     _currentBooking = updatedBooking;
-        //     _isLoading = false;
-        //   });
-          
-        //   if (updatedBooking.status == 'ride_completed') {
-        //     timer.cancel();
-        //     _navigateToTripCompletion(updatedBooking);
-        //   }
-        // }
-      } catch (e) {
-        if (mounted) {
-          setState(() => _isLoading = false);
-          debugPrint('Error polling booking status: $e');
-        }
-      }
-    });
-  }
-
-  void _navigateToTripCompletion(TaxiBooking booking) {
-    if (_isDisposed) return;
-    Get.offAll(() => TripCompletionScreen(booking: booking));
-  }
-
-  void _navigateToHome() {
-    if (_isDisposed) return;
-    Get.offAllNamed('/home');
-  }
-
-  Future<void> _cancelTrip() async {
-    final shouldCancel = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cancel Trip'),
-        content: const Text('Are you sure you want to cancel this trip?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-
-    if (shouldCancel == true && mounted && !_isDisposed) {
-      try {
-        setState(() => _isLoading = true);
-        await _bookingController.cancelBooking(_currentBooking!.id);
-        if (mounted && !_isDisposed) {
-          _navigateToHome();
-        }
-      } catch (e) {
-        if (mounted && !_isDisposed) {
-          setState(() => _isLoading = false);
-          Get.snackbar('Error', 'Failed to cancel trip: ${e.toString()}');
-        }
-      }
+  void _loadUserData() {
+    if (_currentBooking?.assignedVehicle?.driverId != null) {
+      _userController.fetchDriverDetails(_currentBooking!.assignedVehicle!.driverId);
     }
-  }
-
-  void _contactDriver() {
-    // Implement actual contact logic here
-    Get.snackbar('Contact Driver', 'Calling driver...');
-  }
-
-  @override
-  void dispose() {
-    _isDisposed = true;
-    _pollingTimer.cancel();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        _navigateToHome();
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Ongoing Trip', style: Get.textTheme.headlineMedium),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: _navigateToHome,
-          ),
+    final isDark = AHelperFunctions.isDarkMode(context);
+    final isCompleted = _currentBooking?.status == 'ride_completed';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Trip Details', style: Get.textTheme.headlineMedium),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: isDark ? AColors.white : AColors.black),
+          onPressed: () => Get.offAllNamed('/home'),
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _buildBookingDetails(),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Map Section
+            _buildMapSection(),
+            const SizedBox(height: 20),
+            
+            // User & Driver Cards
+            Row(
+              children: [
+                Expanded(child: _buildUserCard()),
+                const SizedBox(width: 10),
+                Expanded(child: _buildDriverCard()),
+              ],
+            ),
+            const SizedBox(height: 20),
+            
+            // Vehicle Details
+            _buildVehicleCard(),
+            const SizedBox(height: 20),
+            
+            // Trip Details
+            _buildTripDetailsCard(),
+            const SizedBox(height: 20),
+            
+            // Status & Actions
+            _buildStatusSection(),
+            const SizedBox(height: 20),
+            
+            // Action Buttons
+            if (!isCompleted) _buildPaymentButton() else _buildActionButtons(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildBookingDetails() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildMapSection() {
+    return Container(
+      height: 200,
+      
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey[200],
+        image: DecorationImage(
+          image: AssetImage('assets/images/banners/taxi.jpg'),
+          fit: BoxFit.cover
+          )
+      ),
+      child: Stack(
         children: [
-          // Driver Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
+          // Your Map Widget Here (Google Maps or other)
+          Center(child: 
+          Text('Your Sri Lanka Trusted Taxi partner')
+          ),
+          
+          // Destination Box
+          Positioned(
+            bottom: 10,
+            left: 10,
+            right: 10,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+              )],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    child: Icon(Icons.person, size: 30),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        
-                        'Driver ID: ${_currentBooking?.assignedVehicle?.driverId.substring(0, 8).toUpperCase() ?? 'N/A'}',
-                        style: const TextStyle(
-                          fontSize: 18, 
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Rating: 4.8 ★'),
-                      const SizedBox(height: 4),
-                      Text(
-                        _currentBooking?.assignedVehicle?.vehicleNumber ?? 'N/A',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+                      Icon(Icons.circle, color: Colors.green, size: 12),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(_currentBooking?.pickupLocation ?? 'Pickup location')),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: Colors.red, size: 12),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(_currentBooking?.dropLocation ?? 'Drop location')),
                     ],
                   ),
                 ],
               ),
             ),
           ),
-          
-          const SizedBox(height: 16),
-          
-          // Trip Details Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.location_on, color: Colors.red),
-                    title: const Text('Pickup Location'),
-                    subtitle: Text(_currentBooking?.pickupLocation ?? 'Not specified'),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Icons.flag, color: Colors.green),
-                    title: const Text('Drop Location'),
-                    subtitle: Text(_currentBooking?.dropLocation ?? 'Not specified'),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Icons.directions_car),
-                    title: const Text('Vehicle'),
-                    subtitle: Text(
-                      _currentBooking?.assignedVehicle?.model != null
-                        ? '${_currentBooking!.assignedVehicle!.model} (${_currentBooking!.assignedVehicle!.vehicleNumber})'
-                        : 'Vehicle info not available'
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Trip Status Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'TRIP STATUS', 
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: _getProgressValue(_currentBooking?.status ?? 'pending'),
-                    backgroundColor: Colors.grey[200],
-                    color: Colors.green,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _getStatusText(_currentBooking?.status ?? 'pending'),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          // Action Buttons
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _cancelTrip,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: Colors.red),
-                  ),
-                  child: const Text(
-                    'CANCEL TRIP',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _contactDriver,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: const Text(
-                    'CONTACT DRIVER',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
+  Widget _buildUserCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('YOUR DETAILS', style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.bold,
+            )),
+            const SizedBox(height: 8),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(
+                radius: 20,
+                child: Icon(Icons.person),
+              ),
+              title: Text(_userController.currentUser?.fullName ?? 'You'),
+              subtitle: Text('Traveler'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDriverCard() {
+    return Obx(() {
+      final driver = _userController.currentDriver.value;
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('DRIVER DETAILS', style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.bold,
+              )),
+              const SizedBox(height: 8),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: driver?.profilePhoto != null 
+                    ? NetworkImage(driver!.profilePhoto!) 
+                    : null,
+                  child: driver?.profilePhoto == null ? Icon(Icons.person) : null,
+                ),
+                title: Text(driver?.fullName ?? 'Loading...'),
+                subtitle: Text('Driver | 4.8 ★'),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildVehicleCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('VEHICLE DETAILS', style: Get.textTheme.titleLarge),
+            const SizedBox(height: 8),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AHelperFunctions.isDarkMode(context) ? AColors.primary : AColors.homePrimary,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Icon(Iconsax.car, color: Colors.white),
+              ),
+              title: Text(_currentBooking?.assignedVehicle?.model ?? 'Vehicle model', style: Get.textTheme.bodyLarge,),
+              subtitle: Text(_currentBooking?.assignedVehicle?.vehicleNumber ?? 'License plate', style: Get.textTheme.bodyLarge,),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTripDetailsCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('TRIP DETAILS', style: Get.textTheme.titleLarge),
+            const SizedBox(height: 12),
+            _buildDetailRow(Icons.timer, 'Trip Time', '30 mins (approx)'),
+            const Divider(height: 20),
+            _buildDetailRow(Icons.attach_money, 'Estimated Fare', 'LKR ${_currentBooking?.totalPrice ?? '0.00'}'),
+            const Divider(height: 20),
+            _buildDetailRow(Icons.date_range, 'Date', 
+              '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String title, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.grey),
+        const SizedBox(width: 12),
+        Text(title, style: const TextStyle(fontSize: 14)),
+        const Spacer(),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Widget _buildStatusSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            LinearProgressIndicator(
+              value: _getProgressValue(_currentBooking?.status ?? 'pending'),
+              backgroundColor: Colors.grey[200],
+              color: AColors.primary,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _getStatusText(_currentBooking?.status ?? 'pending'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            icon: const Icon(Icons.close, color: Colors.red),
+            label: const Text('CANCEL', style: TextStyle(color: Colors.red)),
+            onPressed: _cancelTrip,
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              side: const BorderSide(color: Colors.red),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.call, color: Colors.white),
+            label: const Text('CONTACT', style: TextStyle(color: Colors.white)),
+            onPressed: _contactDriver,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: AColors.primary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          // Handle payment
+          Get.toNamed('/payment', arguments: _currentBooking);
+        },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: AColors.primary,
+        ),
+        child: const Text(
+          'PAY NOW',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  // Helper methods
   double _getProgressValue(String status) {
     switch (status) {
       case 'driver_accepted': return 0.3;
@@ -300,75 +363,18 @@ class _OngoingBookingScreenState extends State<OngoingBookingScreen> {
       case 'driver_accepted': return 'Driver is on the way';
       case 'driver_arrived': return 'Driver has arrived';
       case 'ride_started': return 'Trip in progress';
-      case 'ride_completed': return 'Trip completed';
+      case 'ride_completed': return 'Trip completed - Payment pending';
       default: return 'Waiting for driver';
     }
   }
-}
 
-class TripCompletionScreen extends StatelessWidget {
-  final TaxiBooking booking;
+  Future<void> _cancelTrip() async {
+    print(widget.booking.id);
+    _bookingController.updateBookingStatus(bookingId: widget.booking.id, status: 'cancelled');
+  }
 
-  const TripCompletionScreen({super.key, required this.booking});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trip Completed'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () => Get.offAllNamed('/home'),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green, size: 80),
-              const SizedBox(height: 20),
-              const Text(
-                'Trip Completed!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'LKR ${booking.totalPrice}', 
-                style: const TextStyle(
-                  fontSize: 32, 
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'Thank you for using our service',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Get.offAllNamed('/home'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: const Text(
-                    'Back to Home',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _contactDriver() {
+    Get.snackbar('Call to Driver', 'Calling........');
+    
   }
 }
