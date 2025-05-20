@@ -142,11 +142,80 @@ class CheckoutScreen extends StatelessWidget {
 
 
 Future<void> _handlePayment() async {
+  await Get.bottomSheet(
+    Container(
+      padding: const EdgeInsets.all(ASizes.defaultSpace),
+      decoration: BoxDecoration(
+        color: Get.theme.colorScheme.background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Select Payment Method', style: Get.textTheme.headlineSmall),
+          const SizedBox(height: ASizes.spaceBtwItems),
+          
+          // Card Payment Option
+          _buildPaymentOption(
+            icon: Icons.credit_card,
+            title: 'Pay with Card',
+            subtitle: 'Secure payment via PayHere',
+            onTap: () => _processCardPayment(),
+          ),
+          
+          const SizedBox(height: ASizes.spaceBtwItems),
+          
+          // Cash Payment Option
+          _buildPaymentOption(
+            icon: Icons.money,
+            title: 'Pay with Cash',
+            subtitle: 'Pay at the hostel reception',
+            onTap: () => _processCashPayment(),
+          ),
+          
+          const SizedBox(height: ASizes.spaceBtwSections),
+          
+          // Cancel Button
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
+            ),
+          ),
+        ],
+      ),
+    ),
+    isScrollControlled: true,
+  );
+}
+
+Widget _buildPaymentOption({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required VoidCallback onTap,
+}) {
+  return Card(
+    child: ListTile(
+      leading: Icon(icon, color: AColors.primary),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
+    ),
+  );
+}
+
+
+Future<void> _processCardPayment() async {
   try {
-    // 1. Show confirmation dialog
+    Get.back(); // Close the bottom sheet
+    
+    // Show confirmation dialog
     final confirm = await Get.dialog<bool>(
       AlertDialog(
-        title: const Text('Confirm Payment'),
+        title: const Text('Confirm Card Payment'),
         content: const Text('You will be redirected to PayHere to complete your payment. Continue?'),
         actions: [
           TextButton(
@@ -163,10 +232,12 @@ Future<void> _handlePayment() async {
 
     if (confirm != true) return;
 
-    // 2. Show loading
     AFullScreenLoader.openLoadingDialog('Processing Payment', AImages.paymentSuccess);
 
-    // 3. Initialize PayHere payment
+    // Simulate payment processing
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Initialize PayHere payment (real implementation)
     final userController = Get.find<UserController>();
     await PayHereService.initiatePayment(
       amount: total,
@@ -175,19 +246,56 @@ Future<void> _handlePayment() async {
       customerEmail: userController.currentUser!.email,
     );
 
-    // 4. Close loading (PayHere will handle the rest)
     AFullScreenLoader.stopLoading();
+    _navigateToSuccessScreen();
 
-  } catch (e, stack) {
+  } catch (e) {
     AFullScreenLoader.stopLoading();
-    print('Payment error: $e');
-    print('Stack trace: $stack');
-    
-    Get.snackbar(
-      'Payment Error',
-      'Failed to initiate payment: ${e.toString()}',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    Get.snackbar('Error', 'Payment failed: ${e.toString()}');
   }
 }
+
+Future<void> _processCashPayment() async {
+  Get.back(); // Close the bottom sheet
+  
+  // Show confirmation dialog
+  final confirm = await Get.dialog<bool>(
+    AlertDialog(
+      title: const Text('Confirm Cash Payment'),
+      content: const Text('You will need to pay the amount at the hostel reception. Continue?'),
+      actions: [
+        TextButton(
+          onPressed: () => Get.back(result: false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Get.back(result: true),
+          child: const Text('Confirm'),
+        ),
+      ],
+    ),
+  );
+
+  if (confirm != true) return;
+
+  AFullScreenLoader.openLoadingDialog('Processing Request', AImages.paymentSuccess);
+  
+  // Simulate processing
+  await Future.delayed(const Duration(seconds: 2));
+  
+  AFullScreenLoader.stopLoading();
+  _navigateToSuccessScreen();
+}
+
+void _navigateToSuccessScreen() {
+  Get.offAllNamed('/payment-success', arguments: {
+    'bookingId': bookingId,
+    'amount': total,
+    'paymentMethod': 'Card', // or 'Cash' depending on which was selected
+    'room': room,
+    'checkInDate': checkInDate,
+    'checkOutDate': checkOutDate,
+  });
+}
+
 }

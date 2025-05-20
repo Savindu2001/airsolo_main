@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:airsolo/features/taxi/controllers/taxi_booking_controller.dart';
 import 'package:airsolo/features/taxi/models/taxi_booking_model.dart';
+import 'package:airsolo/features/taxi/screens/taxi_payment.dart';
 import 'package:airsolo/features/users/user_controller.dart' show UserController;
 import 'package:airsolo/utils/constants/colors.dart';
 import 'package:airsolo/utils/helpers/helper_functions.dart';
@@ -327,25 +328,24 @@ class _OngoingBookingScreenState extends State<OngoingBookingScreen> {
     );
   }
 
-  Widget _buildPaymentButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          // Handle payment
-          Get.toNamed('/payment', arguments: _currentBooking);
-        },
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: AColors.primary,
-        ),
-        child: const Text(
-          'PAY NOW',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+Widget _buildPaymentButton() {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: () {
+        Get.to(() => TaxiPaymentScreen(), arguments: _currentBooking);
+      },
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: AColors.primary,
       ),
-    );
-  }
+      child: const Text(
+        'PAY NOW ',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
 
   // Helper methods
   double _getProgressValue(String status) {
