@@ -139,20 +139,32 @@ class HostelListScreen extends StatelessWidget {
   }
 
   void _showFilterBottomSheet() {
-    Get.bottomSheet(
-      Container(
-        decoration: BoxDecoration(
-          color: AHelperFunctions.isDarkMode(Get.context!)
-              ? AColors.dark
-              : Colors.white,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(ASizes.cardRadiusLg),
-          ),
+  // Create reactive variables for filters
+  final selectedType = ''.obs;
+  final selectedCity = ''.obs;
+  final minPrice = 0.0.obs;
+  final maxPrice = 1000.0.obs;
+
+  // Sample filter options - replace with your actual data
+  final types = ['All', 'Male Dorm', 'Female Dorm', 'Shared'];
+  final cities = ['All', 'Colombo', 'Sigiriya', 'Kandy', 'Dambulla'];
+
+  Get.bottomSheet(
+    Container(
+      decoration: BoxDecoration(
+        color: AHelperFunctions.isDarkMode(Get.context!)
+            ? AColors.dark
+            : Colors.white,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(ASizes.cardRadiusLg),
         ),
-        padding: const EdgeInsets.all(ASizes.defaultSpace),
+      ),
+      padding: const EdgeInsets.all(ASizes.defaultSpace),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Drag handle
             Container(
               width: 40,
               height: 4,
@@ -162,16 +174,121 @@ class HostelListScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
+            
+            // Title
             Text(
               'Filter Hostels',
               style: Theme.of(Get.context!).textTheme.titleLarge,
             ),
             const SizedBox(height: ASizes.spaceBtwSections),
+
+            // Hostel Type Filter
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hostel Type',
+                  style: Theme.of(Get.context!).textTheme.titleMedium,
+                ),
+                const SizedBox(height: ASizes.sm),
+                Obx(
+                  () => Wrap(
+                    spacing: ASizes.sm,
+                    runSpacing: ASizes.sm,
+                    children: types.map((type) {
+                      return ChoiceChip(
+                        label: Text(type),
+                        selected: selectedType.value == type,
+                        onSelected: (selected) {
+                          selectedType.value = selected ? type : '';
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: ASizes.spaceBtwItems),
+
+            // City Filter
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'City',
+                  style: Theme.of(Get.context!).textTheme.titleMedium,
+                ),
+                const SizedBox(height: ASizes.sm),
+                Obx(
+                  () => Wrap(
+                    spacing: ASizes.sm,
+                    runSpacing: ASizes.sm,
+                    children: cities.map((city) {
+                      return ChoiceChip(
+                        label: Text(city),
+                        selected: selectedCity.value == city,
+                        onSelected: (selected) {
+                          selectedCity.value = selected ? city : '';
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: ASizes.spaceBtwItems),
+
+            // Budget Filter
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Budget Range',
+                  style: Theme.of(Get.context!).textTheme.titleMedium,
+                ),
+                const SizedBox(height: ASizes.sm),
+                Obx(
+                  () => RangeSlider(
+                    values: RangeValues(minPrice.value, maxPrice.value),
+                    min: 0,
+                    max: 1000,
+                    divisions: 10,
+                    labels: RangeLabels(
+                      'USD${minPrice.value.toInt()}',
+                      'USD${maxPrice.value.toInt()}',
+                    ),
+                    onChanged: (values) {
+                      minPrice.value = values.start;
+                      maxPrice.value = values.end;
+                    },
+                  ),
+                ),
+                const SizedBox(height: ASizes.sm),
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('USD${minPrice.value.toInt()}'),
+                      Text('USD${maxPrice.value.toInt()}'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: ASizes.spaceBtwSections),
+
+            // Action Buttons
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
+                      // Reset all filters
+                      selectedType.value = '';
+                      selectedCity.value = '';
+                      minPrice.value = 0.0;
+                      maxPrice.value = 1000.0;
+                      _controller.filterHostels();
                       if (Get.isBottomSheetOpen ?? false) {
                         Get.back(); 
                       }
@@ -183,7 +300,13 @@ class HostelListScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      _controller.filterHostels();
+                      // Apply filters with current selections
+                      _controller.applyFilters(
+                        type: selectedType.value,
+                        city: selectedCity.value,
+                        minPrice: minPrice.value,
+                        maxPrice: maxPrice.value,
+                      );
                       if (Get.isBottomSheetOpen ?? false) {
                         Get.back(); 
                       }
@@ -196,8 +319,10 @@ class HostelListScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+    isScrollControlled: true,
+  );
+}
 }
 
 class _HostelCard extends StatelessWidget {

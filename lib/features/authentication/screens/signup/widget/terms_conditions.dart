@@ -37,7 +37,7 @@ class ATermsConditions extends StatelessWidget {
               TextSpan(text: ATexts.iAgreeTo, style: Theme.of(context).textTheme.bodySmall),
               TextSpan(
                 text: ATexts.privacyPolicy,
-                style: Theme.of(context).textTheme.bodyMedium!.apply(
+                style: Theme.of(context).textTheme.bodySmall!.apply(
                   color: dark ? AColors.white : AColors.primary,
                   decoration: TextDecoration.underline,
                   decorationColor: dark ? AColors.white : AColors.primary,
@@ -46,7 +46,7 @@ class ATermsConditions extends StatelessWidget {
               TextSpan(text: ATexts.and, style: Theme.of(context).textTheme.bodySmall),
               TextSpan(
                 text: ATexts.termsOfUse,
-                style: Theme.of(context).textTheme.bodyMedium!.apply(
+                style: Theme.of(context).textTheme.bodySmall!.apply(
                   color: dark ? AColors.white : AColors.primary,
                   decoration: TextDecoration.underline,
                   decorationColor: dark ? AColors.white : AColors.primary,

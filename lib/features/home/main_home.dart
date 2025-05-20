@@ -163,7 +163,30 @@ Widget _buildPopularCities() {
   
 }
 
-// Hostel Section
+
+
+String _getPriceRange(List<Room> rooms) {
+  if (rooms.isEmpty) return 'Loading prices...';
+  
+  final validPrices = rooms
+      .where((room) => room.pricePerPerson > 0)
+      .map((room) => room.pricePerPerson)
+      .toList();
+
+  if (validPrices.isEmpty) return 'View hostel';
+  
+  validPrices.sort();
+  final min = validPrices.first;
+  final max = validPrices.last;
+
+  return min == max 
+      ? '\$${min.toStringAsFixed(2)}' 
+      : '\$${min.toStringAsFixed(2)} - \$${max.toStringAsFixed(2)}';
+}
+
+
+
+
 Widget _buildHostelCard() {
   final hostelController = Get.find<HostelController>();
 
@@ -171,9 +194,18 @@ Widget _buildHostelCard() {
     if (hostelController.isLoading.value && hostelController.hostels.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: ASizes.defaultSpace),
-        child: AGridLayout(
-          itemCount: 4,
-          itemBuilder: (_, index) => const _HostelCardSkeleton(),
+        child: SizedBox(
+          height: 220,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: 4,
+            itemBuilder: (_, index) => const SizedBox(
+              width: 180,
+              child: _HostelCardSkeleton(),
+            ),
+            separatorBuilder: (_, __) => const SizedBox(width: ASizes.spaceBtwItems),
+          ),
         ),
       );
     }
@@ -200,7 +232,7 @@ Widget _buildHostelCard() {
       );
     }
 
-    final displayedHostels = hostelController.hostels.take(12).toList();
+    final displayedHostels = hostelController.hostels.take(7).toList();
 
     if (displayedHostels.isEmpty) {
       return Center(
@@ -237,119 +269,126 @@ Widget _buildHostelCard() {
         ),
         const SizedBox(height: ASizes.spaceBtwItems),
 
-        // Hostel Grid
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: ASizes.defaultSpace),
-          child: AGridLayout(
+        // Hostel Horizontal List
+        SizedBox(
+          height: 220, // Fixed height matching city cards
+          child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
             itemCount: displayedHostels.length,
             itemBuilder: (_, index) {
               final hostel = displayedHostels[index];
               final rooms = hostelController.getRoomsForHostel(hostel.id);
               final hasRooms = rooms.isNotEmpty;
               
-              return Card(
-                margin: const EdgeInsets.only(bottom: ASizes.defaultSpace),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
+              return SizedBox(
+                width: 300, // Fixed width matching city cards
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {
                     hostelController.selectedHostel.value = null;
                     hostelController.isDetailLoading.value = true;
-                    Get.to(() => HostelDetailScreen(hostelId: hostel.id));
+                    Get.to(
+                      () => HostelDetailScreen(hostelId: hostel.id),
+                      transition: Transition.cupertino,
+                    );
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Image Section
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(ASizes.cardRadiusLg),
-                          topRight: Radius.circular(ASizes.cardRadiusLg),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 16/9,
-                          child: hostel.gallery.isNotEmpty 
-                              ? CachedNetworkImage(
-                                  imageUrl: hostel.gallery.first,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Container(
-                                    color: Colors.grey[200],
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(AColors.primary),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Image Section
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(ASizes.cardRadiusLg),
+                          ),
+                          child: SizedBox(
+                            height: 120, // Fixed image height
+                            width: double.infinity,
+                            child: hostel.gallery.isNotEmpty 
+                                ? CachedNetworkImage(
+                                    imageUrl: hostel.gallery.first,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey[200],
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(AColors.primary),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  errorWidget: (context, url, error) => Image.asset(
+                                    errorWidget: (context, url, error) => Image.asset(
+                                      AImages.hostelImage1,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Image.asset(
                                     AImages.hostelImage1,
                                     fit: BoxFit.cover,
                                   ),
-                                )
-                              : Image.asset(
-                                  AImages.hostelImage1,
-                                  fit: BoxFit.cover,
-                                ),
+                          ),
                         ),
-                      ),
-                      // Details Section
-                      Padding(
-                        padding: const EdgeInsets.all(ASizes.defaultSpace),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              hostel.name,
-                              style: Get.textTheme.titleLarge,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: ASizes.sm),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on, size: 16),
-                                const SizedBox(width: ASizes.xs),
-                                Expanded(
-                                  child: Text(
-                                    hostel.address ?? 'No address provided',
-                                    style: Get.textTheme.bodyMedium,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: ASizes.sm),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
+                        // Details Section
+                        Padding(
+                          padding: const EdgeInsets.all(ASizes.sm),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                hostel.name,
+                                style: Get.textTheme.titleMedium,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: ASizes.xs),
+                              Row(
                                 children: [
-                                  const Icon(Icons.star, color: Colors.amber, size: 16),
+                                  const Icon(Icons.location_on, size: 14),
+                                  const SizedBox(width: ASizes.xs),
+                                  Expanded(
+                                    child: Text(
+                                      hostel.address ?? 'No address',
+                                      style: Get.textTheme.bodySmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: ASizes.xs),
+                              Row(
+                                children: [
+                                  const Icon(Icons.star, size: 14, color: Colors.amber),
                                   const SizedBox(width: ASizes.xs),
                                   Text(
                                     hostel.rating?.toStringAsFixed(1) ?? 'N/A',
-                                    style: Get.textTheme.bodyMedium,
+                                    style: Get.textTheme.bodySmall,
                                   ),
                                   const Spacer(),
                                   Text(
                                     hasRooms 
                                         ? _getPriceRange(rooms)
                                         : 'View hostel',
-                                    style: Get.textTheme.titleMedium,
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
             },
+            separatorBuilder: (_, __) => const SizedBox(width: ASizes.spaceBtwItems),
           ),
         ),
       ],
@@ -357,25 +396,7 @@ Widget _buildHostelCard() {
   });
 }
 
-String _getPriceRange(List<Room> rooms) {
-  if (rooms.isEmpty) return 'Loading prices...';
-  
-  final validPrices = rooms
-      .where((room) => room.pricePerPerson > 0)
-      .map((room) => room.pricePerPerson)
-      .toList();
-
-  if (validPrices.isEmpty) return 'View hostel';
-  
-  validPrices.sort();
-  final min = validPrices.first;
-  final max = validPrices.last;
-
-  return min == max 
-      ? '\$${min.toStringAsFixed(2)}' 
-      : '\$${min.toStringAsFixed(2)} - \$${max.toStringAsFixed(2)}';
-}
-
+// Update the skeleton to match the new design
 class _HostelCardSkeleton extends StatelessWidget {
   const _HostelCardSkeleton();
 
@@ -384,43 +405,61 @@ class _HostelCardSkeleton extends StatelessWidget {
     final dark = AHelperFunctions.isDarkMode(context);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: ASizes.defaultSpace),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(ASizes.cardRadiusLg),
       ),
       child: Shimmer.fromColors(
-        baseColor: dark ? AColors.primary : AColors.homePrimary,
-        highlightColor: dark ? AColors.primary : AColors.homePrimary,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 180,
-                width: double.infinity,
+        baseColor: dark ? Colors.grey[700]! : Colors.grey[300]!,
+        highlightColor: dark ? Colors.grey[600]! : Colors.grey[100]!,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 120,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(ASizes.cardRadiusLg),
+                ),
                 color: Colors.white,
               ),
-              Padding(
-                padding: const EdgeInsets.all(ASizes.defaultSpace),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 20,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: ASizes.sm),
-                    Container(
-                      width: double.infinity,
-                      height: 16,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(ASizes.sm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 16,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: ASizes.xs),
+                  Container(
+                    width: 100,
+                    height: 12,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: ASizes.xs),
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 12,
+                        color: Colors.white,
+                      ),
+                      const Spacer(),
+                      Container(
+                        width: 60,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

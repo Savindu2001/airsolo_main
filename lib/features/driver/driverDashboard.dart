@@ -36,14 +36,42 @@ class DriverHomeScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 12),
             child: Row(
               children: [
-                Obx(() => Switch(
-                  value: vehicleController.currentVehicle.value?.isAvailable ?? true,
-                  onChanged: (value) {
-                    vehicleController.toggleAvailability(value);
-                  },
-                  activeColor: Colors.green,
-                  inactiveThumbColor: Colors.grey[200],
-                )),
+
+                Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Obx(() => TextButton(
+      onPressed: vehicleController.currentVehicle.value?.isAvailable == true
+          ? null // Disabled when already online
+          : () {
+              vehicleController.toggleAvailability(true);
+            },
+      style: TextButton.styleFrom(
+        backgroundColor: vehicleController.currentVehicle.value?.isAvailable == true
+            ? Colors.green
+            : Colors.grey[300],
+        foregroundColor: Colors.white,
+      ),
+      child: const Text("Go Online"),
+    )),
+    const SizedBox(width: 10),
+    Obx(() => TextButton(
+      onPressed: vehicleController.currentVehicle.value?.isAvailable == false
+          ? null // Disabled when already offline
+          : () {
+              vehicleController.toggleAvailability(false);
+            },
+      style: TextButton.styleFrom(
+        backgroundColor: vehicleController.currentVehicle.value?.isAvailable == false
+            ? Colors.red
+            : Colors.grey[300],
+        foregroundColor: Colors.white,
+      ),
+      child: const Text("Go Offline"),
+    )),
+  ],
+),
+
 
                 
 

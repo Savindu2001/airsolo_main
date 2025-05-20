@@ -6,8 +6,7 @@ import 'package:airsolo/features/driver/driverDashboard.dart';
 import 'package:airsolo/features/driver/vehicle_register.dart';
 import 'package:airsolo/features/hostel/screens/hostel_list_screen.dart';
 import 'package:airsolo/features/informations/screen/information_screen.dart';
-import 'package:airsolo/features/taxi/screens/join/available_shared_rides_screen.dart';
-import 'package:airsolo/features/taxi/screens/join/join_taxi_search.dart';
+import 'package:airsolo/features/taxi/screens/join/shareTaxiList.dart';
 import 'package:airsolo/features/taxi/screens/ongoing_booking_screen.dart';
 import 'package:airsolo/features/taxi/screens/taxi_book.dart';
 import 'package:airsolo/features/tripGenie/screens/ai_home_screen.dart';
@@ -48,7 +47,7 @@ class AirsoloApp extends StatelessWidget {
         GetPage(name: '/driver/register', page: () => VehicleRegistrationScreen()),
         GetPage(name: '/ongoing-booking',page: () => OngoingBookingScreen(booking: Get.arguments),),
         GetPage(name: '/info', page: () => InformationScreen()),
-        GetPage(name: '/join-taxi', page: ()=> JoinTaxiSearchScreen()),
+        GetPage(name: '/join-taxi', page: () => SharedBookingsScreen(),)
         
       ],
     );

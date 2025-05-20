@@ -433,4 +433,55 @@ Future<void> loadHostelDetails(String hostelId) async {
       message: 'Failed to fetch hostels: ${e.toString()}',
     );
   }
+
+
+
+  void applyFilters({
+  String type = '',
+  String city = '',
+  double minPrice = 0,
+  double maxPrice = double.infinity,
+}) {
+  try {
+    isLoading(true);
+    
+    filteredHostels.assignAll(hostels.where((hostel) {
+      // Type filter
+      // if (type.isNotEmpty && type != 'All' && hostel.type?.toLowerCase() != type.toLowerCase()) {
+      //   return false;
+      // }
+      
+      // City filter
+      if (city.isNotEmpty && city != 'All' && hostel.cityId?.toLowerCase() != city.toLowerCase()) {
+        return false;
+      }
+      
+      // Price filter - only apply if hostel has rooms
+      final rooms = getRoomsForHostel(hostel.id);
+      if (rooms.isNotEmpty) {
+        final prices = rooms.map((room) => room.pricePerPerson).toList();
+        prices.sort();
+        final minHostelPrice = prices.first;
+        final maxHostelPrice = prices.last;
+        
+        if (minHostelPrice < minPrice || maxHostelPrice > maxPrice) {
+          return false;
+        }
+      }
+      
+      return true;
+    }).toList());
+    
+    // If search query is active, apply that filter too
+    if (searchQuery.isNotEmpty) {
+      filterHostels();
+    }
+  } catch (e) {
+    error('Failed to apply filters: ${e.toString()}');
+  } finally {
+    isLoading(false);
+  }
 }
+}
+
+

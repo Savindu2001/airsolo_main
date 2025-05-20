@@ -89,36 +89,36 @@ We do not sell your personal information to third parties. We may share informat
 
 Last updated: January 1, 2023
 
-## 1. Acceptance of Terms
+ 1. Acceptance of Terms
 
 By using our app, you agree to these Terms and Conditions. If you do not agree, please do not use our app.
 
-## 2. User Responsibilities
+ 2. User Responsibilities
 
 You agree to:
 - Provide accurate information
 - Use the app for lawful purposes only
 - Not engage in fraudulent activities
 
-## 3. Service Modifications
+ 3. Service Modifications
 
 We reserve the right to modify or discontinue the app at any time without notice.
 ''';
 
   final String _appDetailsContent = '''
-# App Details
+ App Details
 
-## Version
+ Version
 1.0.0
 
-## Developer
-Your Company Name
+ Developer
+Savindu Senanayake - Nsbm
 
 ## Contact
-support@yourcompany.com
+support@airsolo.com
 
 ## Release Date
-January 1, 2023
+May 5, 2025
 
 ## Features
 - Book taxis

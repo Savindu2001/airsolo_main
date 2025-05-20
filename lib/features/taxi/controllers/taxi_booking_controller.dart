@@ -171,7 +171,6 @@ Future<void> cancelBooking(String bookingId) async {
   }
 }
 
-
 // Get nearby bookings for drivers
 Future<void> getNearByBookings() async {
   try {
@@ -212,6 +211,8 @@ Future<void> getNearByBookings() async {
     isLoading(false);
   }
 }
+
+
 
 
 
