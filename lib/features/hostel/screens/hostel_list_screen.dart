@@ -369,7 +369,7 @@ return Obx( (){
                 ),
                 child: AspectRatio(
                   aspectRatio: 16/9,
-                  child: _buildImageContent(firstImage, context)),
+                  child: _buildImageContent(hostel.gallery.first, context)),
               ),
               // Details Section
               Padding(
@@ -428,10 +428,10 @@ return Obx( (){
   }
 
 Widget _buildImageContent(String? imageUrl, BuildContext context) {
-  if (_isValidImageUrl(imageUrl)) {
+  // if (_isValidImageUrl(imageUrl)) {
     
-    return _buildDefaultImage();
-  }
+  //   return _buildDefaultImage();
+  // }
 
   return CachedNetworkImage(
     imageUrl: imageUrl!,

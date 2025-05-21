@@ -675,7 +675,7 @@ class _RoomCard extends StatelessWidget {
 
   Widget _buildImagePlaceholder() {
     return Image.asset(
-      AImages.defaultCityImage,
+      AImages.defaultRoomImage,
       fit: BoxFit.cover,
     );
   }

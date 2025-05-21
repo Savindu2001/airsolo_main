@@ -63,7 +63,7 @@ class AImages{
   /// Hostel Images
       static const String hostelImage1 = 'assets/images/items/hostel1.png';
       static const String hostelImage2 = 'assets/images/items/hostel2.png';
-      static const String defaultRoomImage = 'assets/images/items/hostel2.png';
+      static const String defaultRoomImage = 'assets/images/items/share_domitory.jpg';
       // static const String hostelImage3 = '';
       // static const String hostelImage4 = '';
       // static const String hostelImage5 = '';

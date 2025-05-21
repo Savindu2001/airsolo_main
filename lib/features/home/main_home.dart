@@ -40,7 +40,7 @@ class MainHomeScreen extends StatelessWidget {
 
                         children: [
                           //App Bar
-                           const AHomeAppBar(),
+                           //const AHomeAppBar(),
                            const SizedBox(height: ASizes.spaceBtwSections,),
                           //SearchBar
                           const ASearchBarContainer( text: 'Where you go next?', showBackground: true, showBorder: true, icon: Iconsax.search_normal,),
@@ -282,7 +282,7 @@ Widget _buildHostelCard() {
               final hasRooms = rooms.isNotEmpty;
               
               return SizedBox(
-                width: 300, // Fixed width matching city cards
+                width: 300, // Fixed width matching 
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
